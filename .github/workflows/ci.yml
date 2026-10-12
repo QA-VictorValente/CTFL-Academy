@@ -1,0 +1,71 @@
+name: CTFL Academy CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  verify-and-test:
+    name: Typecheck, Lint, Unit/Integration Tests, Build & E2E
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ctfl_user
+          POSTGRES_PASSWORD: ctfl_password
+          POSTGRES_DB: ctfl_academy
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://ctfl_user:ctfl_password@localhost:5432/ctfl_academy?schema=public
+      DIRECT_URL: postgresql://ctfl_user:ctfl_password@localhost:5432/ctfl_academy?schema=public
+      AUTH_SECRET: ci-secret-key-ctfl-academy-2026-istqb-401-secure
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client & Apply Migrations
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
+          npm run db:seed
+          npm run admin:create
+
+      - name: Run TypeScript Typecheck
+        run: npm run typecheck
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Vitest Unit & Integration Tests
+        run: npm run test
+
+      - name: Build Production Next.js Application
+        run: npm run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright E2E Suite
+        run: npm run test:e2e
