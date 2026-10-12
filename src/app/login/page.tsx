@@ -77,7 +77,7 @@ export default function LoginPage() {
               <ShieldCheck className="h-6 w-6" />
             </div>
             <CardTitle className="text-2xl font-bold">
-              Acessar CTFL Academy
+              Acessar CTFL Academy 1.0
             </CardTitle>
             <CardDescription>
               Entre com sua conta para continuar seus estudos e simulados
