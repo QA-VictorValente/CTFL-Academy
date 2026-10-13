@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { ToastProvider } from '@/components/providers/toast-provider';
+import { NavigationProgress } from '@/components/layout/navigation-progress';
 
 export const metadata: Metadata = {
   title: {
@@ -26,6 +27,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <NavigationProgress />
           <ToastProvider>{children}</ToastProvider>
         </ThemeProvider>
       </body>

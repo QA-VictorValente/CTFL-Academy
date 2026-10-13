@@ -1,8 +1,10 @@
 import { PrismaClient, UserRole } from '@prisma/client';
 import * as readline from 'readline';
 import { hashPassword } from '../src/lib/auth';
+import { ensureLocalPgRunning } from './local-pg-helper';
 
 const prisma = new PrismaClient();
+let stopLocalPg: (() => Promise<void>) | null = null;
 
 function parseArg(flag: string): string | undefined {
   const arg = process.argv.find((a) => a.startsWith(`--${flag}=`));
@@ -17,6 +19,7 @@ function ask(rl: readline.Interface, question: string): Promise<string> {
 }
 
 async function main() {
+  stopLocalPg = await ensureLocalPgRunning();
   let targetEmail = parseArg('email')?.trim().toLowerCase();
   const targetId = parseArg('id')?.trim();
   let newName = parseArg('name')?.trim();
@@ -142,4 +145,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    if (stopLocalPg) await stopLocalPg();
   });

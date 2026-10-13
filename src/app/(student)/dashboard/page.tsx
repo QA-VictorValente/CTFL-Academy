@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
+import { getCachedPublishedChapters } from '@/lib/curriculum-cache';
 import { formatDateTimeBR } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,32 +39,18 @@ export default async function StudentDashboardPage() {
     totalAnswers,
     correctAnswers,
     examAttempts,
+    completedExamsCount,
     inProgressAttempt,
     lastActivity,
     userAchievements,
     lastLesson,
   ] = await Promise.all([
-    prisma.chapter.findMany({
-      where: { isPublished: true, deletedAt: null },
-      include: {
-        topics: {
-          where: { deletedAt: null },
-          orderBy: { orderIndex: 'asc' },
-          include: {
-            lessons: {
-              where: { deletedAt: null, isPublished: true },
-              orderBy: { orderIndex: 'asc' },
-            },
-          },
-        },
-      },
-      orderBy: { number: 'asc' },
-    }),
+    getCachedPublishedChapters(),
     prisma.topicProgress.findMany({
       where: { userId: user.id },
       include: {
-        topic: true,
-        chapter: true,
+        topic: { select: { id: true, code: true, slug: true, title: true } },
+        chapter: { select: { id: true, number: true, slug: true, title: true } },
       },
     }),
     prisma.userAnswer.count({ where: { userId: user.id } }),
@@ -75,6 +62,12 @@ export default async function StudentDashboardPage() {
       },
       orderBy: { completedAt: 'desc' },
       take: 5,
+    }),
+    prisma.examAttempt.count({
+      where: {
+        userId: user.id,
+        status: { in: ['COMPLETED', 'EXPIRED'] },
+      },
     }),
     prisma.examAttempt.findFirst({
       where: {
@@ -96,8 +89,15 @@ export default async function StudentDashboardPage() {
     user.lastLessonId
       ? prisma.lesson.findUnique({
           where: { id: user.lastLessonId },
-          include: {
-            topic: { include: { chapter: true } },
+          select: {
+            id: true,
+            topic: {
+              select: {
+                code: true,
+                slug: true,
+                chapter: { select: { slug: true } },
+              },
+            },
           },
         })
       : null,
@@ -122,13 +122,6 @@ export default async function StudentDashboardPage() {
     totalAnswers > 0
       ? Number(((correctAnswers / totalAnswers) * 100).toFixed(1))
       : 0;
-
-  const completedExamsCount = await prisma.examAttempt.count({
-    where: {
-      userId: user.id,
-      status: { in: ['COMPLETED', 'EXPIRED'] },
-    },
-  });
 
   // Assuntos com maior dificuldade baseados no histórico real (mínimo de 1 questão respondida e acerto < 70%)
   const weakTopics = topicProgresses

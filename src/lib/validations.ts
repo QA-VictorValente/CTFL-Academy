@@ -4,15 +4,18 @@ export const registerSchema = z.object({
   fullName: z
     .string()
     .trim()
+    .min(1, 'Insira seu nome completo.')
     .min(2, 'O nome deve ter pelo menos 2 caracteres.')
     .max(100, 'O nome deve ter no máximo 100 caracteres.'),
   email: z
     .string()
     .trim()
     .toLowerCase()
-    .email('Informe um endereço de e-mail válido.'),
+    .min(1, 'Insira seu e-mail.')
+    .email('Formato de e-mail inválido. Exemplo: voce@email.com'),
   password: z
     .string()
+    .min(1, 'Insira sua senha.')
     .min(8, 'A senha deve possuir no mínimo 8 caracteres.')
     .max(72, 'A senha deve possuir no máximo 72 caracteres.'),
 });
@@ -22,8 +25,9 @@ export const loginSchema = z.object({
     .string()
     .trim()
     .toLowerCase()
-    .email('Informe um endereço de e-mail válido.'),
-  password: z.string().min(1, 'Informe sua senha.'),
+    .min(1, 'Insira seu e-mail.')
+    .email('Formato de e-mail inválido. Exemplo: voce@email.com'),
+  password: z.string().min(1, 'Insira sua senha.'),
 });
 
 export const recoverPasswordSchema = z.object({
@@ -31,15 +35,22 @@ export const recoverPasswordSchema = z.object({
     .string()
     .trim()
     .toLowerCase()
-    .email('Informe um endereço de e-mail válido.'),
+    .min(1, 'Insira seu e-mail.')
+    .email('Formato de e-mail inválido. Exemplo: voce@email.com'),
   newPassword: z
     .string()
+    .min(1, 'Insira sua nova senha.')
     .min(8, 'A nova senha deve possuir no mínimo 8 caracteres.')
     .optional(),
 });
 
 export const updateProfileSchema = z.object({
-  fullName: z.string().trim().min(2).max(100),
+  fullName: z
+    .string()
+    .trim()
+    .min(1, 'Insira seu nome completo.')
+    .min(2, 'O nome deve ter pelo menos 2 caracteres.')
+    .max(100, 'O nome deve ter no máximo 100 caracteres.'),
   preferredTheme: z.enum(['dark', 'light']),
   dailyGoalMinutes: z.number().int().min(10).max(240),
   nonNativeLanguageBonus: z.boolean(),

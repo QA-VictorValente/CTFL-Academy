@@ -1,8 +1,12 @@
 import { PrismaClient } from '@prisma/client';
+import { ensureLocalPgRunning } from './local-pg-helper';
 
 const prisma = new PrismaClient();
+let stopLocalPg: (() => Promise<void>) | null = null;
 
 async function main() {
+  stopLocalPg = await ensureLocalPgRunning();
+
   const users = await prisma.userProfile.findMany({
     orderBy: { createdAt: 'desc' },
     select: {
@@ -44,4 +48,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    if (stopLocalPg) await stopLocalPg();
   });

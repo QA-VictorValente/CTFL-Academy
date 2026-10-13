@@ -47,7 +47,7 @@ export function PublicHeader() {
             href="/#simulados"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            Simulados Oficiais
+            Metodologia Completa
           </Link>
           <Link
             href="/privacidade"
@@ -102,6 +102,13 @@ export function PublicHeader() {
               className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-secondary"
             >
               Syllabus 4.0.1
+            </Link>
+            <Link
+              href="/#simulados"
+              onClick={() => setMobileOpen(false)}
+              className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-secondary"
+            >
+              Metodologia Completa
             </Link>
             <Link
               href="/privacidade"

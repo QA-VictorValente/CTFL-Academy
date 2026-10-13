@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { requireAdmin, AuthError } from '@/lib/auth';
 import { logAuditEvent } from '@/lib/audit';
+import { invalidateCurriculumCache } from '@/lib/curriculum-cache';
 
 const updateLessonSchema = z.object({
   entityType: z.literal('lesson'),
@@ -51,6 +52,8 @@ export async function PUT(req: Request) {
         },
       });
 
+      invalidateCurriculumCache();
+
       await logAuditEvent({
         actorId: admin.id,
         action: 'LESSON_UPDATED',
@@ -81,6 +84,8 @@ export async function PUT(req: Request) {
           examWeightQuestions: parsed.data.examWeightQuestions,
         },
       });
+
+      invalidateCurriculumCache();
 
       await logAuditEvent({
         actorId: admin.id,

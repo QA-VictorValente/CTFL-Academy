@@ -25,10 +25,12 @@ export async function POST(req: Request) {
     const body = await req.json();
     const parsed = registerSchema.safeParse(body);
     if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0];
       return NextResponse.json(
         {
           error:
-            parsed.error.issues[0]?.message || 'Dados de cadastro inválidos.',
+            firstIssue?.message || 'Dados de cadastro inválidos.',
+          field: firstIssue?.path?.[0] || null,
           issues: parsed.error.issues,
         },
         { status: 400 }
@@ -43,7 +45,11 @@ export async function POST(req: Request) {
 
     if (existing && !existing.deletedAt) {
       return NextResponse.json(
-        { error: 'Este endereço de e-mail já está cadastrado.' },
+        {
+          error:
+            'Este e-mail já está cadastrado. Faça login ou recupere sua senha.',
+          field: 'email',
+        },
         { status: 409 }
       );
     }

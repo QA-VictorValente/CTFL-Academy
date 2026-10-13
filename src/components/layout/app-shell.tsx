@@ -25,6 +25,7 @@ import {
   Flame,
   Zap,
   Shield,
+  Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -82,6 +83,11 @@ export function AppShell({
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [loggingOut, setLoggingOut] = React.useState(false);
+  const [pendingHref, setPendingHref] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
 
   const isAdminSection = pathname?.startsWith('/admin');
 
@@ -103,21 +109,33 @@ export function AppShell({
         item.href === '/dashboard' || item.href === '/admin'
           ? pathname === item.href
           : pathname === item.href || pathname?.startsWith(`${item.href}/`);
+      const isPending = pendingHref === item.href && pathname !== item.href;
+
       return (
         <Link
           key={item.href}
           href={item.href}
-          onClick={onNavigate}
+          prefetch={true}
+          onClick={() => {
+            if (pathname !== item.href) {
+              setPendingHref(item.href);
+            }
+            onNavigate?.();
+          }}
           className={cn(
             'flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all',
-            isActive
+            isActive || isPending
               ? 'bg-gradient-to-r from-indigo-600/20 to-violet-600/20 text-indigo-400 border border-indigo-500/30 font-semibold'
               : 'text-muted-foreground hover:bg-secondary/70 hover:text-foreground'
           )}
         >
-          <Icon
-            className={cn('h-4 w-4 shrink-0', isActive && 'text-indigo-400')}
-          />
+          {isPending ? (
+            <Loader2 className="h-4 w-4 shrink-0 animate-spin text-indigo-400" />
+          ) : (
+            <Icon
+              className={cn('h-4 w-4 shrink-0', isActive && 'text-indigo-400')}
+            />
+          )}
           <span>{item.label}</span>
         </Link>
       );

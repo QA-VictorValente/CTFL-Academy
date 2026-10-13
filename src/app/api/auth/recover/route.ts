@@ -21,10 +21,11 @@ export async function POST(req: Request) {
     const body = await req.json();
     const parsed = recoverPasswordSchema.safeParse(body);
     if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0];
       return NextResponse.json(
         {
-          error:
-            parsed.error.issues[0]?.message || 'Dados inválidos.',
+          error: firstIssue?.message || 'Dados inválidos.',
+          field: firstIssue?.path?.[0] || null,
         },
         { status: 400 }
       );
@@ -38,8 +39,18 @@ export async function POST(req: Request) {
       },
     });
 
-    // No modo local compatível, permite redefinir senha quando informada
-    if (user && newPassword) {
+    if (!user) {
+      return NextResponse.json(
+        {
+          error:
+            'E-mail não cadastrado. Verifique o e-mail informado ou crie uma conta.',
+          field: 'email',
+        },
+        { status: 404 }
+      );
+    }
+
+    if (newPassword) {
       await prisma.userProfile.update({
         where: { id: user.id },
         data: {
@@ -58,7 +69,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message:
-        'Se o endereço de e-mail estiver cadastrado, o procedimento de recuperação de acesso foi processado com sucesso.',
+        'Sua senha foi redefinida com sucesso! Você já pode entrar com a nova senha.',
     });
   } catch (error) {
     console.error('[Auth Recover] Erro:', error);

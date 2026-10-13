@@ -25,26 +25,49 @@ export async function POST(req: Request) {
     const body = await req.json();
     const parsed = loginSchema.safeParse(body);
     if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0];
       return NextResponse.json(
         {
-          error:
-            parsed.error.issues[0]?.message || 'Credenciais de login inválidas.',
+          error: firstIssue?.message || 'Dados de login inválidos.',
+          field: firstIssue?.path?.[0] || null,
         },
         { status: 400 }
       );
     }
 
     const { email, password } = parsed.data;
-    const user = await prisma.userProfile.findFirst({
-      where: {
-        email,
-        deletedAt: null,
-      },
+    const user = await prisma.userProfile.findUnique({
+      where: { email },
     });
 
-    if (!user || !user.passwordHash || !verifyPassword(password, user.passwordHash)) {
+    if (!user) {
       return NextResponse.json(
-        { error: 'E-mail ou senha incorretos.' },
+        {
+          error:
+            'E-mail não cadastrado. Verifique o e-mail digitado ou crie uma conta.',
+          field: 'email',
+        },
+        { status: 404 }
+      );
+    }
+
+    if (user.deletedAt) {
+      return NextResponse.json(
+        {
+          error: 'Esta conta foi excluída ou desativada.',
+          field: 'email',
+        },
+        { status: 403 }
+      );
+    }
+
+    if (!user.passwordHash || !verifyPassword(password, user.passwordHash)) {
+      return NextResponse.json(
+        {
+          error:
+            'Senha incorreta. Verifique sua senha ou clique em "Esqueceu a senha?".',
+          field: 'password',
+        },
         { status: 401 }
       );
     }

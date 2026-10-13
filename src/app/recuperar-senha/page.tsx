@@ -24,13 +24,17 @@ type RecoverFormValues = z.infer<typeof recoverPasswordSchema>;
 export default function RecuperarSenhaPage() {
   const { toast } = useToast();
   const [completed, setCompleted] = React.useState(false);
+  const [serverError, setServerError] = React.useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<RecoverFormValues>({
     resolver: zodResolver(recoverPasswordSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: '',
       newPassword: '',
@@ -38,6 +42,14 @@ export default function RecuperarSenhaPage() {
   });
 
   async function onSubmit(data: RecoverFormValues) {
+    setServerError(null);
+    if (!data.newPassword || data.newPassword.trim().length === 0) {
+      const msg = 'Insira sua nova senha.';
+      setError('newPassword', { type: 'manual', message: msg });
+      setServerError(msg);
+      return;
+    }
+
     try {
       const res = await fetch('/api/auth/recover', {
         method: 'POST',
@@ -46,9 +58,14 @@ export default function RecuperarSenhaPage() {
       });
       const json = await res.json();
       if (!res.ok) {
+        const msg = json.error || 'Tente novamente.';
+        setServerError(msg);
+        if (json.field === 'email' || json.field === 'newPassword') {
+          setError(json.field, { type: 'server', message: msg });
+        }
         toast({
           title: 'Erro ao recuperar acesso',
-          description: json.error || 'Tente novamente.',
+          description: msg,
           variant: 'error',
         });
         return;
@@ -56,14 +73,16 @@ export default function RecuperarSenhaPage() {
 
       setCompleted(true);
       toast({
-        title: 'Recuperação processada',
+        title: 'Senha redefinida!',
         description: json.message,
         variant: 'success',
       });
     } catch {
+      const msg = 'Não foi possível contatar o servidor.';
+      setServerError(msg);
       toast({
         title: 'Erro de conexão',
-        description: 'Não foi possível contatar o servidor.',
+        description: msg,
         variant: 'error',
       });
     }
@@ -93,8 +112,8 @@ export default function RecuperarSenhaPage() {
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Seu procedimento de recuperação foi concluído. Você já pode
-                  autenticar-se na plataforma.
+                  Sua senha foi redefinida com sucesso! Você já pode entrar na
+                  plataforma com a nova senha.
                 </p>
                 <Link href="/login" className="block">
                   <Button className="w-full">Ir para o Login</Button>
@@ -106,6 +125,14 @@ export default function RecuperarSenhaPage() {
                 className="space-y-4"
                 noValidate
               >
+                {serverError && (
+                  <div
+                    role="alert"
+                    className="rounded-lg border border-rose-500/40 bg-rose-500/10 p-3 text-xs font-medium text-rose-400"
+                  >
+                    {serverError}
+                  </div>
+                )}
                 <div className="space-y-1.5">
                   <label
                     htmlFor="email"

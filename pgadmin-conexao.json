@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "CTFL Academy (Banco Local)",
+      "Group": "Servers",
+      "Host": "localhost",
+      "Port": 5432,
+      "MaintenanceDB": "ctfl_academy",
+      "Username": "postgres",
+      "SSLMode": "prefer"
+    }
+  }
+}

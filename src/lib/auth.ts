@@ -1,11 +1,31 @@
 import crypto from 'crypto';
+import * as React from 'react';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { UserProfile, UserRole } from '@prisma/client';
 
+const reactCache =
+  typeof React.cache === 'function'
+    ? React.cache
+    : <T extends (...args: never[]) => unknown>(fn: T): T => fn;
+
 export const SESSION_COOKIE_NAME = 'ctfl_session';
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 dias
+
+const USER_CACHE_TTL_MS = 4000;
+const userProfileCache = new Map<
+  string,
+  { profile: UserProfile; expiresAt: number }
+>();
+
+export function invalidateUserCache(userId?: string) {
+  if (userId) {
+    userProfileCache.delete(userId);
+  } else {
+    userProfileCache.clear();
+  }
+}
 
 export interface SessionPayload {
   userId: string;
@@ -103,9 +123,10 @@ export function setSessionCookie(token: string) {
 export function clearSessionCookie() {
   const cookieStore = cookies();
   cookieStore.delete(SESSION_COOKIE_NAME);
+  userProfileCache.clear();
 }
 
-export async function getCurrentUser(): Promise<UserProfile | null> {
+export const getCurrentUser = reactCache(async (): Promise<UserProfile | null> => {
   try {
     const isLocalMode = process.env.SUPABASE_LOCAL_AUTH !== 'false';
     const cookieStore = cookies();
@@ -114,13 +135,24 @@ export async function getCurrentUser(): Promise<UserProfile | null> {
     if (token) {
       const payload = verifySessionToken(token);
       if (payload) {
+        const cached = userProfileCache.get(payload.userId);
+        if (cached && cached.expiresAt > Date.now()) {
+          return cached.profile;
+        }
+
         const profile = await prisma.userProfile.findFirst({
           where: {
             id: payload.userId,
             deletedAt: null,
           },
         });
-        if (profile) return profile;
+        if (profile) {
+          userProfileCache.set(payload.userId, {
+            profile,
+            expiresAt: Date.now() + USER_CACHE_TTL_MS,
+          });
+          return profile;
+        }
       }
     }
 
@@ -156,7 +188,7 @@ export async function getCurrentUser(): Promise<UserProfile | null> {
   } catch {
     return null;
   }
-}
+});
 
 export class AuthError extends Error {
   status: number;

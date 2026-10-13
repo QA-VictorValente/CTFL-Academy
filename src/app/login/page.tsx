@@ -30,9 +30,12 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: '',
       password: '',
@@ -51,7 +54,10 @@ export default function LoginPage() {
       if (!res.ok) {
         const msg = json.error || 'Falha ao realizar login.';
         setServerError(msg);
-        toast({ title: 'Erro no login', description: msg, variant: 'error' });
+        if (json.field === 'email' || json.field === 'password') {
+          setError(json.field, { type: 'server', message: msg });
+        }
+        toast({ title: 'Não foi possível entrar', description: msg, variant: 'error' });
         return;
       }
 
@@ -63,7 +69,7 @@ export default function LoginPage() {
       router.push('/dashboard');
       router.refresh();
     } catch {
-      setServerError('Não foi possível conectar ao servidor.');
+      setServerError('Não foi possível conectar ao servidor. Verifique sua conexão.');
     }
   }
 

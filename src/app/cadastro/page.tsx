@@ -30,9 +30,12 @@ export default function CadastroPage() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       fullName: '',
       email: '',
@@ -52,6 +55,13 @@ export default function CadastroPage() {
       if (!res.ok) {
         const msg = json.error || 'Erro ao criar conta.';
         setServerError(msg);
+        if (
+          json.field === 'fullName' ||
+          json.field === 'email' ||
+          json.field === 'password'
+        ) {
+          setError(json.field, { type: 'server', message: msg });
+        }
         toast({ title: 'Falha no cadastro', description: msg, variant: 'error' });
         return;
       }
@@ -64,7 +74,7 @@ export default function CadastroPage() {
       router.push('/dashboard');
       router.refresh();
     } catch {
-      setServerError('Não foi possível conectar ao servidor.');
+      setServerError('Não foi possível conectar ao servidor. Verifique sua conexão.');
     }
   }
 

@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
+import { getCachedPublishedChapters } from '@/lib/curriculum-cache';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -24,22 +25,7 @@ export default async function CapitulosListPage() {
   const user = await requireAuth();
 
   const [chapters, topicProgresses] = await Promise.all([
-    prisma.chapter.findMany({
-      where: { isPublished: true, deletedAt: null },
-      include: {
-        topics: {
-          where: { deletedAt: null },
-          orderBy: { orderIndex: 'asc' },
-        },
-        _count: {
-          select: {
-            questions: { where: { status: 'PUBLISHED', deletedAt: null } },
-            flashcards: { where: { isPublished: true, deletedAt: null } },
-          },
-        },
-      },
-      orderBy: { number: 'asc' },
-    }),
+    getCachedPublishedChapters(),
     prisma.topicProgress.findMany({
       where: { userId: user.id },
     }),
