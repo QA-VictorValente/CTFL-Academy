@@ -26,11 +26,13 @@ import {
   Zap,
   Shield,
   Loader2,
+  Brain,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
+import { FloatingNotebook } from '@/components/student/floating-notebook';
 
 export interface ShellUser {
   id: string;
@@ -52,6 +54,7 @@ const STUDENT_NAV: NavItem[] = [
   { href: '/capitulos', label: 'Capítulos & Aulas', icon: BookOpen },
   { href: '/exercicios', label: 'Exercícios de Fixação', icon: CheckSquare },
   { href: '/flashcards', label: 'Flashcards', icon: Layers },
+  { href: '/caderno', label: 'Caderno & Mapas', icon: Brain },
   { href: '/simulados', label: 'Central de Simulados', icon: Clock },
   { href: '/historico', label: 'Histórico de Provas', icon: History },
   { href: '/revisao-erros', label: 'Revisão de Erros', icon: AlertOctagon },
@@ -337,6 +340,8 @@ export function AppShell({
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <div className="mx-auto max-w-7xl">{children}</div>
         </main>
+
+        <FloatingNotebook />
       </div>
     </div>
   );

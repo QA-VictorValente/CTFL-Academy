@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { RetakeExamButton } from '@/components/student/retake-exam-button';
+import { FormattedText, InlineMarkdown } from '@/components/ui/formatted-text';
 
 export default async function ExamResultPage({
   params,
@@ -375,8 +376,8 @@ export default async function ExamResultPage({
                   )}
                 </div>
 
-                <CardTitle className="pt-3 whitespace-pre-line text-base font-medium leading-relaxed">
-                  {eq.statementSnapshot}
+                <CardTitle className="pt-3 text-base font-medium leading-relaxed">
+                  <FormattedText text={eq.statementSnapshot} />
                 </CardTitle>
               </CardHeader>
 
@@ -405,11 +406,13 @@ export default async function ExamResultPage({
                               {opt.displayLabel}
                             </span>
                             <div>
-                              <p className="font-medium">{opt.content}</p>
+                              <div className="font-medium">
+                                <InlineMarkdown text={opt.content} />
+                              </div>
                               {opt.justification && (
-                                <p className="mt-1 text-xs text-muted-foreground">
-                                  {opt.justification}
-                                </p>
+                                <div className="mt-1 text-xs text-muted-foreground">
+                                  <InlineMarkdown text={opt.justification} />
+                                </div>
                               )}
                             </div>
                           </div>
@@ -437,7 +440,10 @@ export default async function ExamResultPage({
                     Explicação Oficial da Questão (Gabarito:{' '}
                     {eq.correctDisplayLabel}):
                   </p>
-                  <p className="leading-relaxed">{eq.explanationSnapshot}</p>
+                  <FormattedText
+                    text={eq.explanationSnapshot}
+                    className="leading-relaxed space-y-2"
+                  />
                 </div>
               </CardContent>
             </Card>

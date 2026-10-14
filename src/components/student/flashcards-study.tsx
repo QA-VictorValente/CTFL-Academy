@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  Undo2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +19,8 @@ import {
 } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
 import { useToast } from '@/components/providers/toast-provider';
-import { formatDateBR } from '@/lib/utils';
+import { formatDateBR, cn } from '@/lib/utils';
+import { FormattedText } from '@/components/ui/formatted-text';
 
 export interface FlashcardStudyItem {
   id: string;
@@ -40,6 +42,19 @@ export interface FlashcardStudyItem {
     nextReviewAt: string;
   } | null;
 }
+
+interface LastRatedAction {
+  cardId: string;
+  cardIndex: number;
+  previousReview: FlashcardStudyItem['review'];
+  ratingApplied: 'EASY' | 'MEDIUM' | 'HARD';
+}
+
+const DIFFICULTY_LABELS: Record<string, string> = {
+  EASY: 'Fácil',
+  MEDIUM: 'Médio',
+  HARD: 'Difícil',
+};
 
 export function FlashcardsStudy({
   chapters,
@@ -63,6 +78,8 @@ export function FlashcardsStudy({
   const [submitting, setSubmitting] = React.useState(false);
   const [itemsState, setItemsState] =
     React.useState<FlashcardStudyItem[]>(flashcards);
+  const [lastRatedAction, setLastRatedAction] =
+    React.useState<LastRatedAction | null>(null);
 
   const deck = React.useMemo(() => {
     const now = Date.now();
@@ -111,15 +128,80 @@ export function FlashcardsStudy({
     };
   }, [itemsState]);
 
+  // Informações de exibição do estado em Português com cores dinâmicas
+  const stateInfo = React.useMemo(() => {
+    if (!currentCard?.review) {
+      return {
+        label: 'Novo Cartão',
+        className: 'border-sky-500/40 bg-sky-500/15 text-sky-300 font-semibold',
+        dotColor: 'bg-sky-400',
+        description: 'Nunca respondido',
+      };
+    }
+
+    const isHard =
+      currentCard.review.rating === 'HARD' ||
+      currentCard.review.state === 'LEARNING';
+    const isMedium =
+      currentCard.review.rating === 'MEDIUM' ||
+      currentCard.review.state === 'REVIEW';
+    const isEasy =
+      currentCard.review.rating === 'EASY' ||
+      currentCard.review.state === 'MASTERED';
+
+    if (isHard) {
+      return {
+        label: 'Difícil (Aprendendo)',
+        className:
+          'border-rose-500/60 bg-rose-500/20 text-rose-300 font-bold shadow-sm shadow-rose-950/40',
+        dotColor: 'bg-rose-500 animate-pulse',
+        description: 'Revisão prioritária em 1 dia',
+      };
+    }
+
+    if (isMedium) {
+      return {
+        label: 'Médio (Em Revisão)',
+        className:
+          'border-amber-500/60 bg-amber-500/20 text-amber-300 font-bold shadow-sm shadow-amber-950/40',
+        dotColor: 'bg-amber-400',
+        description: 'Em fixação espaçada',
+      };
+    }
+
+    if (isEasy) {
+      return {
+        label: 'Fácil (Dominado)',
+        className:
+          'border-emerald-500/60 bg-emerald-500/20 text-emerald-300 font-bold shadow-sm shadow-emerald-950/40',
+        dotColor: 'bg-emerald-400',
+        description: 'Conceito bem fixado',
+      };
+    }
+
+    return {
+      label: 'Novo Cartão',
+      className: 'border-sky-500/40 bg-sky-500/15 text-sky-300 font-semibold',
+      dotColor: 'bg-sky-400',
+      description: 'Nunca respondido',
+    };
+  }, [currentCard?.review]);
+
+  // Avaliar cartão
   async function handleRate(rating: 'EASY' | 'MEDIUM' | 'HARD') {
-    if (!currentCard) return;
+    if (!currentCard || submitting) return;
     setSubmitting(true);
+
+    const prevReview = currentCard.review;
+    const cardId = currentCard.id;
+    const cardIdx = currentIndex;
+
     try {
       const res = await fetch('/api/flashcards/review', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          flashcardId: currentCard.id,
+          flashcardId: cardId,
           rating,
         }),
       });
@@ -135,7 +217,7 @@ export function FlashcardsStudy({
 
       setItemsState((prev) =>
         prev.map((item) =>
-          item.id === currentCard.id
+          item.id === cardId
             ? {
                 ...item,
                 review: {
@@ -151,14 +233,23 @@ export function FlashcardsStudy({
         )
       );
 
+      // Armazena a ação para permitir "Desfazer" imediatamente
+      setLastRatedAction({
+        cardId,
+        cardIndex: cardIdx,
+        previousReview: prevReview,
+        ratingApplied: rating,
+      });
+
+      const ratingPt =
+        rating === 'EASY'
+          ? 'Fácil'
+          : rating === 'MEDIUM'
+          ? 'Médio'
+          : 'Difícil';
+
       toast({
-        title: `Cartão marcado como ${
-          rating === 'EASY'
-            ? 'Fácil'
-            : rating === 'MEDIUM'
-            ? 'Médio'
-            : 'Difícil'
-        }`,
+        title: `Cartão marcado como ${ratingPt}`,
         description: `Próxima revisão agendada para daqui a ${json.review.intervalDays} dia(s).`,
         variant: 'success',
       });
@@ -172,6 +263,148 @@ export function FlashcardsStudy({
       setSubmitting(false);
     }
   }
+
+  // Redefinir completamente o cartão para "Novo" (como se nunca tivesse sido respondido)
+  async function handleResetCard(flashcardId: string) {
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/flashcards/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ flashcardId }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        toast({
+          title: 'Erro ao redefinir cartão',
+          description: json.error || 'Tente novamente.',
+          variant: 'error',
+        });
+        return;
+      }
+
+      setItemsState((prev) =>
+        prev.map((item) =>
+          item.id === flashcardId
+            ? {
+                ...item,
+                review: null,
+              }
+            : item
+        )
+      );
+
+      if (lastRatedAction?.cardId === flashcardId) {
+        setLastRatedAction(null);
+      }
+
+      setFlipped(false);
+
+      toast({
+        title: 'Cartão redefinido para Novo! 🔄',
+        description:
+          'Histórico zerado com sucesso. O cartão agora está como se nunca tivesse sido respondido.',
+        variant: 'info',
+      });
+
+      router.refresh();
+    } catch {
+      toast({
+        title: 'Erro de conexão',
+        description: 'Não foi possível redefinir o cartão.',
+        variant: 'error',
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  // Desfazer a última resposta (caso tenha clicado sem querer)
+  const handleUndoLastRating = React.useCallback(async () => {
+    if (!lastRatedAction || submitting) return;
+    const { cardId, cardIndex: targetIdx, previousReview } = lastRatedAction;
+
+    setSubmitting(true);
+    try {
+      if (!previousReview) {
+        // Antes era um cartão NOVO -> reset completo no backend
+        const res = await fetch('/api/flashcards/reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ flashcardId: cardId }),
+        });
+        if (!res.ok) throw new Error('Falha ao resetar');
+
+        setItemsState((prev) =>
+          prev.map((item) =>
+            item.id === cardId ? { ...item, review: null } : item
+          )
+        );
+      } else {
+        // Antes já tinha um estado anterior -> reverte a avaliação
+        const res = await fetch('/api/flashcards/review', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            flashcardId: cardId,
+            rating: previousReview.rating,
+          }),
+        });
+        if (!res.ok) throw new Error('Falha ao restaurar');
+
+        setItemsState((prev) =>
+          prev.map((item) =>
+            item.id === cardId ? { ...item, review: previousReview } : item
+          )
+        );
+      }
+
+      // Volta a visualização para o cartão que foi alterado
+      setCurrentIndex(targetIdx);
+      setFlipped(false);
+      setLastRatedAction(null);
+
+      toast({
+        title: 'Ação desfeita com sucesso! ↩️',
+        description: !previousReview
+          ? 'O cartão voltou a ser Novo, exatamente como antes do clique.'
+          : 'O cartão foi restaurado para a avaliação anterior.',
+        variant: 'success',
+      });
+
+      router.refresh();
+    } catch {
+      toast({
+        title: 'Erro ao desfazer',
+        description: 'Não foi possível restaurar o estado do cartão.',
+        variant: 'error',
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  }, [lastRatedAction, submitting, toast, router]);
+
+  // Atalhos de teclado (Ctrl+Z para desfazer, etc.)
+  React.useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      const activeTag = (e.target as HTMLElement)?.tagName;
+      if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') {
+        return;
+      }
+
+      // Ctrl+Z para Desfazer
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) {
+        e.preventDefault();
+        if (lastRatedAction && !submitting) {
+          handleUndoLastRating();
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lastRatedAction, submitting, handleUndoLastRating]);
 
   return (
     <div className="space-y-6">
@@ -193,7 +426,7 @@ export function FlashcardsStudy({
         </Card>
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs text-muted-foreground">Dominados (Mastered)</p>
+            <p className="text-xs text-muted-foreground">Dominados</p>
             <p className="mt-1 text-2xl font-bold text-emerald-400">
               {stats.mastered}
             </p>
@@ -228,6 +461,7 @@ export function FlashcardsStudy({
                     setChapterFilter(e.target.value);
                     setCurrentIndex(0);
                     setFlipped(false);
+                    setLastRatedAction(null);
                   }}
                 >
                   <option value="ALL">Todos os Capítulos (1 a 6)</option>
@@ -253,6 +487,7 @@ export function FlashcardsStudy({
                     setModeFilter(e.target.value as 'ALL' | 'DUE_ONLY');
                     setCurrentIndex(0);
                     setFlipped(false);
+                    setLastRatedAction(null);
                   }}
                 >
                   <option value="ALL">Todos os Cartões do Filtro</option>
@@ -263,18 +498,35 @@ export function FlashcardsStudy({
               </div>
             </div>
 
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                setRandomSeed((s) => s + 1);
-                setCurrentIndex(0);
-                setFlipped(false);
-              }}
-            >
-              <Shuffle className="h-4 w-4" />
-              Estudar Cartões Aleatórios
-            </Button>
+            <div className="flex items-center gap-2">
+              {lastRatedAction && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleUndoLastRating}
+                  disabled={submitting}
+                  className="border-indigo-500/50 bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 shadow-sm"
+                  title="Desfazer última avaliação (Atalho: Ctrl+Z)"
+                >
+                  <Undo2 className="h-4 w-4 mr-1.5 text-indigo-400" />
+                  Desfazer última avaliação
+                </Button>
+              )}
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setRandomSeed((s) => s + 1);
+                  setCurrentIndex(0);
+                  setFlipped(false);
+                }}
+              >
+                <Shuffle className="h-4 w-4" />
+                Embaralhar
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -304,7 +556,8 @@ export function FlashcardsStudy({
       ) : (
         <Card className="border-indigo-500/30 shadow-xl">
           <CardHeader className="border-b border-border/60">
-            <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              {/* Badges de Identificação */}
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="default">
                   Cartão {currentIndex + 1} de {deck.length}
@@ -313,7 +566,9 @@ export function FlashcardsStudy({
                   Cap. {currentCard.chapterNumber} • Tópico{' '}
                   {currentCard.topicCode}
                 </Badge>
-                <Badge variant="secondary">{currentCard.difficulty}</Badge>
+                <Badge variant="secondary">
+                  Nível {DIFFICULTY_LABELS[currentCard.difficulty] || currentCard.difficulty}
+                </Badge>
                 {currentCard.tags.map((tag) => (
                   <Badge key={tag} variant="purple">
                     {tag}
@@ -321,19 +576,48 @@ export function FlashcardsStudy({
                 ))}
               </div>
 
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              {/* Status do Flashcard Dinâmico (Vermelho / Amarelo / Verde / Novo) */}
+              <div className="flex flex-wrap items-center gap-2.5">
+                <div
+                  className={cn(
+                    'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors',
+                    stateInfo.className
+                  )}
+                  title={stateInfo.description}
+                >
+                  <span
+                    className={cn(
+                      'h-2 w-2 rounded-full shrink-0',
+                      stateInfo.dotColor
+                    )}
+                  />
+                  <span>
+                    Estado: <strong>{stateInfo.label}</strong>
+                  </span>
+                </div>
+
                 {currentCard.review ? (
-                  <>
-                    <Badge variant="success">
-                      Estado: {currentCard.review.state}
-                    </Badge>
-                    <span>
-                      Última: {formatDateBR(currentCard.review.reviewedAt)} •
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] text-muted-foreground hidden md:inline">
                       Próxima: {formatDateBR(currentCard.review.nextReviewAt)}
                     </span>
-                  </>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled={submitting}
+                      onClick={() => handleResetCard(currentCard.id)}
+                      className="h-7 px-2.5 text-xs text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 border border-border/50 hover:border-rose-500/30 transition rounded-lg"
+                      title="Clique caso tenha clicado por engano ou queira zerar o cartão para Novo"
+                    >
+                      <RotateCcw className="h-3 w-3 mr-1" />
+                      Voltar para Novo
+                    </Button>
+                  </div>
                 ) : (
-                  <Badge variant="warning">Novo Cartão</Badge>
+                  <span className="text-[11px] text-muted-foreground hidden sm:inline">
+                    Cartão inédito
+                  </span>
                 )}
               </div>
             </div>
@@ -355,16 +639,17 @@ export function FlashcardsStudy({
               <span className="mb-3 rounded-full border border-border px-3 py-0.5 text-[11px] font-semibold uppercase tracking-widest text-indigo-400">
                 {flipped ? 'Verso (Resposta Oficial)' : 'Frente (Pergunta)'}
               </span>
-              <p className="max-w-2xl text-base sm:text-lg font-semibold leading-relaxed">
-                {flipped ? currentCard.back : currentCard.front}
-              </p>
+              <FormattedText
+                text={flipped ? currentCard.back : currentCard.front}
+                className="max-w-2xl text-base sm:text-lg font-semibold leading-relaxed"
+              />
               <span className="mt-6 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                 <RotateCcw className="h-3.5 w-3.5" />
                 Clique no cartão para virar ({flipped ? 'ver frente' : 'ver resposta'})
               </span>
             </div>
 
-            {/* Botões de Repetição Espaçada */}
+            {/* Botões de Navegação e Avaliação de Repetição Espaçada */}
             <div className="flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-4 sm:flex-row">
               <div className="flex items-center gap-2">
                 <Button
@@ -414,6 +699,8 @@ export function FlashcardsStudy({
                   size="sm"
                   disabled={submitting}
                   onClick={() => handleRate('HARD')}
+                  title="Marca como Difícil: Estado vira Difícil (Aprendendo) em Vermelho"
+                  className="font-medium"
                 >
                   Difícil (Rever em 1d)
                 </Button>
@@ -423,6 +710,8 @@ export function FlashcardsStudy({
                   size="sm"
                   disabled={submitting}
                   onClick={() => handleRate('MEDIUM')}
+                  title="Marca como Médio: Estado vira Médio (Em Revisão) em Amarelo"
+                  className="border-amber-500/40 bg-amber-500/15 text-amber-300 hover:bg-amber-500/25 font-medium"
                 >
                   Médio
                 </Button>
@@ -432,9 +721,26 @@ export function FlashcardsStudy({
                   size="sm"
                   disabled={submitting}
                   onClick={() => handleRate('EASY')}
+                  title="Marca como Fácil: Estado vira Fácil (Dominado) em Verde"
+                  className="font-medium"
                 >
                   Fácil (Dominado)
                 </Button>
+
+                {currentCard.review && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    disabled={submitting}
+                    onClick={() => handleResetCard(currentCard.id)}
+                    className="text-xs text-muted-foreground hover:text-rose-400"
+                    title="Zerar resposta e voltar este cartão para Novo"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5 mr-1" />
+                    Resetar
+                  </Button>
+                )}
               </div>
             </div>
           </CardContent>

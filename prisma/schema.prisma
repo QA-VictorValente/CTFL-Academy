@@ -75,6 +75,11 @@ enum FlashcardReviewState {
   MASTERED
 }
 
+enum NoteType {
+  NOTE
+  MINDMAP
+}
+
 model Role {
   id          String        @id @default(cuid())
   code        UserRole      @unique
@@ -118,6 +123,7 @@ model UserProfile {
   userAchievements       UserAchievement[]
   xpEvents               XPEvent[]
   studyActivities        StudyActivity[]
+  studyNotes             StudyNote[]
   auditLogs              AuditLog[]
 
   @@index([email])
@@ -143,6 +149,7 @@ model Chapter {
   questions                 Question[]
   flashcards                Flashcard[]
   topicProgresses           TopicProgress[]
+  studyNotes                StudyNote[]
 
   @@index([number])
 }
@@ -165,6 +172,7 @@ model Topic {
   questions          Question[]
   flashcards         Flashcard[]
   topicProgresses    TopicProgress[]
+  studyNotes         StudyNote[]
 
   @@index([chapterId, orderIndex])
 }
@@ -524,3 +532,28 @@ model AuditLog {
   @@index([actorId, createdAt])
   @@index([createdAt])
 }
+
+model StudyNote {
+  id          String      @id @default(cuid())
+  userId      String
+  user        UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        NoteType    @default(NOTE)
+  title       String
+  content     String      @default("") @db.Text
+  mindMapData Json?
+  color       String      @default("#6366f1")
+  tags        Json?       @default("[]")
+  chapterId   String?
+  chapter     Chapter?    @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+  topicId     String?
+  topic       Topic?      @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  isPinned    Boolean     @default(false)
+  deletedAt   DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([userId, type])
+  @@index([userId, chapterId])
+  @@index([userId, createdAt])
+}
+

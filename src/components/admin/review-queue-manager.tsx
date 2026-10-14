@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { EmptyState } from '@/components/ui/empty-state';
 import { useToast } from '@/components/providers/toast-provider';
 import { formatDateTimePtBr } from '@/lib/utils';
+import { FormattedText, InlineMarkdown } from '@/components/ui/formatted-text';
 
 interface ReviewQuestionItem {
   id: string;
@@ -143,7 +144,7 @@ export function ReviewQueueManager({
               </span>
             </div>
             <CardTitle className="mt-2 text-base leading-relaxed">
-              {q.statement}
+              <FormattedText text={q.statement} />
             </CardTitle>
             <CardDescription>
               Referência: {q.referenceSection}
@@ -162,19 +163,23 @@ export function ReviewQueueManager({
                   }`}
                 >
                   <div className="font-semibold">
-                    {opt.label}) {opt.content}
+                    {opt.label}) <InlineMarkdown text={opt.content} />
                   </div>
                   {opt.justification && (
                     <p className="mt-1 text-muted-foreground">
-                      • {opt.justification}
+                      • <InlineMarkdown text={opt.justification} />
                     </p>
                   )}
                 </div>
               ))}
             </div>
 
-            <div className="rounded-lg border border-border bg-secondary/20 p-3 text-xs">
-              <strong>Explicação Didática:</strong> {q.explanation}
+            <div className="rounded-lg border border-border bg-secondary/20 p-3 text-xs space-y-1">
+              <strong>Explicação Didática:</strong>
+              <FormattedText
+                text={q.explanation}
+                className="mt-1 space-y-2 leading-relaxed"
+              />
             </div>
 
             <div className="space-y-3 rounded-xl border border-border p-3.5">

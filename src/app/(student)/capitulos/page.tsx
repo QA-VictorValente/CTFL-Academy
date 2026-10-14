@@ -20,6 +20,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { FormattedText } from '@/components/ui/formatted-text';
 
 export default async function CapitulosListPage() {
   const user = await requireAuth();
@@ -77,7 +78,7 @@ export default async function CapitulosListPage() {
                   {ch.number}. {ch.title}
                 </CardTitle>
                 <CardDescription className="text-sm leading-relaxed">
-                  {ch.description}
+                  <FormattedText text={ch.description} />
                 </CardDescription>
               </CardHeader>
 

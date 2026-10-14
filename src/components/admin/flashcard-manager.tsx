@@ -11,6 +11,7 @@ import { Select } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { ConfirmModal } from '@/components/ui/confirm-modal';
 import { useToast } from '@/components/providers/toast-provider';
+import { InlineMarkdown } from '@/components/ui/formatted-text';
 
 interface FlashcardItem {
   id: string;
@@ -212,12 +213,12 @@ export function FlashcardManager({
                   </div>
                 </div>
 
-                <p className="mt-3 text-sm font-bold text-foreground">
-                  Frente: {fc.front}
-                </p>
-                <p className="mt-2 rounded-lg border border-border bg-secondary/20 p-2.5 text-xs text-muted-foreground">
-                  <strong>Verso:</strong> {fc.back}
-                </p>
+                <div className="mt-3 text-sm font-bold text-foreground">
+                  Frente: <InlineMarkdown text={fc.front} />
+                </div>
+                <div className="mt-2 rounded-lg border border-border bg-secondary/20 p-2.5 text-xs text-muted-foreground">
+                  <strong>Verso:</strong> <InlineMarkdown text={fc.back} />
+                </div>
               </div>
 
               <div className="mt-3 flex flex-wrap gap-1">

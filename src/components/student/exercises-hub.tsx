@@ -18,6 +18,7 @@ import { Select } from '@/components/ui/select';
 import { Pagination } from '@/components/ui/pagination';
 import { useToast } from '@/components/providers/toast-provider';
 import { cn } from '@/lib/utils';
+import { InlineMarkdown, FormattedText } from '@/components/ui/formatted-text';
 
 export interface ExerciseHubItem {
   id: string;
@@ -229,8 +230,8 @@ export function ExercisesHub({
                   </div>
                   <Badge variant="outline">{q.difficulty}</Badge>
                 </div>
-                <CardDescription className="pt-3 whitespace-pre-line text-sm font-medium text-foreground leading-relaxed">
-                  {q.statement}
+                <CardDescription className="pt-3 text-sm font-medium text-foreground leading-relaxed">
+                  <InlineMarkdown text={q.statement} />
                 </CardDescription>
               </CardHeader>
 
@@ -270,10 +271,10 @@ export function ExercisesHub({
                           {opt.label}
                         </span>
                         <div className="flex-1 space-y-1">
-                          <p>{opt.content}</p>
+                          <p><InlineMarkdown text={opt.content} /></p>
                           {optFb?.justification && (
                             <p className="text-xs text-muted-foreground pt-1">
-                              {optFb.justification}
+                              <InlineMarkdown text={optFb.justification} />
                             </p>
                           )}
                         </div>
@@ -315,7 +316,9 @@ export function ExercisesHub({
                         </>
                       )}
                     </p>
-                    <p className="leading-relaxed">{fb.explanation}</p>
+                    <div className="leading-relaxed">
+                      <FormattedText text={fb.explanation} />
+                    </div>
                     <p className="opacity-80">
                       Referência: {fb.referenceSection}
                     </p>

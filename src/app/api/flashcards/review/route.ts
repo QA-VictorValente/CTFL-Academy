@@ -125,3 +125,50 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const user = await requireAuth();
+    const { searchParams } = new URL(req.url);
+    let flashcardId = searchParams.get('flashcardId');
+
+    if (!flashcardId) {
+      try {
+        const body = await req.json();
+        flashcardId = body.flashcardId;
+      } catch {
+        // no body
+      }
+    }
+
+    if (!flashcardId) {
+      return NextResponse.json(
+        { error: 'flashcardId é obrigatório.' },
+        { status: 400 }
+      );
+    }
+
+    await prisma.flashcardReview.deleteMany({
+      where: {
+        userId: user.id,
+        flashcardId,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Revisão removida. Cartão redefinido para Novo.',
+      flashcardId,
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+    console.error('[Flashcard Review Delete] Erro:', error);
+    return NextResponse.json(
+      { error: 'Erro ao redefinir flashcard.' },
+      { status: 500 }
+    );
+  }
+}
+

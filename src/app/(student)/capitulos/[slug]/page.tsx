@@ -22,6 +22,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { FormattedText, InlineMarkdown } from '@/components/ui/formatted-text';
 
 interface LearningObjectiveEntry {
   code: string;
@@ -124,7 +125,7 @@ export default async function CapituloDetailPage({
             {chapter.number}. {chapter.title}
           </CardTitle>
           <CardDescription className="text-sm leading-relaxed">
-            {chapter.introduction}
+            <FormattedText text={chapter.introduction} />
           </CardDescription>
         </CardHeader>
 
@@ -135,9 +136,10 @@ export default async function CapituloDetailPage({
               <Target className="h-4 w-4" />
               Síntese dos Objetivos de Aprendizagem do Capítulo
             </h2>
-            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-              {chapter.learningObjectivesSummary}
-            </p>
+            <FormattedText
+              text={chapter.learningObjectivesSummary}
+              className="mt-1.5 text-xs leading-relaxed text-muted-foreground"
+            />
           </div>
         </CardContent>
       </Card>
@@ -202,7 +204,7 @@ export default async function CapituloDetailPage({
                             {lo.code} ({lo.kLevel})
                           </Badge>
                           <span className="text-muted-foreground">
-                            {lo.description}
+                            <InlineMarkdown text={lo.description} />
                           </span>
                         </li>
                       ))}

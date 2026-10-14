@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { formatDateTimePtBr } from '@/lib/utils';
+import { FormattedText, InlineMarkdown } from '@/components/ui/formatted-text';
 
 export const dynamic = 'force-dynamic';
 
@@ -225,7 +226,7 @@ export default async function RevisaoErrosPage({
                     </span>
                   </div>
                   <CardTitle className="mt-3 text-base leading-relaxed">
-                    {q.statement}
+                    <FormattedText text={q.statement} />
                   </CardTitle>
                   <CardDescription>
                     Tópico: {q.topic.title}
@@ -251,7 +252,8 @@ export default async function RevisaoErrosPage({
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div>
-                              <span className="font-bold">{opt.label})</span> {opt.content}
+                              <span className="font-bold">{opt.label})</span>{' '}
+                              <InlineMarkdown text={opt.content} />
                             </div>
                             <div className="flex shrink-0 items-center gap-1.5">
                               {isUserWrongSelection && (
@@ -268,7 +270,7 @@ export default async function RevisaoErrosPage({
                           </div>
                           {opt.justification && (
                             <p className="mt-1.5 text-xs text-muted-foreground">
-                              • {opt.justification}
+                              • <InlineMarkdown text={opt.justification} />
                             </p>
                           )}
                         </div>
@@ -281,7 +283,10 @@ export default async function RevisaoErrosPage({
                       <AlertCircle className="h-4 w-4" />
                       Explicação Didática (Gabarito: Alternativa {correctOption?.label}):
                     </div>
-                    <p className="mt-1 text-foreground/90">{q.explanation}</p>
+                    <FormattedText
+                      text={q.explanation}
+                      className="mt-1 text-foreground/90 space-y-2"
+                    />
                     <p className="mt-1.5 text-muted-foreground">
                       Referência: {q.referenceSection} ({q.source.referenceDocument})
                     </p>

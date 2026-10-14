@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/card';
 import { useToast } from '@/components/providers/toast-provider';
 import { cn } from '@/lib/utils';
+import { FormattedText, InlineMarkdown } from '@/components/ui/formatted-text';
 
 export interface LessonData {
   id: string;
@@ -179,8 +180,8 @@ export function LessonViewer({
               <BookOpen className="h-5 w-5" />
               Explicação Didática
             </h3>
-            <div className="whitespace-pre-line rounded-xl border border-border/60 bg-background/40 p-5 text-sm leading-relaxed">
-              {lesson.explanation}
+            <div className="rounded-xl border border-border/60 bg-background/40 p-5 text-sm leading-relaxed">
+              <FormattedText text={lesson.explanation} />
             </div>
           </section>
 
@@ -200,7 +201,7 @@ export function LessonViewer({
                       {def.term}
                     </p>
                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                      {def.definition}
+                      <InlineMarkdown text={def.definition} />
                     </p>
                   </div>
                 ))}
@@ -214,8 +215,8 @@ export function LessonViewer({
               <Code2 className="h-5 w-5" />
               Exemplos Práticos (Web, APIs e Bancos de Dados)
             </h3>
-            <div className="whitespace-pre-line rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5 text-sm leading-relaxed">
-              {lesson.practicalExamples}
+            <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5 text-sm leading-relaxed">
+              <FormattedText text={lesson.practicalExamples} />
             </div>
           </section>
 
@@ -225,8 +226,8 @@ export function LessonViewer({
               <Briefcase className="h-5 w-5" />
               Aplicação na Rotina Real de QA
             </h3>
-            <div className="whitespace-pre-line rounded-xl border border-amber-500/20 bg-amber-500/5 p-5 text-sm leading-relaxed">
-              {lesson.qaRoutineExamples}
+            <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-5 text-sm leading-relaxed">
+              <FormattedText text={lesson.qaRoutineExamples} />
             </div>
           </section>
 
@@ -236,7 +237,7 @@ export function LessonViewer({
               <Sparkles className="h-4 w-4" />
               Resumo Essencial para a Prova
             </h3>
-            <p className="text-sm leading-relaxed">{lesson.summary}</p>
+            <FormattedText text={lesson.summary} className="text-sm leading-relaxed" />
           </section>
 
           {/* Botão de Concluir Aula */}
@@ -295,8 +296,8 @@ export function LessonViewer({
                   </div>
                   <Badge variant="secondary">{q.difficulty}</Badge>
                 </div>
-                <CardDescription className="pt-3 whitespace-pre-line text-sm font-medium text-foreground leading-relaxed">
-                  {q.statement}
+                <CardDescription className="pt-3 text-sm font-medium text-foreground leading-relaxed">
+                  <InlineMarkdown text={q.statement} />
                 </CardDescription>
               </CardHeader>
 
@@ -336,10 +337,10 @@ export function LessonViewer({
                           {opt.label}
                         </span>
                         <div className="flex-1 space-y-1">
-                          <p>{opt.content}</p>
+                          <p><InlineMarkdown text={opt.content} /></p>
                           {optFb?.justification && (
                             <p className="text-xs text-muted-foreground pt-1">
-                              {optFb.justification}
+                              <InlineMarkdown text={optFb.justification} />
                             </p>
                           )}
                         </div>
@@ -383,7 +384,9 @@ export function LessonViewer({
                         </>
                       )}
                     </p>
-                    <p className="leading-relaxed">{fb.explanation}</p>
+                    <div className="leading-relaxed">
+                      <FormattedText text={fb.explanation} />
+                    </div>
                     <p className="opacity-80">
                       Referência: {fb.referenceSection}
                     </p>

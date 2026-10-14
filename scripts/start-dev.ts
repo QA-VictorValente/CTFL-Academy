@@ -53,6 +53,34 @@ function isPortListening(port: number): Promise<boolean> {
   });
 }
 
+function isSourceNewerThanBuild(buildIdPath: string): boolean {
+  if (!fs.existsSync(buildIdPath)) return true;
+  const buildMtime = fs.statSync(buildIdPath).mtimeMs;
+
+  function checkDir(dir: string): boolean {
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          if (checkDir(fullPath)) return true;
+        } else if (entry.isFile()) {
+          if (fs.statSync(fullPath).mtimeMs > buildMtime) {
+            return true;
+          }
+        }
+      }
+    } catch {
+      // Ignore read errors
+    }
+    return false;
+  }
+
+  const srcDir = path.resolve(process.cwd(), 'src');
+  if (fs.existsSync(srcDir) && checkDir(srcDir)) return true;
+  return false;
+}
+
 async function main() {
   loadEnvFile();
   let pg: EmbeddedPostgres | null = null;
@@ -104,10 +132,11 @@ async function main() {
 
   const forceDev = process.argv.includes('--dev');
   const buildIdPath = path.resolve(process.cwd(), '.next', 'BUILD_ID');
+  const needsBuild = !forceDev && isSourceNewerThanBuild(buildIdPath);
 
-  if (!forceDev && !fs.existsSync(buildIdPath)) {
+  if (needsBuild) {
     console.log(
-      '[CTFL Academy] Gerando build otimizado para navegação local ultra-rápida...'
+      '[CTFL Academy] Alterações detectadas nos arquivos fonte. Gerando build otimizado...'
     );
     execSync(`"${process.execPath}" "${nextBin}" build`, {
       stdio: 'inherit',

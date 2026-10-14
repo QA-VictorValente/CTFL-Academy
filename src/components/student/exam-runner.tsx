@@ -22,6 +22,7 @@ import {
 import { ConfirmModal } from '@/components/ui/confirm-modal';
 import { useToast } from '@/components/providers/toast-provider';
 import { cn, formatDurationSeconds } from '@/lib/utils';
+import { InlineMarkdown } from '@/components/ui/formatted-text';
 
 export interface RunnerQuestionItem {
   id: string;
@@ -311,8 +312,8 @@ export function ExamRunner({
                 </Button>
               </div>
 
-              <CardTitle className="pt-4 whitespace-pre-line text-base font-medium leading-relaxed">
-                {currentQuestion.statement}
+              <CardTitle className="pt-4 text-base font-medium leading-relaxed">
+                <InlineMarkdown text={currentQuestion.statement} />
               </CardTitle>
             </CardHeader>
 
@@ -342,7 +343,9 @@ export function ExamRunner({
                     >
                       {opt.displayLabel}
                     </span>
-                    <span className="pt-0.5 leading-relaxed">{opt.content}</span>
+                    <span className="pt-0.5 leading-relaxed">
+                      <InlineMarkdown text={opt.content} />
+                    </span>
                   </button>
                 );
               })}

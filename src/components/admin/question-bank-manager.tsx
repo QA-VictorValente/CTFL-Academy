@@ -22,6 +22,7 @@ import { Select } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/providers/toast-provider';
 import { formatDateTimePtBr } from '@/lib/utils';
+import { FormattedText, InlineMarkdown } from '@/components/ui/formatted-text';
 
 interface OptionData {
   id?: string;
@@ -558,9 +559,9 @@ export function QuestionBankManager({
                 </div>
               </div>
 
-              <p className="mt-2.5 text-sm font-medium leading-relaxed">
-                {q.statement}
-              </p>
+              <div className="mt-2.5 text-sm font-medium leading-relaxed">
+                <InlineMarkdown text={q.statement} />
+              </div>
 
               <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
                 <span>
@@ -800,9 +801,9 @@ export function QuestionBankManager({
             </CardHeader>
 
             <CardContent className="space-y-4 p-6">
-              <p className="font-semibold text-sm leading-relaxed">
-                {previewQuestion.statement}
-              </p>
+              <div className="font-semibold text-sm leading-relaxed">
+                <FormattedText text={previewQuestion.statement} />
+              </div>
 
               <div className="space-y-2">
                 {previewQuestion.options.map((opt) => (
@@ -814,18 +815,23 @@ export function QuestionBankManager({
                         : 'border-border bg-secondary/10'
                     }`}
                   >
-                    <span className="font-bold">{opt.label})</span> {opt.content}
+                    <span className="font-bold">{opt.label})</span>{' '}
+                    <InlineMarkdown text={opt.content} />
                     {opt.justification && (
                       <p className="mt-1 text-muted-foreground">
-                        • {opt.justification}
+                        • <InlineMarkdown text={opt.justification} />
                       </p>
                     )}
                   </div>
                 ))}
               </div>
 
-              <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs">
-                <strong>Explicação:</strong> {previewQuestion.explanation}
+              <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs space-y-1">
+                <strong>Explicação:</strong>
+                <FormattedText
+                  text={previewQuestion.explanation}
+                  className="mt-1 space-y-2 leading-relaxed"
+                />
               </div>
 
               <div className="border-t border-border pt-3">
