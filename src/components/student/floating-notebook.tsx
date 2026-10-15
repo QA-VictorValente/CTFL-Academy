@@ -17,6 +17,7 @@ import { useToast } from '@/components/providers/toast-provider';
 import { MindMapCanvas } from '@/components/student/mind-map-canvas';
 import { NotebookEditor } from '@/components/student/notebook-editor';
 import { MindMapData } from '@/types/notebook';
+import { cn } from '@/lib/utils';
 
 const STORAGE_KEY_NOTE = 'ctfl_floating_note_content';
 const STORAGE_KEY_MINDMAP = 'ctfl_floating_mindmap_data';
@@ -70,6 +71,27 @@ export function FloatingNotebook() {
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Detecta rolagem ativa da página para atenuar o botão e não obstruir a leitura
+  const [isScrolling, setIsScrolling] = React.useState(false);
+
+  React.useEffect(() => {
+    let scrollTimer: ReturnType<typeof setTimeout>;
+
+    function handleScroll() {
+      setIsScrolling(true);
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        setIsScrolling(false);
+      }, 700);
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimer);
+    };
   }, []);
 
   // Debounced auto-save para localStorage
@@ -157,20 +179,26 @@ export function FloatingNotebook() {
       {/* Botão Flutuante de Disparo (canto inferior direito) */}
       {!isOpen && (
         <button
+          id="floating-notebook-btn"
           type="button"
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-2xl border border-indigo-500/40 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 px-4 py-3 font-semibold text-white shadow-2xl shadow-indigo-500/30 transition hover:scale-105 active:scale-95 group"
+          className={cn(
+            'fixed bottom-4 right-2.5 sm:bottom-5 sm:right-3.5 z-40 flex items-center gap-1.5 rounded-xl border border-indigo-500/40 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 p-2 sm:px-3 sm:py-2 font-semibold text-white shadow-xl shadow-indigo-500/25 transition-all duration-300 hover:scale-105 active:scale-95 group',
+            isScrolling
+              ? 'opacity-35 hover:opacity-100 hover:scale-105'
+              : 'opacity-95 hover:opacity-100'
+          )}
           title="Abrir Caderno de Estudos e Mapa Mental (Alt + N)"
         >
-          <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/20 text-white">
-            <Brain className="h-4 w-4 transition group-hover:rotate-12" />
+          <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-white/20 text-white">
+            <Brain className="h-3.5 w-3.5 transition group-hover:rotate-12" />
           </div>
-          <div className="flex flex-col text-left leading-none">
-            <span className="text-xs font-bold">Caderno & Mapas</span>
-            <span className="text-[10px] text-indigo-200">Alt + N</span>
+          <div className="hidden sm:flex flex-col text-left leading-none">
+            <span className="text-[11px] font-bold">Caderno & Mapas</span>
+            <span className="text-[9px] text-indigo-200">Alt + N</span>
           </div>
           {isLessonPage && (
-            <span className="ml-1 flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="ml-0.5 flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
           )}
         </button>
       )}

@@ -117,3 +117,25 @@
     background-color: hsl(var(--border) / 0.6);
   }
 }
+
+/* Isolamento e estilos para o Modo Tela Cheia / Foco da Aula */
+:fullscreen,
+::backdrop {
+  background-color: hsl(var(--background)) !important;
+}
+
+div:fullscreen {
+  overflow-y: auto !important;
+  background-color: hsl(var(--background)) !important;
+}
+
+body.ctfl-fullscreen-active {
+  overflow: hidden !important;
+}
+
+body.ctfl-fullscreen-active header,
+body.ctfl-fullscreen-active aside,
+body.ctfl-fullscreen-active #floating-notebook-btn {
+  display: none !important;
+}
+

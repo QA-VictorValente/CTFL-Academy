@@ -34,6 +34,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@bestcodes/edge-tts": "^3.0.1",
     "@hookform/resolvers": "^3.9.0",
     "@prisma/client": "5.22.0",
     "@supabase/ssr": "^0.5.1",

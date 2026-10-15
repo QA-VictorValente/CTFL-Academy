@@ -17,7 +17,6 @@ import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -124,21 +123,22 @@ export default async function CapituloDetailPage({
           <CardTitle className="text-2xl sm:text-3xl font-extrabold">
             {chapter.number}. {chapter.title}
           </CardTitle>
-          <CardDescription className="text-sm leading-relaxed">
-            <FormattedText text={chapter.introduction} />
-          </CardDescription>
+          <div className="pt-1 text-base sm:text-lg leading-relaxed text-foreground/90">
+            <FormattedText text={chapter.introduction} fontSize="lg" />
+          </div>
         </CardHeader>
 
         <CardContent className="space-y-4">
           <Progress value={pct} />
-          <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+          <div className="rounded-2xl border border-indigo-500/20 bg-background/60 p-5">
             <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-400">
               <Target className="h-4 w-4" />
               Síntese dos Objetivos de Aprendizagem do Capítulo
             </h2>
             <FormattedText
               text={chapter.learningObjectivesSummary}
-              className="mt-1.5 text-xs leading-relaxed text-muted-foreground"
+              className="mt-2 text-sm sm:text-base leading-relaxed text-muted-foreground"
+              fontSize="base"
             />
           </div>
         </CardContent>
@@ -194,16 +194,16 @@ export default async function CapituloDetailPage({
                     <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       Objetivos de Aprendizagem Oficiais (Syllabus 4.0.1):
                     </p>
-                    <ul className="space-y-1.5">
+                    <ul className="space-y-2">
                       {objectives.map((lo) => (
                         <li
                           key={lo.code}
-                          className="flex items-start gap-2.5 rounded-lg border border-border/50 bg-background/40 px-3 py-2 text-xs"
+                          className="flex items-start gap-3 rounded-xl border border-border/60 bg-background/50 px-3.5 py-2.5 text-sm"
                         >
-                          <Badge variant="default" className="shrink-0">
+                          <Badge variant="default" className="shrink-0 mt-0.5">
                             {lo.code} ({lo.kLevel})
                           </Badge>
-                          <span className="text-muted-foreground">
+                          <span className="text-foreground/90 leading-relaxed">
                             <InlineMarkdown text={lo.description} />
                           </span>
                         </li>

@@ -1,0 +1,765 @@
+'use client';
+
+import * as React from 'react';
+import {
+  Search,
+  Volume2,
+  Play,
+  Pause,
+  RotateCcw,
+  Sparkles,
+  CheckCircle2,
+  HelpCircle,
+  Eye,
+  EyeOff,
+  Check,
+  Code2,
+  Globe,
+  Database,
+  Server,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import { FormattedText, InlineMarkdown, type FontSizeOption } from '@/components/ui/formatted-text';
+import { useToast } from '@/components/providers/toast-provider';
+
+// -------------------------------------------------------------
+// 1. GLOSSÁRIO INTERATIVO COM MODO DE MEMORIZAÇÃO ATIVA
+// -------------------------------------------------------------
+export interface GlossaryItem {
+  term: string;
+  definition: string;
+}
+
+export function InteractiveGlossary({
+  definitions,
+  fontSize = 'base',
+}: {
+  definitions: GlossaryItem[];
+  fontSize?: FontSizeOption;
+}) {
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [hiddenDefs, setHiddenDefs] = React.useState<Record<string, boolean>>({});
+  const [masteredTerms, setMasteredTerms] = React.useState<Record<string, boolean>>({});
+  const [activeSpeechTerm, setActiveSpeechTerm] = React.useState<string | null>(null);
+  const { toast } = useToast();
+
+  const filtered = React.useMemo(() => {
+    if (!searchTerm.trim()) return definitions;
+    const q = searchTerm.toLowerCase();
+    return definitions.filter(
+      (d) =>
+        d.term.toLowerCase().includes(q) ||
+        d.definition.toLowerCase().includes(q)
+    );
+  }, [definitions, searchTerm]);
+
+  function toggleHide(term: string) {
+    setHiddenDefs((prev) => ({ ...prev, [term]: !prev[term] }));
+  }
+
+  function toggleMastered(term: string) {
+    const isNowMastered = !masteredTerms[term];
+    setMasteredTerms((prev) => ({ ...prev, [term]: isNowMastered }));
+    if (isNowMastered) {
+      toast({
+        title: 'Termo fixado! 🎯',
+        description: `"${term}" marcado como dominado no seu estudo.`,
+        variant: 'success',
+      });
+    }
+  }
+
+  function speakTerm(term: string, definition: string) {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      toast({
+        title: 'Áudio não suportado',
+        description: 'Seu navegador não possui suporte a síntese de voz nativa.',
+        variant: 'info',
+      });
+      return;
+    }
+
+    if (activeSpeechTerm === term) {
+      window.speechSynthesis.cancel();
+      setActiveSpeechTerm(null);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const text = `${term}. Definição oficial: ${definition}`;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'pt-BR';
+    utterance.rate = 1.05;
+
+    utterance.onend = () => setActiveSpeechTerm(null);
+    utterance.onerror = () => setActiveSpeechTerm(null);
+
+    setActiveSpeechTerm(term);
+    window.speechSynthesis.speak(utterance);
+  }
+
+  const masteredCount = Object.values(masteredTerms).filter(Boolean).length;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="relative flex-1 min-w-[220px]">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar termo ou conceito no glossário..."
+            className="pl-9 bg-background/50 border-violet-500/30"
+          />
+        </div>
+
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Badge variant="purple" className="font-semibold">
+            {masteredCount} de {definitions.length} termos dominados
+          </Badge>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              const allHidden: Record<string, boolean> = {};
+              definitions.forEach((d) => (allHidden[d.term] = true));
+              setHiddenDefs((prev) =>
+                Object.keys(prev).length === definitions.length ? {} : allHidden
+              );
+            }}
+            className="text-xs text-violet-300 hover:text-violet-200"
+          >
+            <EyeOff className="h-3.5 w-3.5 mr-1" />
+            Desafio de Memória (Ocultar Tudo)
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
+        {filtered.map((def) => {
+          const isHidden = hiddenDefs[def.term] ?? false;
+          const isMastered = masteredTerms[def.term] ?? false;
+          const isSpeaking = activeSpeechTerm === def.term;
+
+          return (
+            <Card
+              key={def.term}
+              className={cn(
+                'transition-all duration-200 border-violet-500/30 bg-gradient-to-br from-violet-950/20 via-background to-background',
+                isMastered && 'border-emerald-500/50 bg-emerald-950/15'
+              )}
+            >
+              <CardContent className="p-4 space-y-2.5">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-violet-300 text-base">
+                      {def.term}
+                    </span>
+                    {isMastered && (
+                      <Badge variant="success" className="h-5 px-1.5 text-[10px]">
+                        Dominado
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => speakTerm(def.term, def.definition)}
+                      className={cn(
+                        'h-7 w-7 p-0 text-muted-foreground hover:text-violet-300',
+                        isSpeaking && 'text-violet-400 bg-violet-500/20 animate-pulse'
+                      )}
+                      title="Ouvir definição em áudio"
+                    >
+                      <Volume2 className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => toggleHide(def.term)}
+                      className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                      title={isHidden ? 'Revelar definição' : 'Ocultar para testar memória'}
+                    >
+                      {isHidden ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => toggleMastered(def.term)}
+                      className={cn(
+                        'h-7 w-7 p-0 text-muted-foreground hover:text-emerald-400',
+                        isMastered && 'text-emerald-400 bg-emerald-500/20'
+                      )}
+                      title={isMastered ? 'Desmarcar como dominado' : 'Marcar como dominado'}
+                    >
+                      <Check className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+
+                {isHidden ? (
+                  <div
+                    onClick={() => toggleHide(def.term)}
+                    role="button"
+                    tabIndex={0}
+                    className="cursor-pointer rounded-lg border border-dashed border-violet-500/40 bg-violet-500/5 p-3 text-center text-xs text-violet-300 hover:bg-violet-500/10 transition"
+                  >
+                    🔒 Definição oculta. Tente lembrar com suas palavras e clique para conferir!
+                  </div>
+                ) : (
+                  <p
+                    className={cn(
+                      'leading-relaxed text-foreground/90',
+                      fontSize === 'sm' && 'text-sm',
+                      fontSize === 'base' && 'text-base',
+                      fontSize === 'lg' && 'text-lg',
+                      fontSize === 'xl' && 'text-xl'
+                    )}
+                  >
+                    <InlineMarkdown text={def.definition} />
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// -------------------------------------------------------------
+// 2. PAUSA RÁPIDA DE FIXAÇÃO (MICRO-CHECKPOINT INTERATIVO)
+// -------------------------------------------------------------
+export interface MicroCheckpointQuestion {
+  question: string;
+  options: { label: string; text: string; isCorrect: boolean; feedback: string }[];
+}
+
+export function InlineCheckpoint({
+  checkpoint,
+  onCompleted,
+}: {
+  checkpoint: MicroCheckpointQuestion;
+  onCompleted?: () => void;
+}) {
+  const [selectedLabel, setSelectedLabel] = React.useState<string | null>(null);
+  const [revealed, setRevealed] = React.useState(false);
+  const { toast } = useToast();
+
+  const selectedOpt = checkpoint.options.find((o) => o.label === selectedLabel);
+
+  function handleSelect(label: string) {
+    if (revealed) return;
+    setSelectedLabel(label);
+    setRevealed(true);
+
+    const opt = checkpoint.options.find((o) => o.label === label);
+    if (opt?.isCorrect) {
+      toast({
+        title: 'Mandou bem! Resposta Correta! 🌟',
+        description: opt.feedback,
+        variant: 'success',
+      });
+      onCompleted?.();
+    } else {
+      toast({
+        title: 'Quase lá!',
+        description: opt?.feedback || 'Confira a explicação abaixo para fixar o conceito.',
+        variant: 'info',
+      });
+    }
+  }
+
+  function handleReset() {
+    setSelectedLabel(null);
+    setRevealed(false);
+  }
+
+  return (
+    <div className="my-6 rounded-2xl border border-indigo-500/40 bg-gradient-to-br from-indigo-950/30 via-background to-violet-950/20 p-5 sm:p-6 shadow-lg shadow-indigo-950/30">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-500/20 pb-3 mb-4">
+        <div className="flex items-center gap-2">
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/20 text-indigo-400">
+            <Sparkles className="h-4 w-4" />
+          </span>
+          <div>
+            <h4 className="text-sm font-bold text-indigo-300 uppercase tracking-wider">
+              Pausa Rápida de Fixação (Active Recall)
+            </h4>
+            <p className="text-xs text-muted-foreground">
+              Teste seu entendimento antes de avançar para a próxima seção
+            </p>
+          </div>
+        </div>
+
+        {revealed && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handleReset}
+            className="h-7 text-xs text-muted-foreground hover:text-foreground"
+          >
+            <RotateCcw className="h-3 w-3 mr-1" />
+            Tentar Novamente
+          </Button>
+        )}
+      </div>
+
+      <div className="space-y-4">
+        <p className="text-base sm:text-lg font-bold text-foreground leading-snug">
+          {checkpoint.question}
+        </p>
+
+        <div className="space-y-2">
+          {checkpoint.options.map((opt) => {
+            const isSelected = selectedLabel === opt.label;
+            return (
+              <button
+                key={opt.label}
+                type="button"
+                disabled={revealed}
+                onClick={() => handleSelect(opt.label)}
+                className={cn(
+                  'w-full flex items-start gap-3 rounded-xl border p-3.5 text-left text-sm transition-all',
+                  !revealed && 'border-border/70 bg-background/50 hover:border-indigo-500/50 hover:bg-indigo-500/5 cursor-pointer',
+                  revealed && opt.isCorrect && 'border-emerald-500/70 bg-emerald-500/15 text-emerald-200 font-semibold',
+                  revealed && isSelected && !opt.isCorrect && 'border-rose-500/70 bg-rose-500/15 text-rose-200'
+                )}
+              >
+                <span
+                  className={cn(
+                    'flex h-6 w-6 shrink-0 items-center justify-center rounded-md border font-bold text-xs',
+                    !revealed && 'border-border bg-muted/30 text-muted-foreground',
+                    revealed && opt.isCorrect && 'border-emerald-500 bg-emerald-500 text-black',
+                    revealed && isSelected && !opt.isCorrect && 'border-rose-500 bg-rose-500 text-white'
+                  )}
+                >
+                  {opt.label}
+                </span>
+                <span className="flex-1">{opt.text}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {revealed && selectedOpt && (
+          <div
+            className={cn(
+              'rounded-xl border p-4 text-xs sm:text-sm leading-relaxed space-y-1',
+              selectedOpt.isCorrect
+                ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-200'
+                : 'border-amber-500/40 bg-amber-950/30 text-amber-200'
+            )}
+          >
+            <p className="font-bold flex items-center gap-1.5">
+              {selectedOpt.isCorrect ? (
+                <>
+                  <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                  Excelente! Explicação:
+                </>
+              ) : (
+                <>
+                  <HelpCircle className="h-4 w-4 text-amber-400" />
+                  Atenção ao conceito:
+                </>
+              )}
+            </p>
+            <p className="opacity-95">{selectedOpt.feedback}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// -------------------------------------------------------------
+// 3. PLAYER DE NARRAÇÃO DA AULA (OUVIR AULA COM VOZ CALMA / SELETOR)
+// -------------------------------------------------------------
+function cleanTextForNaturalSpeech(raw: string): string {
+  return raw
+    .replace(/\*\*/g, '')
+    .replace(/###/g, '')
+    .replace(/##/g, '')
+    .replace(/`/g, '')
+    .replace(/>/g, '')
+    .replace(/QA\b/g, 'Q. A.')
+    .replace(/CTFL\b/g, 'C. T. F. L.')
+    .replace(/ISTQB\b/g, 'I. S. T. Q. B.')
+    .replace(/BSTQB\b/g, 'B. S. T. Q. B.')
+    .replace(/vs\./gi, 'versus')
+    .replace(/e\.g\./gi, 'por exemplo')
+    .replace(/i\.e\./gi, 'isto é')
+    .replace(/[-*•]\s+/g, '. ')
+    .replace(/\n\s*\n/g, '. ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getVoiceLabel(voice: SpeechSynthesisVoice): string {
+  const name = voice.name;
+  const isFemale =
+    name.includes('Francisca') ||
+    name.includes('Maria') ||
+    name.includes('Leticia') ||
+    name.includes('Luciana') ||
+    name.includes('Brenda') ||
+    name.includes('Yara') ||
+    name.includes('Vitória') ||
+    name.includes('Google português') ||
+    name.toLowerCase().includes('female');
+
+  const isNatural =
+    name.toLowerCase().includes('natural') ||
+    name.toLowerCase().includes('online') ||
+    name.toLowerCase().includes('neural');
+
+  const cleanName = name
+    .replace(/Microsoft /g, '')
+    .replace(/Online \(Natural\) - /g, '')
+    .replace(/Portuguese \(Brazil\)/g, '')
+    .replace(/\(Brazil\)/g, '')
+    .replace(/-/g, '')
+    .trim();
+
+  if (isFemale && isNatural) return `🌸 ${cleanName} (Feminina Calma)`;
+  if (isFemale) return `👩 ${cleanName} (Feminina)`;
+  return `🎙️ ${cleanName}`;
+}
+
+export function AudioLessonPlayer({
+  title,
+  textToRead,
+}: {
+  title: string;
+  textToRead: string;
+}) {
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  const [isPaused, setIsPaused] = React.useState(false);
+  const [rate, setRate] = React.useState<number>(0.95);
+  const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoiceUri, setSelectedVoiceUri] = React.useState<string>('');
+  const { toast } = useToast();
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+
+    function populateVoices() {
+      const allVoices = window.speechSynthesis.getVoices();
+      if (!allVoices || allVoices.length === 0) return;
+
+      // Filtra vozes em português prioritariamente
+      const ptVoices = allVoices.filter(
+        (v) =>
+          v.lang.toLowerCase().startsWith('pt') ||
+          v.lang.toLowerCase().includes('br')
+      );
+      const list = ptVoices.length > 0 ? ptVoices : allVoices;
+      setVoices(list);
+
+      // Verifica se o usuário já salvou uma preferência de voz anterior
+      try {
+        const saved = localStorage.getItem('ctfl_preferred_voice_uri');
+        if (saved && list.some((v) => v.voiceURI === saved)) {
+          setSelectedVoiceUri(saved);
+          return;
+        }
+      } catch {}
+
+      // Prioriza voz feminina natural e calma:
+      // 1. Francisca (Microsoft Natural Online)
+      // 2. Thalita (Microsoft Natural Online)
+      // 3. Maria
+      // 4. Letícia, Luciana, Brenda
+      // 5. Google português do Brasil
+      const preferred =
+        list.find((v) => v.name.includes('Francisca')) ||
+        list.find((v) => v.name.includes('Thalita')) ||
+        list.find((v) => v.name.includes('Maria')) ||
+        list.find((v) => v.name.includes('Leticia')) ||
+        list.find((v) => v.name.includes('Luciana')) ||
+        list.find((v) => v.name.includes('Google português')) ||
+        list.find((v) => v.name.toLowerCase().includes('female')) ||
+        list[0];
+
+      if (preferred) {
+        setSelectedVoiceUri(preferred.voiceURI);
+      }
+    }
+
+    populateVoices();
+    window.speechSynthesis.onvoiceschanged = populateVoices;
+
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  function handlePlay() {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      toast({
+        title: 'Síntese de voz indisponível',
+        description: 'Seu navegador não suporta a API de áudio nativa.',
+        variant: 'error',
+      });
+      return;
+    }
+
+    if (isPaused) {
+      window.speechSynthesis.resume();
+      setIsPaused(false);
+      setIsPlaying(true);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const cleanText = cleanTextForNaturalSpeech(textToRead);
+    const utterance = new SpeechSynthesisUtterance(`${title}. ${cleanText}`);
+
+    const chosenVoice = voices.find((v) => v.voiceURI === selectedVoiceUri);
+    if (chosenVoice) {
+      utterance.voice = chosenVoice;
+      utterance.lang = chosenVoice.lang;
+    } else {
+      utterance.lang = 'pt-BR';
+    }
+
+    // Tom e ritmo calmo, natural e suave
+    utterance.rate = rate;
+    utterance.pitch = 1.0;
+
+    utterance.onend = () => {
+      setIsPlaying(false);
+      setIsPaused(false);
+    };
+
+    utterance.onerror = () => {
+      setIsPlaying(false);
+      setIsPaused(false);
+    };
+
+    window.speechSynthesis.speak(utterance);
+    setIsPlaying(true);
+    setIsPaused(false);
+  }
+
+  function handlePause() {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.pause();
+      setIsPaused(true);
+      setIsPlaying(false);
+    }
+  }
+
+  function handleStop() {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setIsPlaying(false);
+      setIsPaused(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/30 via-background to-violet-950/20 p-3.5 shadow-sm">
+      <div className="flex items-center gap-2.5">
+        <span
+          className={cn(
+            'flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 shrink-0',
+            isPlaying && 'animate-pulse text-indigo-300 ring-2 ring-indigo-500/50'
+          )}
+        >
+          <Volume2 className="h-4 w-4" />
+        </span>
+        <div>
+          <div className="flex items-center gap-2">
+            <p className="text-xs font-bold text-indigo-300">
+              {isPlaying ? 'Narrando Aula em Áudio...' : 'Ouvir Aula em Áudio'}
+            </p>
+            <Badge variant="purple" className="text-[10px] h-4 px-1.5 font-normal">
+              Voz Calma
+            </Badge>
+          </div>
+          <p className="text-[11px] text-muted-foreground hidden sm:block">
+            Narração suave e natural para estudar sem cansaço visual
+          </p>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        {/* Seletor de Voz */}
+        {voices.length > 0 && (
+          <select
+            value={selectedVoiceUri}
+            onChange={(e) => {
+              const val = e.target.value;
+              setSelectedVoiceUri(val);
+              try {
+                localStorage.setItem('ctfl_preferred_voice_uri', val);
+              } catch {}
+              if (isPlaying) {
+                handleStop();
+                setTimeout(handlePlay, 100);
+              }
+            }}
+            className="h-8 max-w-[190px] truncate rounded-lg border border-border/70 bg-background/70 px-2 py-0.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            title="Escolha a voz para a narração"
+          >
+            {voices.map((v) => (
+              <option key={v.voiceURI} value={v.voiceURI}>
+                {getVoiceLabel(v)}
+              </option>
+            ))}
+          </select>
+        )}
+
+        {/* Velocidade de Narração */}
+        <div className="flex items-center rounded-lg border border-border/60 bg-background/60 p-0.5 text-xs">
+          {[
+            { val: 0.9, label: '0.9x Calma' },
+            { val: 1.0, label: '1x' },
+            { val: 1.25, label: '1.25x' },
+          ].map((r) => (
+            <button
+              key={r.val}
+              type="button"
+              onClick={() => {
+                setRate(r.val);
+                if (isPlaying) {
+                  handleStop();
+                  setTimeout(handlePlay, 100);
+                }
+              }}
+              className={cn(
+                'rounded px-2 py-0.5 font-medium transition',
+                rate === r.val
+                  ? 'bg-indigo-500 text-white font-bold'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+            >
+              {r.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Botões Play / Pause / Stop */}
+        {isPlaying ? (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handlePause}
+            className="h-8 border-indigo-500/40 text-indigo-300"
+          >
+            <Pause className="h-3.5 w-3.5 mr-1" />
+            Pausar
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            onClick={handlePlay}
+            className="h-8 shadow-sm font-semibold"
+          >
+            <Play className="h-3.5 w-3.5 mr-1" />
+            {isPaused ? 'Continuar' : 'Ouvir Aula'}
+          </Button>
+        )}
+
+        {(isPlaying || isPaused) && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handleStop}
+            className="h-8 px-2 text-muted-foreground hover:text-rose-400"
+            title="Parar áudio"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// -------------------------------------------------------------
+// 4. LABORATÓRIO PRÁTICO COM ABAS INTERATIVAS (WEB / API / SQL)
+// -------------------------------------------------------------
+export function InteractivePracticalLab({
+  practicalExamplesText,
+  fontSize = 'base',
+}: {
+  practicalExamplesText: string;
+  fontSize?: FontSizeOption;
+}) {
+  const [activeTab, setActiveTab] = React.useState<'ALL' | 'WEB' | 'API' | 'SQL'>('ALL');
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2 border-b border-border/70 pb-3">
+        <span className="text-xs font-semibold text-muted-foreground mr-1">
+          Filtrar Exemplos:
+        </span>
+        <Button
+          type="button"
+          size="sm"
+          variant={activeTab === 'ALL' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('ALL')}
+          className="h-7 text-xs"
+        >
+          <Code2 className="h-3.5 w-3.5 mr-1" />
+          Todos os Cenários
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant={activeTab === 'WEB' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('WEB')}
+          className="h-7 text-xs"
+        >
+          <Globe className="h-3.5 w-3.5 mr-1" />
+          Web & Telas
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant={activeTab === 'API' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('API')}
+          className="h-7 text-xs"
+        >
+          <Server className="h-3.5 w-3.5 mr-1" />
+          APIs & JSON
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant={activeTab === 'SQL' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('SQL')}
+          className="h-7 text-xs"
+        >
+          <Database className="h-3.5 w-3.5 mr-1" />
+          Bancos de Dados
+        </Button>
+      </div>
+
+      <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/5 p-5 sm:p-6">
+        <FormattedText text={practicalExamplesText} fontSize={fontSize} />
+      </div>
+    </div>
+  );
+}
