@@ -1,0 +1,9 @@
+export const XP_RULES = {
+  LESSON_COMPLETED: 30,
+  EXERCISE_CORRECT: 15,
+  FLASHCARD_REVIEWED: 5,
+  EXAM_COMPLETED: 80,
+  EXAM_PASSED: 150,
+} as const;
+
+export type XPEventType = keyof typeof XP_RULES | 'ACHIEVEMENT_UNLOCKED';

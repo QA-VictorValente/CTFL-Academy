@@ -5,11 +5,14 @@ export default defineConfig({
   test: {
     environment: 'node',
     globals: true,
-    include: ['tests/unit/**/*.test.ts', 'tests/integration/**/*.test.ts'],
+    include: ['tests/**/*.test.ts'],
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@backend': path.resolve(__dirname, './src/backend'),
+      '@frontend': path.resolve(__dirname, './src/frontend'),
+      '@shared': path.resolve(__dirname, './src/shared'),
     },
   },
 });
