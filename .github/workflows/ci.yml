@@ -1,4 +1,4 @@
-name: CTFL Academy CI
+name: CTFL Academy CI & Quality Gate
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     branches: [main, master]
 
 jobs:
-  verify-and-test:
-    name: Typecheck, Lint, Unit/Integration Tests, Build & E2E
+  quality-gate-pipeline:
+    name: Strict 100% Quality Gate (Typecheck, Lint, Unit, Integration, API, Web & k6)
     runs-on: ubuntu-latest
 
     services:
@@ -31,41 +31,63 @@ jobs:
       DIRECT_URL: postgresql://ctfl_user:ctfl_password@localhost:5432/ctfl_academy?schema=public
       AUTH_SECRET: ci-secret-key-ctfl-academy-2026-istqb-401-secure
       NEXT_PUBLIC_APP_URL: http://localhost:3000
+      DISABLE_RATE_LIMIT: 'true'
 
     steps:
-      - name: Checkout repository
+      - name: 1. Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
+      - name: 2. Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: 3. Setup Grafana k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: 4. Install dependencies
         run: npm ci
 
-      - name: Generate Prisma Client & Apply Migrations
+      - name: 5. Generate Prisma Client & Run Seed
         run: |
           npx prisma generate
           npx prisma migrate deploy
           npm run db:seed
           npm run admin:create
 
-      - name: Run TypeScript Typecheck
+      - name: 6. Run TypeScript Typecheck (Gate 1)
         run: npm run typecheck
 
-      - name: Run ESLint
+      - name: 7. Run ESLint (Gate 2)
         run: npm run lint
 
-      - name: Run Vitest Unit & Integration Tests
+      - name: 8. Run Vitest Unit & Integration Suite (Gate 3)
         run: npm run test
 
-      - name: Build Production Next.js Application
+      - name: 9. Build Production Next.js Application (Gate 4)
         run: npm run build
 
-      - name: Install Playwright Chromium
+      - name: 10. Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright E2E Suite
+      - name: 11. Start Server in Background & Wait for Ready
+        run: |
+          npm run start &
+          npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: 12. Run Playwright HTTP API Suite (Gate 5)
+        run: npm run test:api:pw
+
+      - name: 13. Run Playwright Web E2E Suite (Gate 6)
+        run: npm run test:web
+
+      - name: 14. Run Playwright Complete E2E Suite (Gate 7)
         run: npm run test:e2e
+
+      - name: 15. Run k6 Performance Smoke Test (Gate 8)
+        run: npm run test:performance:smoke
+
+      - name: 16. Quality Gate Status
+        if: success()
+        run: echo "✅ QUALITY GATE PASSED 100%! Ready to deploy."
