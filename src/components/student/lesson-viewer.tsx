@@ -98,8 +98,29 @@ export function LessonViewer({
   const [fontSize, setFontSize] = React.useState<FontSizeOption>('lg');
 
   // Modo de visualização: Trilha Interativa (Passo a Passo) ou Leitura Contínua
-  const [studyMode, setStudyMode] = React.useState<StudyMode>('TRACK');
+  const [studyMode, setStudyMode] = React.useState<StudyMode>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('ctfl_study_mode');
+        if (saved === 'FULL' || saved === 'TRACK') return saved;
+      } catch {}
+    }
+    return 'TRACK';
+  });
   const [currentStep, setCurrentStep] = React.useState(1);
+
+  React.useEffect(() => {
+    if (lesson.isCompleted) {
+      setCompleted(true);
+    }
+  }, [lesson.isCompleted]);
+
+  const changeStudyMode = React.useCallback((mode: StudyMode) => {
+    setStudyMode(mode);
+    try {
+      localStorage.setItem('ctfl_study_mode', mode);
+    } catch {}
+  }, []);
 
   // Modo foco tela cheia
   const [focusMode, setFocusMode] = React.useState(false);
@@ -396,7 +417,7 @@ export function LessonViewer({
           <div className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/60 p-1">
             <button
               type="button"
-              onClick={() => setStudyMode('TRACK')}
+              onClick={() => changeStudyMode('TRACK')}
               className={cn(
                 'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition',
                 studyMode === 'TRACK'
@@ -409,7 +430,7 @@ export function LessonViewer({
             </button>
             <button
               type="button"
-              onClick={() => setStudyMode('FULL')}
+              onClick={() => changeStudyMode('FULL')}
               className={cn(
                 'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition',
                 studyMode === 'FULL'

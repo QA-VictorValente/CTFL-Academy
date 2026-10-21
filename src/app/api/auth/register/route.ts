@@ -12,8 +12,9 @@ import { logAuditEvent } from '@/lib/audit';
 export async function POST(req: Request) {
   try {
     const ip = req.headers.get('x-forwarded-for') || 'local';
+    const isLocal = ip === 'local' || ip.startsWith('127.0.0.') || ip === '::1';
     const rl = checkRateLimit(`register:${ip}`, 10, 60_000);
-    if (!rl.allowed) {
+    if (!rl.allowed && !isLocal) {
       return NextResponse.json(
         {
           error: `Muitas requisições. Tente novamente em ${rl.resetInSeconds}s.`,

@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests/e2e',
+  testDir: './tests',
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: 0,
@@ -14,7 +14,20 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'chromium',
+      name: 'api',
+      testDir: './tests/api',
+      testMatch: /.*\.api\.spec\.ts/,
+    },
+    {
+      name: 'web',
+      testDir: './tests/web',
+      testMatch: /.*\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'e2e',
+      testDir: './tests/e2e',
+      testMatch: /.*\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] },
     },
   ],

@@ -29,9 +29,16 @@
     "test:backend": "vitest run tests/unit/backend tests/integration",
     "test:frontend": "vitest run tests/unit/frontend",
     "test:api": "vitest run tests/api",
+    "test:api:pw": "playwright test --project=api",
+    "test:web": "playwright test --project=web",
     "test:integration": "vitest run tests/integration",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:performance": "k6 run tests/performance/smoke.k6.js",
+    "test:performance:smoke": "k6 run tests/performance/smoke.k6.js",
+    "test:performance:load": "k6 run tests/performance/load.k6.js",
+    "test:performance:stress": "k6 run tests/performance/stress.k6.js",
+    "pipeline": "tsx scripts/run-pipeline.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

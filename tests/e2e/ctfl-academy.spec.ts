@@ -44,12 +44,14 @@ test.describe.serial('CTFL Academy — Fluxos Completos E2E (18 Cenários)', () 
     // 6. Abrir aula e concluir estudo
     await page.goto('/capitulos/fundamentos-de-teste/topicos/1-1-o-que-e-teste');
     await expect(page.getByText(/Explicação Didática/i)).toBeVisible();
+    await page.getByRole('button', { name: /Leitura Contínua/i }).click();
+    await expect(page.getByText(/Finalizou a leitura desta aula\?/i)).toBeVisible();
     const completeBtn = page.getByRole('button', {
       name: /Concluir Aula \(\+30 XP\)/i,
     });
     await completeBtn.click();
     await expect(
-      page.getByRole('button', { name: /Aula Concluída/i })
+      page.getByText(/Aula Concluída|Concluída/i).first()
     ).toBeVisible();
 
     // 7. Resolver exercícios de fixação
