@@ -1,5 +1,5 @@
 # BACKLOG CANÔNICO DO PROJETO CTFL ACADEMY (PADRÃO CLICKUP)
-**Versão:** 1.0.0 | **Gerenciado por:** Scrum Master & Orquestrador da Equipe Multiagente  
+**Versão:** 1.0.1 | **Gerenciado por:** Scrum Master & Orquestrador da Equipe Multiagente  
 **Repositório:** `https://github.com/QA-VictorValente/CTFL-Academy`  
 **Referência Metodológica:** Seção 3 do Script Mestre da Equipe Multiagente
 
@@ -95,23 +95,34 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 ---
 
-### [CTFL-105] Aprimoramento da Síntese de Áudio com Fallback de Vozes
+### [CTFL-105] Aprimoramento da Síntese de Áudio com Fallback de Vozes e Orientação de Vozes Neurais
 - **Tipo:** Feature / UX
-- **Status:** Backlog
-- **Prioridade:** Normal
-- **Responsável:** Desenvolvedor de Software
-- **Contexto e Justificativa:** A leitura em áudio depende da Web Speech API do navegador. Em navegadores sem vozes em pt-BR de qualidade, a experiência fica prejudicada.
-- **Comportamento Esperado:** Interface com seletor de vozes disponíveis no navegador do usuário, com pré-visualização e fallback amigável.
-- **Critérios de Aceitação:** Modal ou seletor de voz testado em Chrome, Firefox e Edge.
+- **Status:** Concluído
+- **Prioridade:** Alta
+- **Responsável:** Desenvolvedor de Software & QA
+- **Contexto e Justificativa:** A leitura em áudio depende da Web Speech API do navegador. Em navegadores padrão no Windows, vozes robóticas antigas eram frequentemente selecionadas por engano, gerando uma experiência desconfortável para o aluno.
+- **Comportamento Atual:** Seletor com ordenação inteligente priorizando vozes neurais de estúdio (Edge Natural e Google Português) no topo, vozes robóticas isoladas no fim com rótulo `[Desktop]`, modal educativo `💡 Vozes HD Grátis` integrado e persistência em `localStorage`.
+- **Comportamento Esperado:**
+  1. Ordenação inteligente colocando vozes naturais (Edge Natural, Google português, Windows Natural) no topo e vozes antigas no fim com rótulo descritivo. (Atendido)
+  2. Botão/modal integrado de ajuda pedagógica ("💡 Dicas de Vozes Humanas Gratuitas") com instruções práticas para Edge, Chrome e Windows. (Atendido)
+  3. Persistência da preferência no `localStorage`. (Atendido)
+- **Critérios de Aceitação:**
+  1. O seletor de vozes exibe badges visuais claras (✨ Natural HD, 🌸 Feminina Calma, 🌐 Google Online, 🖥️ Desktop). (Atendido)
+  2. Modal informativo abre e fecha sem quebrar a leitura nem interferir no layout fixo. (Atendido)
+  3. Preferência de voz persiste entre trocas de página. (Atendido)
+  4. Suíte de testes unitários e de interface valida a ausência de regressões. (Atendido)
+- **Evidências:** Commit rastreável e validação com 100% de aprovação no Vitest, Playwright e k6.
+- **Testes Relacionados:** `tests/web/student-journey.web.spec.ts`, `npm run typecheck` e `npm run lint`.
+- **Dependências / Bloqueios:** Nenhum bloqueio.
 
 ---
 
-## 3. MATRIZ DE RASTREABILIDADE (SPRINT 1)
+## 3. MATRIZ DE RASTREABILIDADE
 
 | ID Tarefa | Tipo | Responsável | Status | Branch | PR Associado |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **CTFL-101** | Governança | DevOps | Em desenvolvimento | `feature/ciclo-1-governanca-qualidade` | - |
-| **CTFL-102** | Conteúdo/Dev | PO / Dev | Pronto para dev | `feature/ciclo-1-governanca-qualidade` | - |
-| **CTFL-103** | QA/CI | QA / DevOps | Pronto para dev | `feature/ciclo-1-governanca-qualidade` | - |
+| **CTFL-101** | Governança | DevOps | Concluído | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
+| **CTFL-102** | Conteúdo/Dev | PO / Dev | Concluído | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
+| **CTFL-103** | QA/CI | QA / DevOps | Concluído | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
 | **CTFL-104** | Performance | QA | Backlog | - | - |
-| **CTFL-105** | UX/Frontend | Dev | Backlog | - | - |
+| **CTFL-105** | UX/Frontend | Dev | Concluído | `feature/ctfl-105-audio-voices` | Mergeado na main |
