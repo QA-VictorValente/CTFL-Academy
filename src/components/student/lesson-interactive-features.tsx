@@ -17,6 +17,7 @@ import {
   Globe,
   Database,
   Server,
+  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -407,23 +408,39 @@ function cleanTextForNaturalSpeech(raw: string): string {
     .trim();
 }
 
+function getVoiceQualityScore(voice: SpeechSynthesisVoice): number {
+  const name = voice.name.toLowerCase();
+  // Vozes neurais online de máxima naturalidade (Edge / Azure Cognitive)
+  if (name.includes('francisca') || name.includes('thalita')) return 100;
+  if (name.includes('natural') || name.includes('online') || name.includes('neural')) return 95;
+  if (name.includes('antonio')) return 90;
+  // Voz neural remota do Chrome
+  if (name.includes('google português') || name.includes('google')) return 80;
+  // Vozes modernas de smartphone ou complementares
+  if (
+    name.includes('leticia') ||
+    name.includes('luciana') ||
+    name.includes('yara') ||
+    name.includes('vitoria') ||
+    name.includes('vitória')
+  ) {
+    return 70;
+  }
+  // Vozes antigas legadas de Desktop (robóticas SAPI)
+  if (name.includes('desktop') || name.includes('sapi')) return 10;
+  return 40;
+}
+
 function getVoiceLabel(voice: SpeechSynthesisVoice): string {
   const name = voice.name;
-  const isFemale =
-    name.includes('Francisca') ||
-    name.includes('Maria') ||
-    name.includes('Leticia') ||
-    name.includes('Luciana') ||
-    name.includes('Brenda') ||
-    name.includes('Yara') ||
-    name.includes('Vitória') ||
-    name.includes('Google português') ||
-    name.toLowerCase().includes('female');
+  const lower = name.toLowerCase();
 
   const isNatural =
-    name.toLowerCase().includes('natural') ||
-    name.toLowerCase().includes('online') ||
-    name.toLowerCase().includes('neural');
+    lower.includes('natural') ||
+    lower.includes('online') ||
+    lower.includes('neural');
+  const isGoogle = lower.includes('google');
+  const isDesktop = lower.includes('desktop') || lower.includes('sapi');
 
   const cleanName = name
     .replace(/Microsoft /g, '')
@@ -433,8 +450,21 @@ function getVoiceLabel(voice: SpeechSynthesisVoice): string {
     .replace(/-/g, '')
     .trim();
 
-  if (isFemale && isNatural) return `🌸 ${cleanName} (Feminina Calma)`;
-  if (isFemale) return `👩 ${cleanName} (Feminina)`;
+  if (name.includes('Francisca') || name.includes('Thalita')) {
+    return `🌸 ${cleanName} (Natural HD)`;
+  }
+  if (name.includes('Antonio')) {
+    return `🎙️ ${cleanName} (Natural HD)`;
+  }
+  if (isNatural) {
+    return `✨ ${cleanName} (Natural HD)`;
+  }
+  if (isGoogle) {
+    return `🌐 Google Português (Online HD)`;
+  }
+  if (isDesktop) {
+    return `🖥️ ${cleanName} (Desktop)`;
+  }
   return `🎙️ ${cleanName}`;
 }
 
@@ -450,6 +480,7 @@ export function AudioLessonPlayer({
   const [rate, setRate] = React.useState<number>(0.95);
   const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoiceUri, setSelectedVoiceUri] = React.useState<string>('');
+  const [showVoiceTips, setShowVoiceTips] = React.useState(false);
   const { toast } = useToast();
 
   React.useEffect(() => {
@@ -466,35 +497,25 @@ export function AudioLessonPlayer({
           v.lang.toLowerCase().includes('br')
       );
       const list = ptVoices.length > 0 ? ptVoices : allVoices;
-      setVoices(list);
+
+      // Ordena estritamente por qualidade (vozes neurais/naturais e Google no topo, robóticas de desktop no fim)
+      const sorted = [...list].sort(
+        (a, b) => getVoiceQualityScore(b) - getVoiceQualityScore(a)
+      );
+      setVoices(sorted);
 
       // Verifica se o usuário já salvou uma preferência de voz anterior
       try {
         const saved = localStorage.getItem('ctfl_preferred_voice_uri');
-        if (saved && list.some((v) => v.voiceURI === saved)) {
+        if (saved && sorted.some((v) => v.voiceURI === saved)) {
           setSelectedVoiceUri(saved);
           return;
         }
       } catch {}
 
-      // Prioriza voz feminina natural e calma:
-      // 1. Francisca (Microsoft Natural Online)
-      // 2. Thalita (Microsoft Natural Online)
-      // 3. Maria
-      // 4. Letícia, Luciana, Brenda
-      // 5. Google português do Brasil
-      const preferred =
-        list.find((v) => v.name.includes('Francisca')) ||
-        list.find((v) => v.name.includes('Thalita')) ||
-        list.find((v) => v.name.includes('Maria')) ||
-        list.find((v) => v.name.includes('Leticia')) ||
-        list.find((v) => v.name.includes('Luciana')) ||
-        list.find((v) => v.name.includes('Google português')) ||
-        list.find((v) => v.name.toLowerCase().includes('female')) ||
-        list[0];
-
-      if (preferred) {
-        setSelectedVoiceUri(preferred.voiceURI);
+      // Se não há preferência anterior, seleciona automaticamente a voz de melhor qualidade disponível
+      if (sorted.length > 0) {
+        setSelectedVoiceUri(sorted[0].voiceURI);
       }
     }
 
@@ -574,126 +595,207 @@ export function AudioLessonPlayer({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/30 via-background to-violet-950/20 p-3.5 shadow-sm">
-      <div className="flex items-center gap-2.5">
-        <span
-          className={cn(
-            'flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 shrink-0',
-            isPlaying && 'animate-pulse text-indigo-300 ring-2 ring-indigo-500/50'
-          )}
-        >
-          <Volume2 className="h-4 w-4" />
-        </span>
-        <div>
-          <div className="flex items-center gap-2">
-            <p className="text-xs font-bold text-indigo-300">
-              {isPlaying ? 'Narrando Aula em Áudio...' : 'Ouvir Aula em Áudio'}
-            </p>
-            <Badge variant="purple" className="text-[10px] h-4 px-1.5 font-normal">
-              Voz Calma
-            </Badge>
-          </div>
-          <p className="text-[11px] text-muted-foreground hidden sm:block">
-            Narração suave e natural para estudar sem cansaço visual
-          </p>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2">
-        {/* Seletor de Voz */}
-        {voices.length > 0 && (
-          <select
-            value={selectedVoiceUri}
-            onChange={(e) => {
-              const val = e.target.value;
-              setSelectedVoiceUri(val);
-              try {
-                localStorage.setItem('ctfl_preferred_voice_uri', val);
-              } catch {}
-              if (isPlaying) {
-                handleStop();
-                setTimeout(handlePlay, 100);
-              }
-            }}
-            className="h-8 max-w-[190px] truncate rounded-lg border border-border/70 bg-background/70 px-2 py-0.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            title="Escolha a voz para a narração"
+    <>
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/30 via-background to-violet-950/20 p-3.5 shadow-sm">
+        <div className="flex items-center gap-2.5">
+          <span
+            className={cn(
+              'flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 shrink-0',
+              isPlaying && 'animate-pulse text-indigo-300 ring-2 ring-indigo-500/50'
+            )}
           >
-            {voices.map((v) => (
-              <option key={v.voiceURI} value={v.voiceURI}>
-                {getVoiceLabel(v)}
-              </option>
-            ))}
-          </select>
-        )}
+            <Volume2 className="h-4 w-4" />
+          </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <p className="text-xs font-bold text-indigo-300">
+                {isPlaying ? 'Narrando Aula em Áudio...' : 'Ouvir Aula em Áudio'}
+              </p>
+              <Badge variant="purple" className="text-[10px] h-4 px-1.5 font-normal">
+                Voz Calma
+              </Badge>
+            </div>
+            <p className="text-[11px] text-muted-foreground hidden sm:block">
+              Narração suave e natural para estudar sem cansaço visual
+            </p>
+          </div>
+        </div>
 
-        {/* Velocidade de Narração */}
-        <div className="flex items-center rounded-lg border border-border/60 bg-background/60 p-0.5 text-xs">
-          {[
-            { val: 0.9, label: '0.9x Calma' },
-            { val: 1.0, label: '1x' },
-            { val: 1.25, label: '1.25x' },
-          ].map((r) => (
-            <button
-              key={r.val}
-              type="button"
-              onClick={() => {
-                setRate(r.val);
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Seletor de Voz */}
+          {voices.length > 0 && (
+            <select
+              value={selectedVoiceUri}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSelectedVoiceUri(val);
+                try {
+                  localStorage.setItem('ctfl_preferred_voice_uri', val);
+                } catch {}
                 if (isPlaying) {
                   handleStop();
                   setTimeout(handlePlay, 100);
                 }
               }}
-              className={cn(
-                'rounded px-2 py-0.5 font-medium transition',
-                rate === r.val
-                  ? 'bg-indigo-500 text-white font-bold'
-                  : 'text-muted-foreground hover:text-foreground'
-              )}
+              className="h-8 max-w-[210px] truncate rounded-lg border border-border/70 bg-background/70 px-2 py-0.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
+              title="Escolha a voz para a narração"
             >
-              {r.label}
-            </button>
-          ))}
+              {voices.map((v) => (
+                <option key={v.voiceURI} value={v.voiceURI}>
+                  {getVoiceLabel(v)}
+                </option>
+              ))}
+            </select>
+          )}
+
+          {/* Dica de Vozes HD */}
+          <button
+            type="button"
+            onClick={() => setShowVoiceTips(true)}
+            className="flex items-center gap-1 text-[11px] text-indigo-300 hover:text-indigo-200 bg-indigo-500/10 hover:bg-indigo-500/20 px-2 py-1 rounded-lg border border-indigo-500/30 transition"
+            title="Dicas de como usar vozes ultra-realistas gratuitamente"
+          >
+            <Sparkles className="h-3 w-3 text-amber-400" />
+            <span className="font-semibold hidden sm:inline">Vozes HD Grátis</span>
+          </button>
+
+          {/* Velocidade de Narração */}
+          <div className="flex items-center rounded-lg border border-border/60 bg-background/60 p-0.5 text-xs">
+            {[
+              { val: 0.9, label: '0.9x Calma' },
+              { val: 1.0, label: '1x' },
+              { val: 1.25, label: '1.25x' },
+            ].map((r) => (
+              <button
+                key={r.val}
+                type="button"
+                onClick={() => {
+                  setRate(r.val);
+                  if (isPlaying) {
+                    handleStop();
+                    setTimeout(handlePlay, 100);
+                  }
+                }}
+                className={cn(
+                  'rounded px-2 py-0.5 font-medium transition',
+                  rate === r.val
+                    ? 'bg-indigo-500 text-white font-bold'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Botões Play / Pause / Stop */}
+          {isPlaying ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handlePause}
+              className="h-8 border-indigo-500/40 text-indigo-300"
+            >
+              <Pause className="h-3.5 w-3.5 mr-1" />
+              Pausar
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              variant="default"
+              size="sm"
+              onClick={handlePlay}
+              className="h-8 shadow-sm font-semibold"
+            >
+              <Play className="h-3.5 w-3.5 mr-1" />
+              {isPaused ? 'Continuar' : 'Ouvir Aula'}
+            </Button>
+          )}
+
+          {(isPlaying || isPaused) && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleStop}
+              className="h-8 px-2 text-muted-foreground hover:text-rose-400"
+              title="Parar áudio"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+            </Button>
+          )}
         </div>
-
-        {/* Botões Play / Pause / Stop */}
-        {isPlaying ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handlePause}
-            className="h-8 border-indigo-500/40 text-indigo-300"
-          >
-            <Pause className="h-3.5 w-3.5 mr-1" />
-            Pausar
-          </Button>
-        ) : (
-          <Button
-            type="button"
-            variant="default"
-            size="sm"
-            onClick={handlePlay}
-            className="h-8 shadow-sm font-semibold"
-          >
-            <Play className="h-3.5 w-3.5 mr-1" />
-            {isPaused ? 'Continuar' : 'Ouvir Aula'}
-          </Button>
-        )}
-
-        {(isPlaying || isPaused) && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={handleStop}
-            className="h-8 px-2 text-muted-foreground hover:text-rose-400"
-            title="Parar áudio"
-          >
-            <RotateCcw className="h-3.5 w-3.5" />
-          </Button>
-        )}
       </div>
-    </div>
+
+      {/* Modal Educativo: Dicas de Vozes Gratuitas de Alta Fidelidade */}
+      {showVoiceTips && (
+        <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md rounded-2xl border border-indigo-500/40 bg-background/95 backdrop-blur-xl p-5 shadow-2xl space-y-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400">
+                  <Sparkles className="h-4 w-4 text-amber-400" />
+                </span>
+                <div>
+                  <h3 className="font-bold text-sm text-foreground">Como Ouvir com Vozes Humanas (100% Grátis)</h3>
+                  <p className="text-[11px] text-muted-foreground">Livre-se da voz robótica antiga do Windows</p>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowVoiceTips(false)}
+                className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="space-y-2.5 text-xs text-muted-foreground">
+              <div className="rounded-xl border border-indigo-500/30 bg-indigo-950/20 p-3 space-y-1">
+                <p className="font-bold text-indigo-300 flex items-center gap-1.5">
+                  <span>🌸</span> Opção 1: Microsoft Edge (Mais Fácil)
+                </p>
+                <p>
+                  Abra esta página no <strong>Microsoft Edge</strong>. Ele disponibiliza de graça as vozes neurais <strong>Francisca (Natural HD)</strong> e <strong>Thalita (Natural HD)</strong>, com entonação humana ultra-realista de estúdio sem precisar instalar nada!
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-3 space-y-1">
+                <p className="font-bold text-emerald-300 flex items-center gap-1.5">
+                  <span>🌐</span> Opção 2: Google Chrome
+                </p>
+                <p>
+                  No Chrome com internet conectada, selecione no menu acima a opção <strong>&quot;🌐 Google Português (Online HD)&quot;</strong>, muito superior à voz Maria Desktop.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-violet-500/30 bg-violet-950/20 p-3 space-y-1">
+                <p className="font-bold text-violet-300 flex items-center gap-1.5">
+                  <span>💻</span> Opção 3: Vozes Naturais do Windows 11/10
+                </p>
+                <p>
+                  No Windows, abra <em>Configurações &gt; Hora e Idioma &gt; Fala &gt; Adicionar vozes</em> e instale o pacote <strong>Português (Brasil) (Naturais)</strong> para ter vozes fluidas em todos os programas.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-1">
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => setShowVoiceTips(false)}
+                className="h-7 px-3 text-xs font-semibold"
+              >
+                Entendi!
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
