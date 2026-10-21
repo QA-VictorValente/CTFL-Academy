@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { SYLLABUS_CHAPTERS_DATA } from './fixtures/syllabus-content';
 import { QUESTIONS_CH1_TO_3 } from './fixtures/questions-ch1-3';
 import { QUESTIONS_CH4_TO_6 } from './fixtures/questions-ch4-6';
+import { QUESTIONS_CH_EXPANSION } from './fixtures/questions-ch-expansion';
 import {
   SEED_FLASHCARDS,
   SEED_ACHIEVEMENTS,
@@ -202,7 +203,11 @@ async function main() {
   }
 
   // 5. Questões Autorais + Alternativas + Revisão Inicial
-  const allQuestions = [...QUESTIONS_CH1_TO_3, ...QUESTIONS_CH4_TO_6];
+  const allQuestions = [
+    ...QUESTIONS_CH1_TO_3,
+    ...QUESTIONS_CH4_TO_6,
+    ...QUESTIONS_CH_EXPANSION,
+  ];
   for (const qData of allQuestions) {
     const topicRef = topicMap.get(qData.topicCode);
     if (!topicRef) {
