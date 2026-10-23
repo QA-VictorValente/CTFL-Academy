@@ -83,6 +83,9 @@ Dispatch via `task` tool `agent` field:
 
 Manual completo: `docs/orquestracao/MANUAL_ORQUESTRACAO.md` | Contexto central: `docs/orquestracao/CONTEXTO_PROJETO.md`.
 
+### Mandato Inviolável: Orquestração Obrigatória em 100% das Solicitações
+**O Cérebro Central NUNCA trabalha sozinho.** Sempre que o usuário solicitar qualquer demanda (dúvida, bug, refatoração, análise, teste, infraestrutura ou nova funcionalidade), o Orquestrador DEVE OBRIGATORIAMENTE acionar e coordenar os agentes especializados da equipe (`po`, `scrum-master`, `desenvolvedor`, `qa`, `devops`). Em problemas de código e banco, acione no mínimo `desenvolvedor` + `qa`; em infraestrutura/deploy, `devops`; em produto/backlog, `po` + `scrum-master`.
+
 ### Cérebro Central e Equipe Oficial Independente (`.omp/agents/`)
 | Agente (`agent`) | Papel | Foco e Responsabilidade Central |
 |---|---|---|
