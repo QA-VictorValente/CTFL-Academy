@@ -21,8 +21,9 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 10. **Aguardando aprovação:** Validação executiva do PO/Orquestrador.
 11. **Pronto para implantação:** Build e testes do CI 100% verdes.
 12. **Em implantação:** Execução de migração ou deploy.
-13. **Concluído:** Em produção/homologação com smoke tests aprovados.
-14. **Bloqueado:** Impedimento técnico ou dependência externa documentada.
+13. **Teste Pré-Produção:** Card finalizado pela equipe técnica, validado pelo QA e posicionado em ambiente de pré-produção para homologação final antes do deploy definitivo.
+14. **Concluído:** Em produção final com smoke tests aprovados.
+15. **Bloqueado:** Impedimento técnico ou dependência externa documentada.
 
 ---
 
@@ -30,7 +31,8 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 ### [CTFL-101] Governança de Versionamento, Estratégia de Branches e PR Template
 - **Tipo:** Tarefa / DevOps
-- **Status:** Concluído
+- **Status:** Teste Pré-Produção
+- **Comentário de Transição (ClickUp Activity Log):** "💬 [Status -> Teste Pré-Produção] Conclusão técnica homologada: implementado template oficial de Pull Request em `.github/pull_request_template.md`, documentada a estratégia de branches (`feature/*`, `fix/*`, `chore/*`) e convenção de commits semânticos (commit `e9d17ae`). Pipeline de CI validado e merge realizado na main. Liberado para testes e validação de fluxo em pré-produção."
 - **Prioridade:** Alta
 - **Responsável:** DevOps Engineer
 - **Contexto e Justificativa:** O projeto necessita de rastreabilidade formal e proteção contra commits diretos desavisados na branch principal, além de padronizar a submissão de Pull Requests com checklist de qualidade.
@@ -48,7 +50,8 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 ### [CTFL-102] Expansão do Banco de Questões Oficiais CTFL v4.0.1 (K1, K2 e K3)
 - **Tipo:** Feature / Conteúdo Educacional
-- **Status:** Concluído
+- **Status:** Teste Pré-Produção
+- **Comentário de Transição (ClickUp Activity Log):** "💬 [Status -> Teste Pré-Produção] Conclusão técnica homologada: banco expandido de 55 para 80 questões oficiais alinhadas ao Syllabus CTFL v4.0.1 (Capítulos 1 a 6, níveis K1/K2/K3) via fixture `prisma/fixtures/questions-ch-expansion.ts` e seed idempotente (commit `e19b257`). Quatro alternativas por questão com justificativas didáticas individuais. Testes de persistência e API 100% aprovados. Liberado para homologação pedagógica em pré-produção."
 - **Prioridade:** Alta
 - **Responsável:** Product Owner & Desenvolvedor de Software
 - **Contexto e Justificativa:** O banco continha 55 questões publicadas. Para um exame padrão de 40 questões, realizar 2 simulados consecutivos gerava sobreposição excessiva de questões para o estudante.
@@ -68,7 +71,8 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 ### [CTFL-103] Consolidação do Quality Gate de 7 Estágios na Pipeline de CI
 - **Tipo:** Tarefa / QA & DevOps
-- **Status:** Concluído
+- **Status:** Teste Pré-Produção
+- **Comentário de Transição (ClickUp Activity Log):** "💬 [Status -> Teste Pré-Produção] Conclusão técnica homologada: Quality Gate automatizado em 7 estágios via `scripts/run-pipeline.ts` (ESLint, Typecheck, Vitest Unit, Vitest Integration, Playwright API, Playwright Web E2E e k6 Smoke Test) validado com 100% de sucesso em 98.7s (commit `ee2ff48`). Resiliência em falhas e relatórios consolidados ativos. Liberado para homologação em pré-produção."
 - **Prioridade:** Alta
 - **Responsável:** QA Engineer & DevOps Engineer
 - **Contexto e Justificativa:** Garantir que nenhuma alteração possa ser mesclada na aplicação caso algum teste unitário, de API, de interface (E2E) ou de desempenho (k6) falhe.
@@ -86,7 +90,8 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 ### [CTFL-104] Suíte de Testes de Carga e Estresse para Submissão Concorrente
 - **Tipo:** Tarefa / QA
-- **Status:** Concluído
+- **Status:** Teste Pré-Produção
+- **Comentário de Transição (ClickUp Activity Log):** "💬 [Status -> Teste Pré-Produção] Conclusão técnica homologada: suítes de carga (`tests/performance/load.k6.js`) e estresse (`tests/performance/stress.k6.js`) calibradas em `k6.config.js` para 20 a 50 VUs concorrentes com thresholds estritos de $p(95) < 200\text{ms}$ e taxa de falhas $< 1\%$. Validação de QA concluída e typecheck 100% verde. Liberado para homologação de performance em pré-produção."
 - **Prioridade:** Normal
 - **Responsável:** QA Engineer & Desenvolvedor
 - **Contexto e Justificativa:** Validar a resiliência do backend quando múltiplos alunos submetem respostas de simulado e anotações simultaneamente.
@@ -103,7 +108,8 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 ### [CTFL-105] Aprimoramento da Síntese de Áudio com Fallback de Vozes e Orientação de Vozes Neurais
 - **Tipo:** Feature / UX
-- **Status:** Concluído
+- **Status:** Teste Pré-Produção
+- **Comentário de Transição (ClickUp Activity Log):** "💬 [Status -> Teste Pré-Produção] Conclusão técnica homologada: motor Web Speech API aprimorado com ordenação inteligente priorizando vozes neurais HD de estúdio, modal educativo `💡 Vozes HD Grátis` integrado e persistência da preferência em `localStorage`. Testes unitários e de jornada do aluno no Playwright aprovados com 100% de sucesso. Liberado para validação em pré-produção."
 - **Prioridade:** Alta
 - **Responsável:** Desenvolvedor de Software & QA
 - **Contexto e Justificativa:** A leitura em áudio depende da Web Speech API do navegador. Em navegadores padrão no Windows, vozes robóticas antigas eram frequentemente selecionadas por engano, gerando uma experiência desconfortável para o aluno.
@@ -127,7 +133,8 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 ### [CTFL-106] Sincronização Canônica de Documentação (+30 XP, Matriz Cap. 4 = 12, Banco de 80 Questões e Prefixo `LESSON:`)
 - **Tipo:** Tarefa / Qualidade & Documentação (Quick Win)
-- **Status:** Concluído
+- **Status:** Teste Pré-Produção
+- **Comentário de Transição (ClickUp Activity Log):** "💬 [Status -> Teste Pré-Produção] Conclusão técnica homologada: auditoria cruzada (`DOC-QA-01`, `DOC-QA-02`, `DOC-QA-03`) saneada com sincronização de +30 XP em `docs/ROTEIRO_DE_TESTES_QA.md:86`, Cap. 4 = 12 questões em `docs/ROTEIRO_DE_TESTES_QA.md:73`, referências a 80 questões em `README.md` e `docs/DIREITOS_E_FONTES.md`, e prefixo `LESSON:` em `src/backend/services/lesson.service.ts:83`. 26 testes Vitest e typecheck 100% aprovados. Liberado para homologação em pré-produção."
 - **Prioridade:** Alta
 - **Esforço Estimado:** P (Pequeno)
 - **Responsável:** Product Owner, QA Engineer & Desenvolvedor
@@ -200,7 +207,8 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 ### [CTFL-111] Reformulação Visual Anti-Slop e Conforto de Leitura (Light & Dark Mode) com as 3 Skills de Design
 - **Tipo:** Épica / UI-UX & Frontend Architecture (`design-taste-frontend` + `ui-ux-pro-max` + `design-motion-principles`)
-- **Status:** Concluído
+- **Status:** Teste Pré-Produção
+- **Comentário de Transição (ClickUp Activity Log):** "💬 [Status -> Teste Pré-Produção] Conclusão técnica homologada: reformulação visual anti-slop completa executada em 4 fatias atômicas (`CTFL-111A` a `CTFL-111D`). Zeramento de 412 FAIL para 0 FAIL no `lint.mjs` em 102 arquivos de interface, contraste WCAG 2.2 AA em Light (papel editorial) e Dark Mode (grafite/carbono), preservação estrita de 100% dos seletores E2E, 26/26 testes Vitest verdes, `next build` estático de 47 páginas gerado com sucesso e pipeline CI com gate `lint:ui`. Liberado para homologação de design e usabilidade em pré-produção."
 - **Prioridade:** Alta
 - **Esforço Estimado:** M/G (Fatiado em 4 entregas atômicas seguras: `CTFL-111A` a `CTFL-111D`)
 - **Responsável:** Product Owner (`po`), Desenvolvedor (`desenvolvedor`), QA Engineer (`qa`) & DevOps (`devops`)
@@ -230,14 +238,14 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 | ID Tarefa | Tipo | Responsável | Status | Branch | PR Associado |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **CTFL-101** | Governança | DevOps | Concluído | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
-| **CTFL-102** | Conteúdo/Dev | PO / Dev | Concluído | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
-| **CTFL-103** | QA/CI | QA / DevOps | Concluído | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
-| **CTFL-104** | Performance | QA / Dev | Concluído | `refatoracao` | - |
-| **CTFL-105** | UX/Frontend | Dev | Concluído | `feature/ctfl-105-audio-voices` | Mergeado na main |
-| **CTFL-106** | Qualidade/Docs | PO / QA / Dev | Concluído | `refatoracao` | - |
+| **CTFL-101** | Governança | DevOps | Teste Pré-Produção | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
+| **CTFL-102** | Conteúdo/Dev | PO / Dev | Teste Pré-Produção | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
+| **CTFL-103** | QA/CI | QA / DevOps | Teste Pré-Produção | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
+| **CTFL-104** | Performance | QA / Dev | Teste Pré-Produção | `refatoracao` | - |
+| **CTFL-105** | UX/Frontend | Dev | Teste Pré-Produção | `feature/ctfl-105-audio-voices` | Mergeado na main |
+| **CTFL-106** | Qualidade/Docs | PO / QA / Dev | Teste Pré-Produção | `refatoracao` | - |
 | **CTFL-107** | Feature/Estudo | PO / Dev | A analisar | - | - |
 | **CTFL-108** | UX/Portabilidade | Dev / QA | Backlog | - | - |
 | **CTFL-109** | Arquitetura/CI | Dev / DevOps | A analisar | - | - |
 | **CTFL-110** | Segurança/Simulado | Dev / QA | A analisar | - | - |
-| **CTFL-111** | UI-UX/Frontend | PO / Dev / QA / DevOps | Concluído | `refatoracao` | - |
+| **CTFL-111** | UI-UX/Frontend | PO / Dev / QA / DevOps | Teste Pré-Produção | `refatoracao` | - |
