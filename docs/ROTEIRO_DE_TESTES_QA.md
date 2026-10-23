@@ -70,7 +70,7 @@ Ou diretamente via linha de comando:
 - [ ] **CT-07.3 (Pós-estudo):** Voltar ao Dashboard após concluir aulas, exercícios e simulados e conferir se todas as métricas, sequência de dias (streak), sugestões de revisão e o botão **"Continuar de onde parou"** atualizaram em tempo real.
 
 ### 8. Lista de Capítulos (`/capitulos`)
-- [ ] **CT-08.1:** Verificar a listagem dos **6 capítulos oficiais** do Syllabus 4.0.1 com peso na prova (ex.: Cap. 1 = 8 questões, Cap. 4 = 11 questões), quantidade de tópicos e barra de progresso individual.
+- [ ] **CT-08.1:** Verificar a listagem dos **6 capítulos oficiais** do Syllabus 4.0.1 com peso na prova (ex.: Cap. 1 = 8 questões, Cap. 4 = 12 questões), quantidade de tópicos e barra de progresso individual.
 
 ### 9. Página Individual do Capítulo (`/capitulos/[slug]`)
 - [ ] **CT-09.1:** Clicar no **Capítulo 1 (Fundamentos de Teste)** (`/capitulos/fundamentos-de-teste`) e verificar:
@@ -83,7 +83,7 @@ Ou diretamente via linha de comando:
   - Explicação técnica didática, definições do glossário ISTQB, exemplos práticos e aplicação na rotina de QA.
   - Resumo para revisão rápida e lista de questões de fixação vinculadas ao tópico.
 - [ ] **CT-10.2 (Marcar aula como concluída):** Clicar no botão **"Marcar Aula como Concluída"**:
-  - Deve exibir feedback de sucesso (toast), somar **+20 XP** no topo da tela, atualizar a sequência de dias (`1d`) e marcar a aula como concluída.
+  - Deve exibir feedback de sucesso (toast), somar **+30 XP** no topo da tela, atualizar a sequência de dias (`1d`) e marcar a aula como concluída.
 
 ### 11. Exercícios de Fixação (`/exercicios`)
 - [ ] **CT-11.1 (Filtros):** Filtrar questões por Capítulo (ex.: Cap. 4), Nível Cognitivo (`K3`), Dificuldade (`MEDIUM` / `HARD`) ou busca por texto.

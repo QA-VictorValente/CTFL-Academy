@@ -46,7 +46,7 @@ Documentação complementar detalhada disponível na pasta [`docs/`](./docs):
 │   ├── schema.prisma             # Modelagem relacional completa (22 tabelas)
 │   ├── migrations/               # Histórico de migrações SQL
 │   ├── seed.ts                   # Script de seed idempotente
-│   └── fixtures/                 # Conteúdo didático PT-BR, 55 questões, 20 flashcards
+│   └── fixtures/                 # Conteúdo didático PT-BR, 80 questões, 20 flashcards
 ├── scripts/
 │   ├── create-admin.ts           # Provisionamento seguro do primeiro administrador
 │   └── local-postgres.ts         # Servidor PostgreSQL local para ambientes sem Docker

@@ -80,7 +80,7 @@ export async function completeLesson(userId: string, lessonId: string) {
     userId,
     eventType: 'LESSON_COMPLETED',
     points: XP_RULES.LESSON_COMPLETED,
-    idempotencyKey: `lesson:${userId}:${lesson.id}`,
+    idempotencyKey: `LESSON:${userId}:${lesson.id}`,
     activityType: 'LESSON_STUDY',
     description: `Aula concluída: ${lesson.title}`,
     referenceId: lesson.id,

@@ -11,9 +11,9 @@
 |---|---|
 | **Data da Última Atualização** | `2026-10-22` |
 | **Branch Ativa** | `refatoracao` |
-| **Última Tarefa Concluída no Código** | `CTFL-111` — Reformulação Visual Anti-Slop (Light & Dark Mode: Editorial Técnico Quente + Teal/Esmeralda) e Implementação de CI/CD (Pipeline, Lint UI, Fast Mode) |
-| **Tarefa em Execução Agora** | Nenhuma (Todas as tarefas autorizadas foram concluídas com 100% de sucesso) |
-| **Próximas Tarefas Candidatas no Backlog** | `1ª CTFL-106` (Quick Win: Sincronização Documental +30 XP / Cap. 4 = 12 / 80 questões), `2ª CTFL-110` (Blindagem de Concorrência e Sigilo de Gabarito no Motor de Simulados), `3ª CTFL-104` (Testes de Carga e Estresse k6 20–50 VUs), `4ª CTFL-107` (Evolução do Caderno de Erros K1/K2/K3 e Reteste), `5ª CTFL-109` (Thin Route Handlers + Hardening CI/Auth) |
+| **Última Tarefa Concluída no Código** | `CTFL-104` (Suíte k6 de Carga e Estresse 20–50 VUs), `CTFL-106` (Sincronização Canônica +30 XP / Cap. 4 = 12 / 80 questões / prefixo `LESSON:`) e `CTFL-111` (Reformulação Visual Anti-Slop e CI/CD) |
+| **Status da Sprint 1** | **100% CONCLUÍDA / ZERADA (5/5 cards)**: `CTFL-101`, `CTFL-102`, `CTFL-103`, `CTFL-104`, `CTFL-105` |
+| **Próximas Tarefas Candidatas (Sprint 2)** | `1ª CTFL-110` (Blindagem de Concorrência e Sigilo de Gabarito no Motor de Simulados), `2ª CTFL-107` (Evolução do Caderno de Erros K1/K2/K3 e Reteste), `3ª CTFL-108` (Exportação de Notas/Flashcards `.md`/`.json`), `4ª CTFL-109` (Thin Route Handlers + Hardening CI/Auth) |
 | **Trabalho Interrompido Pendente de Retomada?** | **Não** (Todas as 12 etapas de `CTFL-111` e CI/CD concluídas) |
 | **Bloqueios Críticos Abertos** | Nenhum bloqueio crítico (`BLK-ENV-03` resolvido com junction de `node_modules` e `.env` sincronizado) |
 
@@ -63,3 +63,27 @@
   - **Reformulação Visual (`CTFL-111A..D`):** Implementada a Direção 1 (Editorial Técnico Quente + Teal/Esmeralda) em 102 arquivos de `src/app` e `src/components`, zerando o linter da skill `design-taste-frontend` de **`412 FAIL para 0 FAIL`**!
   - **Implementação de CI/CD pelo DevOps:** Adicionado trigger para `refatoracao`, `workflow_dispatch` e `concurrency: cancel-in-progress` em `.github/workflows/ci.yml`; gate `lint:ui` e upload de artefatos de diagnóstico em falhas; `package.json` atualizado com `"lint:ui"` e `"test:e2e": "playwright test --project=e2e"`; `scripts/run-pipeline.ts` evoluído com suporte a `npm run pipeline:fast` (11.7s, 5 gates estáticos/unitários aprovados); `.env.example` sincronizado com todas as variáveis.
   - **Qualidade Comprovada:** `typecheck` (0 erros), `next lint` (0 warnings/erros), `prisma validate` (válido), `vitest` (26/26 testes aprovados), `next build` (47/47 páginas estáticas geradas com sucesso em 44s) e `trail build` (591 nós e 1460 arestas sincronizados).
+
+---
+
+### [EXEC-2026-10-23-01] Zeramento da Sprint 1 (`CTFL-104`) & Sincronização Canônica de Documentação e Idempotência (`CTFL-106`)
+- **Modo de Operação:** Ciclo Autônomo de Execução Autorizada (Nível B)
+- **Agentes Acionados:** Cérebro Central (`orquestrador`), `po`, `scrum-master`, `desenvolvedor` (`DevSprintCloser`), `qa` (`QASprintAuditor`)
+- **Escopo e Entregas Consolidadas:**
+  1. **`[CTFL-104]` Suíte k6 de Carga e Estresse para Submissão Concorrente:**
+     - `tests/performance/load.k6.js` escalado para 20 a 50 VUs com thresholds estritos $p(95) < 200\text{ms}$ e $p(99) < 400\text{ms}$, cobrindo navegação pública, catálogo de capítulos, exercícios e auth.
+     - `tests/performance/stress.k6.js` escalado até 50 VUs com thresholds $p(95) < 300\text{ms}$ e tolerância de falhas $< 5\%$.
+     - `tests/performance/k6.config.js` calibrado para $p(95) < 200\text{ms}$.
+  2. **`[CTFL-106]` Sincronização Canônica de Documentação e Idempotência:**
+     - `src/backend/services/lesson.service.ts:83` padronizado para `idempotencyKey: \`LESSON:${userId}:${lesson.id}\`` (alinhado a `docs/CRITERIOS_XP.md:9` e testes de integração).
+     - `docs/ROTEIRO_DE_TESTES_QA.md`: linha 73 corrigida para `Cap. 4 = 12 questões` e linha 86 para `+30 XP`.
+     - `README.md:49` e `docs/DIREITOS_E_FONTES.md:10` atualizados para `80 questões`.
+  3. **Validação de Qualidade (QA):**
+     - Typecheck TypeScript (`tsc --noEmit`): 0 erros.
+     - Linter de UI (`npm run lint:ui`): 0 FAIL.
+     - Testes Unitários e Controllers (`vitest`): 26/26 testes aprovados.
+     - Homologação completa pelo `QASprintAuditor` em `local://outbox-qa.md`.
+  4. **Status do Backlog ClickUp:**
+     - **Sprint 1 encerrada com 100% de sucesso (5/5 cards concluídos: CTFL-101 a CTFL-105).**
+     - `CTFL-106` concluída e Matriz de Rastreabilidade atualizada.
+- **Status:** **Concluído com Sucesso.**

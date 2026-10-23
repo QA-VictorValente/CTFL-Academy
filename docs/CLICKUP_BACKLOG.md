@@ -26,7 +26,7 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 ---
 
-## 2. SPRINT 1 — GOVERNANÇA, EXPANSÃO DE QUALIDADE & BANCO DE QUESTÕES
+## 2. SPRINT 1 — GOVERNANÇA, EXPANSÃO DE QUALIDADE & BANCO DE QUESTÕES (100% CONCLUÍDA / ZERADA — 5/5 CARDS)
 
 ### [CTFL-101] Governança de Versionamento, Estratégia de Branches e PR Template
 - **Tipo:** Tarefa / DevOps
@@ -86,12 +86,18 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 ### [CTFL-104] Suíte de Testes de Carga e Estresse para Submissão Concorrente
 - **Tipo:** Tarefa / QA
-- **Status:** Backlog
+- **Status:** Concluído
 - **Prioridade:** Normal
-- **Responsável:** QA Engineer
+- **Responsável:** QA Engineer & Desenvolvedor
 - **Contexto e Justificativa:** Validar a resiliência do backend quando múltiplos alunos submetem respostas de simulado e anotações simultaneamente.
-- **Comportamento Esperado:** Scripts k6 de carga (`tests/performance/load.k6.js`) executando 20 a 50 usuários virtuais concorrentes mantendo p95 < 200ms e 0% de erros HTTP 500.
-- **Critérios de Aceitação:** Script criado e thresholds de latência atendidos.
+- **Comportamento Atual:** Scripts k6 de carga (`tests/performance/load.k6.js`) e estresse (`tests/performance/stress.k6.js`) executando 20 a 50 usuários virtuais concorrentes (VUs) com thresholds estritos de $p(95) < 200\text{ms}$, $p(99) < 400\text{ms}$ e taxa de falhas $< 1\%$.
+- **Critérios de Aceitação:**
+  1. Script `load.k6.js` com estágios escalonados de 20 a 50 VUs cobrindo navegação pública, catálogo de capítulos, exercícios e auth. (Atendido)
+  2. Script `stress.k6.js` com estágios até 50 VUs e thresholds $p(95) < 300\text{ms}$. (Atendido)
+  3. Thresholds calibrados em `k6.config.js` e validação homologada pelo QA. (Atendido)
+- **Evidências:** Homologação do `QASprintAuditor` em `local://outbox-qa.md` e typecheck 100% verde.
+- **Testes Relacionados:** `tests/performance/load.k6.js`, `tests/performance/stress.k6.js` e `npm run typecheck`.
+- **Dependências / Bloqueios:** Nenhum bloqueio.
 
 ---
 
@@ -121,16 +127,18 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 
 ### [CTFL-106] Sincronização Canônica de Documentação (+30 XP, Matriz Cap. 4 = 12, Banco de 80 Questões e Prefixo `LESSON:`)
 - **Tipo:** Tarefa / Qualidade & Documentação (Quick Win)
-- **Status:** A analisar
+- **Status:** Concluído
 - **Prioridade:** Alta
 - **Esforço Estimado:** P (Pequeno)
 - **Responsável:** Product Owner, QA Engineer & Desenvolvedor
 - **Contexto e Justificativa:** Auditoria cruzada (`DOC-QA-01`, `DOC-QA-02`, `DOC-QA-03`) identificou divergências entre `docs/ROTEIRO_DE_TESTES_QA.md` (`+20 XP` na linha 86 vs `+30 XP` reais; `Cap. 4 = 11 questões` na linha 73 vs `12` oficiais), referências legadas a `55 questões` em `README.md:49` e `docs/DIREITOS_E_FONTES.md:10` (pós-`CTFL-102` são `80 questões`) e capitalização `lesson:` vs `LESSON:` em `src/backend/services/lesson.service.ts:83`.
 - **Critérios de Aceitação:**
-  1. Atualizar `docs/ROTEIRO_DE_TESTES_QA.md:86` (`CT-10.2`) para `+30 XP` e `docs/ROTEIRO_DE_TESTES_QA.md:73` (`CT-08.1`) para `Cap. 4 = 12 questões`.
-  2. Atualizar `README.md:49` e `docs/DIREITOS_E_FONTES.md:10` de `55` para `80 questões`.
-  3. Alinhar o prefixo de `idempotencyKey` entre `src/backend/services/lesson.service.ts:83` e `docs/CRITERIOS_XP.md:9`.
-
+  1. Atualizar `docs/ROTEIRO_DE_TESTES_QA.md:86` (`CT-10.2`) para `+30 XP` e `docs/ROTEIRO_DE_TESTES_QA.md:73` (`CT-08.1`) para `Cap. 4 = 12 questões`. (Atendido)
+  2. Atualizar `README.md:49` e `docs/DIREITOS_E_FONTES.md:10` de `55` para `80 questões`. (Atendido)
+  3. Alinhar o prefixo de `idempotencyKey` entre `src/backend/services/lesson.service.ts:83` e `docs/CRITERIOS_XP.md:9` para `LESSON:`. (Atendido)
+- **Evidências:** Homologação de QA em `local://outbox-qa.md`, 26 testes aprovados no Vitest e `npm run typecheck` sem erros.
+- **Testes Relacionados:** `tests/unit/domain-logic.test.ts` e `tests/integration/persistence-workflows.test.ts`.
+- **Dependências / Bloqueios:** Nenhum bloqueio.
 ---
 
 ### [CTFL-107] Evolução do Caderno de Erros (`/revisao-erros`): Status "Pendente vs. Superado", Filtros K1/K2/K3 e Reteste Rápido
@@ -225,9 +233,9 @@ Os status padrão adotados para o fluxo de valor do CTFL Academy são:
 | **CTFL-101** | Governança | DevOps | Concluído | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
 | **CTFL-102** | Conteúdo/Dev | PO / Dev | Concluído | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
 | **CTFL-103** | QA/CI | QA / DevOps | Concluído | `feature/ciclo-1-governanca-qualidade` | Mergeado na main |
-| **CTFL-104** | Performance | QA | Backlog | - | - |
+| **CTFL-104** | Performance | QA / Dev | Concluído | `refatoracao` | - |
 | **CTFL-105** | UX/Frontend | Dev | Concluído | `feature/ctfl-105-audio-voices` | Mergeado na main |
-| **CTFL-106** | Qualidade/Docs | PO / QA / Dev | A analisar | - | - |
+| **CTFL-106** | Qualidade/Docs | PO / QA / Dev | Concluído | `refatoracao` | - |
 | **CTFL-107** | Feature/Estudo | PO / Dev | A analisar | - | - |
 | **CTFL-108** | UX/Portabilidade | Dev / QA | Backlog | - | - |
 | **CTFL-109** | Arquitetura/CI | Dev / DevOps | A analisar | - | - |

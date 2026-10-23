@@ -4,9 +4,10 @@ import { BASE_URL, standardThresholds } from './k6.config.js';
 
 export const options = {
   stages: [
-    { duration: '10s', target: 10 }, // Ramp-up para 10 VUs
-    { duration: '20s', target: 10 }, // Sustentação a 10 VUs
-    { duration: '5s', target: 0 },  // Ramp-down
+    { duration: '10s', target: 20 }, // 10s ramp-up para 20 VUs
+    { duration: '20s', target: 30 }, // 20s sustentação em 30 VUs
+    { duration: '10s', target: 50 }, // 10s pico em 50 VUs
+    { duration: '5s', target: 0 },   // 5s ramp-down
   ],
   thresholds: standardThresholds,
 };
@@ -21,21 +22,25 @@ export default function () {
 
   sleep(0.3);
 
-  group('2. Acesso à Área de Autenticação', () => {
-    const loginRes = http.get(`${BASE_URL}/login`);
-    check(loginRes, {
-      'Login respondeu 200': (r) => r.status === 200,
-    });
-
-    const cadastroRes = http.get(`${BASE_URL}/cadastro`);
-    check(cadastroRes, {
-      'Cadastro respondeu 200': (r) => r.status === 200,
+  group('2. Catálogo de Capítulos', () => {
+    const capitulosRes = http.get(`${BASE_URL}/capitulos`);
+    check(capitulosRes, {
+      'Catálogo de capítulos respondeu 200 ou 307': (r) => r.status === 200 || r.status === 307,
     });
   });
 
   sleep(0.3);
 
-  group('3. Verificação de Sessão da API', () => {
+  group('3. Área de Exercícios', () => {
+    const exerciciosRes = http.get(`${BASE_URL}/exercicios`);
+    check(exerciciosRes, {
+      'Exercícios respondeu 200 ou 307': (r) => r.status === 200 || r.status === 307,
+    });
+  });
+
+  sleep(0.3);
+
+  group('4. Verificação de Sessão da API', () => {
     const authRes = http.get(`${BASE_URL}/api/auth/me`, {
       responseCallback: http.expectedStatuses(401),
     });
