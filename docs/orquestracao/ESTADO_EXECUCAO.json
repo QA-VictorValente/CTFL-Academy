@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0.0",
+  "project": "CTFL Academy",
+  "orchestrator": {
+    "role": "Cérebro Central (orquestrador)",
+    "entryPoint": "Sessão Principal OMP (.omp/RULES.md + .omp/agents/orquestrador.md)",
+    "singleWriterLockOwner": "orquestrador/scrum-master"
+  },
+  "activeTask": {
+    "taskId": "CTFL-111",
+    "title": "Reformulação Visual Anti-Slop e Conforto de Leitura (Light & Dark Mode — Editorial Técnico Quente + Teal/Esmeralda) e Implementação de CI/CD",
+    "mode": "EXECUCAO_AUTORIZADA_CICLO_AUTONOMO_12_ETAPAS",
+    "authorizationLevel": "B_EXECUCAO_AUTORIZADA",
+    "status": "COMPLETED",
+    "currentStep": 12,
+    "totalSteps": 12,
+    "completedSteps": [
+      "1. Interpretação do objetivo do usuário (Reforma Completa CTFL-111A..D com Direção 1: Editorial Técnico Quente + Teal/Esmeralda)",
+      "2. Consulta aos agentes independentes (AgentePO, AgenteScrumMaster, AgenteDesenvolvedor, AgenteQA)",
+      "3. Decomposição em 4 fatias sem sobreposição de arquivos e definição do Contrato de Design (local://contrato-design-ctfl-111.md)",
+      "4. Aprovação explícita do usuário obtida para Direção 1 e Escopo Completo",
+      "5. Execução paralela das 4 fatias de código (Fatia A/B, Fatia C, Fatia D1, Fatia D2)",
+      "6. Reunião de resultados e verificação de conflitos pelo Cérebro Central",
+      "7. Validação independente de QA: zeramento de 412 FAIL para 0 FAIL no design-taste-frontend/scripts/lint.mjs em 102 arquivos e 26/26 testes aprovados no Vitest",
+      "8. Correção imediata de tag JSX no resultado do simulado e loading global",
+      "9. Implementação de melhorias de CI/CD pelo DevOps (.github/workflows/ci.yml com gate UI lint:ui, cancel-in-progress, upload-artifact; package.json com test:e2e --project=e2e e lint:ui; scripts/run-pipeline.ts com fast mode; .env.example sincronizado)",
+      "10. Validação de Build de produção Next.js (47/47 páginas estáticas geradas com sucesso em 44s) e reconstrução do Grafo Trail (591 nodes)",
+      "11. Consolidação de estado em CLICKUP_BACKLOG.md, REGISTRO_QA_DEFEITOS.md e HISTORICO_EXECUCAO.md pelo Scrum Master",
+      "12. Apresentação do Relatório Final Obrigatório ao usuário"
+    ],
+    "pendingSteps": [],
+    "lastCheckpointAt": "2026-10-22T13:00:00Z",
+    "pausedState": null
+  }
+}

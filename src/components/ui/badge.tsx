@@ -3,27 +3,27 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors',
+  'inline-flex items-center gap-1 rounded-md px-2.5 py-0.5 text-xs font-semibold transition-colors ring-1 ring-inset',
   {
     variants: {
       variant: {
         default:
-          'border-indigo-500/30 bg-indigo-500/15 text-indigo-400 dark:text-indigo-300',
+          'ring-primary/30 bg-primary/10 text-primary',
         info:
-          'border-indigo-500/30 bg-indigo-500/15 text-indigo-400 dark:text-indigo-300',
+          'ring-sky-600/30 bg-sky-500/10 text-sky-800 dark:text-sky-300',
         secondary:
-          'border-border bg-secondary text-secondary-foreground',
+          'ring-border bg-secondary text-secondary-foreground',
         success:
-          'border-emerald-500/30 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400',
+          'ring-emerald-600/30 bg-emerald-500/12 text-emerald-800 dark:text-emerald-300',
         warning:
-          'border-amber-500/30 bg-amber-500/15 text-amber-500 dark:text-amber-400',
+          'ring-amber-600/30 bg-amber-500/12 text-amber-800 dark:text-amber-300',
         destructive:
-          'border-rose-500/30 bg-rose-500/15 text-rose-500 dark:text-rose-400',
+          'ring-rose-600/30 bg-rose-500/12 text-rose-800 dark:text-rose-300',
         danger:
-          'border-rose-500/30 bg-rose-500/15 text-rose-500 dark:text-rose-400',
+          'ring-rose-600/30 bg-rose-500/12 text-rose-800 dark:text-rose-300',
         purple:
-          'border-violet-500/30 bg-violet-500/15 text-violet-500 dark:text-violet-300',
-        outline: 'text-foreground border-border',
+          'ring-teal-600/30 bg-teal-500/12 text-teal-800 dark:text-teal-300',
+        outline: 'text-foreground ring-border bg-transparent',
       },
     },
     defaultVariants: {

@@ -210,7 +210,7 @@ export function NotebookHub({
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-md shadow-indigo-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/15 text-primary border border-primary/25">
               <Brain className="h-5 w-5" />
             </div>
             Caderno & Mapas Mentais
@@ -228,7 +228,7 @@ export function NotebookHub({
             onClick={() => handleCreateNew('NOTE')}
             className="gap-1.5"
           >
-            <StickyNote className="h-4 w-4 text-emerald-400" />
+            <StickyNote className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
             Nova Anotação
           </Button>
 
@@ -236,7 +236,7 @@ export function NotebookHub({
             type="button"
             size="sm"
             onClick={() => handleCreateNew('MINDMAP')}
-            className="gap-1.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white hover:from-indigo-500 hover:to-violet-500 shadow-md shadow-indigo-500/20"
+            className="gap-1.5"
           >
             <Brain className="h-4 w-4" />
             Novo Mapa Mental
@@ -247,7 +247,7 @@ export function NotebookHub({
       {/* Painel Principal com Coluna Esquerda (Lista) e Direita (Editor/Canvas) */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 min-h-[640px]">
         {/* Coluna Esquerda: Lista de Itens e Filtros */}
-        <div className="lg:col-span-4 flex flex-col rounded-3xl border border-border/80 bg-card/60 p-4 space-y-4 shadow-sm">
+        <div className="lg:col-span-4 flex flex-col rounded-3xl border border-border/80 bg-card p-4 space-y-4">
           {/* Campo de Busca */}
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -264,9 +264,9 @@ export function NotebookHub({
             <button
               type="button"
               onClick={() => setTypeFilter('ALL')}
-              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors ${
                 typeFilter === 'ALL'
-                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  ? 'bg-primary text-primary-foreground'
                   : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
               }`}
             >
@@ -275,9 +275,9 @@ export function NotebookHub({
             <button
               type="button"
               onClick={() => setTypeFilter('MINDMAP')}
-              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors ${
                 typeFilter === 'MINDMAP'
-                  ? 'bg-indigo-600 text-white shadow-sm'
+                  ? 'bg-primary text-primary-foreground'
                   : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
               }`}
             >
@@ -286,9 +286,9 @@ export function NotebookHub({
             <button
               type="button"
               onClick={() => setTypeFilter('NOTE')}
-              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors ${
                 typeFilter === 'NOTE'
-                  ? 'bg-emerald-600 text-white shadow-sm'
+                  ? 'bg-emerald-600 text-white'
                   : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
               }`}
             >
@@ -304,7 +304,7 @@ export function NotebookHub({
             <option value="ALL">Todos os Capítulos</option>
             {chapters.map((ch) => (
               <option key={ch.id} value={ch.id}>
-                Cap. {ch.number} — {ch.title}
+                Cap. {ch.number} - {ch.title}
               </option>
             ))}
           </Select>
@@ -337,19 +337,19 @@ export function NotebookHub({
                   <div
                     key={note.id}
                     onClick={() => setSelectedNoteId(note.id)}
-                    className={`cursor-pointer rounded-2xl border p-3.5 transition-all ${
+                    className={`cursor-pointer rounded-2xl border p-3.5 transition-colors ${
                       isSelected
-                        ? 'border-indigo-500/60 bg-gradient-to-r from-indigo-950/40 via-secondary/60 to-background shadow-md'
+                        ? 'border-primary/50 bg-primary/10'
                         : 'border-border/60 bg-background/50 hover:bg-secondary/40'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2 min-w-0">
                         <div
-                          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-white shadow-sm ${
+                          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
                             isMindMap
-                              ? 'bg-gradient-to-br from-indigo-500 to-violet-600'
-                              : 'bg-gradient-to-br from-emerald-500 to-teal-600'
+                              ? 'bg-primary text-primary-foreground'
+                              : 'bg-emerald-600 text-white'
                           }`}
                         >
                           {isMindMap ? (
@@ -365,7 +365,7 @@ export function NotebookHub({
 
                       <div className="flex items-center gap-1 shrink-0">
                         {note.isPinned && (
-                          <Pin className="h-3.5 w-3.5 fill-indigo-400 text-indigo-400" />
+                          <Pin className="h-3.5 w-3.5 fill-primary text-primary" />
                         )}
                         <button
                           type="button"
@@ -381,12 +381,12 @@ export function NotebookHub({
                       </div>
                     </div>
 
-                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-[10px] text-muted-foreground">
-                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4">
+                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+                      <Badge variant="outline" className="text-xs px-1.5 py-0 h-5">
                         {isMindMap ? 'Mapa Mental' : 'Anotação'}
                       </Badge>
                       {note.chapter && (
-                        <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
+                        <Badge variant="secondary" className="text-xs px-1.5 py-0 h-5">
                           Cap. {note.chapter.number}
                         </Badge>
                       )}
@@ -400,11 +400,11 @@ export function NotebookHub({
         </div>
 
         {/* Coluna Direita: Área de Edição do Mapa ou Anotação */}
-        <div className="lg:col-span-8 flex flex-col rounded-3xl border border-border/80 bg-card/60 p-5 space-y-4 shadow-sm">
+        <div className="lg:col-span-8 flex flex-col rounded-3xl border border-border/80 bg-card p-5 space-y-4">
           {currentNote ? (
             <>
               {/* Barra de Edição do Título e Configurações da Nota */}
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-secondary/35 p-3">
                 <div className="flex-1 min-w-[200px] flex items-center gap-2">
                   <Input
                     value={currentNote.title}
@@ -418,14 +418,14 @@ export function NotebookHub({
                   <button
                     type="button"
                     onClick={() => handleTogglePin(currentNote.id, currentNote.isPinned)}
-                    className={`flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold transition ${
+                    className={`flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold transition-colors ${
                       currentNote.isPinned
-                        ? 'border-indigo-500/40 bg-indigo-500/10 text-indigo-400'
+                        ? 'border-primary/40 bg-primary/10 text-primary'
                         : 'border-border/60 text-muted-foreground hover:text-foreground'
                     }`}
                     title={currentNote.isPinned ? 'Desafixar do topo' : 'Fixar no topo'}
                   >
-                    <Pin className={`h-3.5 w-3.5 ${currentNote.isPinned ? 'fill-indigo-400' : ''}`} />
+                    <Pin className={`h-3.5 w-3.5 ${currentNote.isPinned ? 'fill-primary' : ''}`} />
                     <span className="hidden sm:inline">
                       {currentNote.isPinned ? 'Fixado' : 'Fixar'}
                     </span>
@@ -459,7 +459,7 @@ export function NotebookHub({
             </>
           ) : (
             <div className="flex flex-1 flex-col items-center justify-center p-12 text-center space-y-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-lg">
+              <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-primary/10 text-primary border border-primary/20">
                 <Brain className="h-8 w-8" />
               </div>
               <div className="space-y-1">
@@ -482,7 +482,7 @@ export function NotebookHub({
                 <Button
                   type="button"
                   onClick={() => handleCreateNew('MINDMAP', '7-principios')}
-                  className="gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white"
+                  className="gap-2"
                 >
                   <Sparkles className="h-4 w-4" />
                   Carregar Template dos 7 Princípios

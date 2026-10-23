@@ -257,7 +257,7 @@ export function LessonViewer({
 
       setCompleted(true);
       toast({
-        title: 'Aula concluída com sucesso! 🏆',
+        title: 'Aula concluída com sucesso!',
         description:
           json.xpAwarded > 0
             ? `Você ganhou +${json.xpAwarded} XP!`
@@ -293,7 +293,7 @@ export function LessonViewer({
 
       setFeedbacks((prev) => ({ ...prev, [questionId]: json }));
       toast({
-        title: json.isCorrect ? 'Resposta Correta! 🌟' : 'Resposta Incorreta',
+        title: json.isCorrect ? 'Resposta Correta!' : 'Resposta Incorreta',
         description:
           json.xpAwarded > 0
             ? `+${json.xpAwarded} XP adicionados ao seu perfil.`
@@ -389,7 +389,7 @@ export function LessonViewer({
     <div
       ref={containerRef}
       className={cn(
-        'space-y-6 transition-all duration-300',
+        'space-y-6 transition-colors duration-200',
         focusMode
           ? 'fixed inset-0 z-[100] overflow-y-auto bg-background p-4 sm:p-8 md:p-12 lg:px-28'
           : 'w-full'
@@ -398,7 +398,7 @@ export function LessonViewer({
       {/* Barra de Progresso de Leitura Superior */}
       <div
         className={cn(
-          'fixed top-0 left-0 h-1.5 bg-gradient-to-r from-indigo-500 via-violet-500 to-emerald-400 transition-all duration-150',
+          'fixed top-0 left-0 h-1 bg-primary transition-[width] duration-150',
           focusMode ? 'z-[110]' : 'z-50'
         )}
         style={{ width: `${scrollProgress}%` }}
@@ -408,8 +408,8 @@ export function LessonViewer({
       {/* BARRA DE FERRAMENTAS DIDÁTICAS E PLAYER DE ÁUDIO (Fixos no layout, sem sobrepor o conteúdo) */}
       <div
         className={cn(
-          'rounded-2xl border border-indigo-500/30 bg-background/95 backdrop-blur-md p-3.5 shadow-sm transition-all',
-          focusMode && 'border-indigo-500/50 shadow-md'
+          'rounded-2xl border border-border bg-card p-3.5 transition-colors',
+          focusMode && 'border-primary/40'
         )}
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -419,9 +419,9 @@ export function LessonViewer({
               type="button"
               onClick={() => changeStudyMode('TRACK')}
               className={cn(
-                'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition',
+                'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors',
                 studyMode === 'TRACK'
-                  ? 'bg-indigo-600 text-white shadow-sm'
+                  ? 'bg-primary text-primary-foreground'
                   : 'text-muted-foreground hover:text-foreground'
               )}
             >
@@ -432,9 +432,9 @@ export function LessonViewer({
               type="button"
               onClick={() => changeStudyMode('FULL')}
               className={cn(
-                'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition',
+                'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors',
                 studyMode === 'FULL'
-                  ? 'bg-indigo-600 text-white shadow-sm'
+                  ? 'bg-primary text-primary-foreground'
                   : 'text-muted-foreground hover:text-foreground'
               )}
             >
@@ -454,9 +454,9 @@ export function LessonViewer({
                   type="button"
                   onClick={() => handleSetFontSize('base')}
                   className={cn(
-                    'px-2.5 py-1 rounded-md font-semibold transition',
+                    'px-2.5 py-1 rounded-md font-semibold transition-colors',
                     fontSize === 'base'
-                      ? 'bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/40'
+                      ? 'bg-primary/15 text-primary font-bold border border-primary/35'
                       : 'text-muted-foreground hover:text-foreground'
                   )}
                   title="Padrão (16px)"
@@ -467,9 +467,9 @@ export function LessonViewer({
                   type="button"
                   onClick={() => handleSetFontSize('lg')}
                   className={cn(
-                    'px-2.5 py-1 rounded-md font-semibold transition',
+                    'px-2.5 py-1 rounded-md font-semibold transition-colors',
                     fontSize === 'lg'
-                      ? 'bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/40'
+                      ? 'bg-primary/15 text-primary font-bold border border-primary/35'
                       : 'text-muted-foreground hover:text-foreground'
                   )}
                   title="Confortável / Recomendado (18px)"
@@ -480,9 +480,9 @@ export function LessonViewer({
                   type="button"
                   onClick={() => handleSetFontSize('xl')}
                   className={cn(
-                    'px-2.5 py-1 rounded-md font-semibold transition',
+                    'px-2.5 py-1 rounded-md font-semibold transition-colors',
                     fontSize === 'xl'
-                      ? 'bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/40'
+                      ? 'bg-primary/15 text-primary font-bold border border-primary/35'
                       : 'text-muted-foreground hover:text-foreground'
                   )}
                   title="Amplo / Muito Grande (20px)"
@@ -498,8 +498,8 @@ export function LessonViewer({
               size="sm"
               onClick={toggleFocusMode}
               className={cn(
-                'h-8 px-2.5 text-xs font-semibold transition',
-                focusMode && 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md'
+                'h-8 px-2.5 text-xs font-semibold transition-colors',
+                focusMode && 'bg-primary text-primary-foreground'
               )}
               title={focusMode ? 'Sair da tela cheia (Esc)' : 'Entrar no modo foco em tela cheia'}
             >
@@ -519,7 +519,7 @@ export function LessonViewer({
         </div>
 
         {/* Player de Voz Narração da Aula */}
-        <div className="mt-3 pt-3 border-t border-border/50">
+        <div className="mt-3 pt-1">
           <AudioLessonPlayer
             title={lesson.title}
             textToRead={`${lesson.explanation} ${lesson.summary}`}
@@ -543,23 +543,23 @@ export function LessonViewer({
                   type="button"
                   onClick={() => setCurrentStep(step.id)}
                   className={cn(
-                    'flex flex-col items-center justify-center rounded-xl border p-2.5 sm:p-3 text-center transition-all',
+                    'flex flex-col items-center justify-center rounded-xl border p-2.5 sm:p-3 text-center transition-colors',
                     isActive &&
-                      'border-indigo-500 bg-indigo-500/20 text-indigo-300 shadow-md shadow-indigo-950/40 ring-1 ring-indigo-500',
+                      'border-primary bg-primary/10 text-primary ring-1 ring-primary',
                     isPast &&
-                      'border-emerald-500/40 bg-emerald-500/5 text-emerald-300 hover:border-emerald-500/60',
+                      'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:border-emerald-500/60',
                     !isActive &&
                       !isPast &&
-                      'border-border/60 bg-background/40 text-muted-foreground hover:border-indigo-500/30'
+                      'border-border/60 bg-background/40 text-muted-foreground hover:border-primary/35'
                   )}
                 >
                   <div className="flex items-center gap-1.5 mb-1">
                     {isPast ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                     ) : (
                       <Icon className="h-4 w-4" />
                     )}
-                    <span className="text-[11px] font-bold uppercase tracking-wider">
+                    <span className="text-xs font-bold">
                       Etapa {step.id}
                     </span>
                   </div>
@@ -572,8 +572,8 @@ export function LessonViewer({
           </div>
 
           {/* Conteúdo Dinâmico da Etapa Atual */}
-          <Card className="border-indigo-500/30 shadow-xl">
-            <CardHeader className="border-b border-border/60 pb-4">
+          <Card className="border-border">
+            <CardHeader className="bg-secondary/25 rounded-t-2xl pb-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <Badge variant="default">
                   Etapa {currentStep} de 5 • {steps[currentStep - 1].title}
@@ -600,7 +600,7 @@ export function LessonViewer({
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <h3 className="flex items-center gap-2 text-lg font-bold text-indigo-400">
+                    <h3 className="flex items-center gap-2 text-lg font-bold text-primary">
                       <BookOpen className="h-5 w-5" />
                       Explicação Didática do Syllabus
                     </h3>
@@ -617,7 +617,7 @@ export function LessonViewer({
                     checkpoint={microCheckpoint}
                     onCompleted={() => {
                       toast({
-                        title: 'Conceito fixado com sucesso! 🚀',
+                        title: 'Conceito fixado com sucesso!',
                         description:
                           'Você pode avançar para a Etapa 2 (Glossário Ativo).',
                         variant: 'success',
@@ -631,7 +631,7 @@ export function LessonViewer({
               {currentStep === 2 && (
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <h3 className="flex items-center gap-2 text-lg font-bold text-violet-400">
+                    <h3 className="flex items-center gap-2 text-lg font-bold text-primary">
                       <Layers className="h-5 w-5" />
                       Glossário Oficial ISTQB (Memorização Ativa)
                     </h3>
@@ -652,7 +652,7 @@ export function LessonViewer({
               {currentStep === 3 && (
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <h3 className="flex items-center gap-2 text-lg font-bold text-emerald-400">
+                    <h3 className="flex items-center gap-2 text-lg font-bold text-emerald-600 dark:text-emerald-400">
                       <Code2 className="h-5 w-5" />
                       Laboratório de Exemplos Práticos (Web, APIs e Dados)
                     </h3>
@@ -672,7 +672,7 @@ export function LessonViewer({
               {currentStep === 4 && (
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <h3 className="flex items-center gap-2 text-lg font-bold text-amber-400">
+                    <h3 className="flex items-center gap-2 text-lg font-bold text-amber-600 dark:text-amber-400">
                       <Briefcase className="h-5 w-5" />
                       Aplicação na Rotina Real de QA (Estudo de Caso)
                     </h3>
@@ -693,9 +693,9 @@ export function LessonViewer({
               {/* ETAPA 5: Resumo Turbo & Pegadinhas do Exame */}
               {currentStep === 5 && (
                 <div className="space-y-6">
-                  <div className="space-y-2 rounded-2xl border border-indigo-500/35 bg-gradient-to-br from-indigo-950/40 via-background to-violet-950/30 p-6 sm:p-8 shadow-lg">
-                    <h3 className="flex items-center gap-2 text-lg font-extrabold uppercase tracking-wider text-indigo-300">
-                      <Sparkles className="h-5 w-5 text-indigo-400" />
+                  <div className="space-y-2 rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8">
+                    <h3 className="flex items-center gap-2 text-lg font-extrabold text-primary">
+                      <Sparkles className="h-5 w-5 text-primary" />
                       Resumo Essencial para o Exame CTFL 4.0.1
                     </h3>
                     <FormattedText
@@ -724,7 +724,7 @@ export function LessonViewer({
                       size="lg"
                       onClick={handleCompleteLesson}
                       isLoading={completing}
-                      className="font-bold shadow-md"
+                      className="font-bold"
                     >
                       <CheckCircle2 className="h-5 w-5 mr-1.5" />
                       {completed ? 'Aula Concluída (+30 XP)' : 'Concluir Aula (+30 XP)'}
@@ -734,7 +734,7 @@ export function LessonViewer({
               )}
 
               {/* Controles de Navegação Entre as Etapas da Trilha */}
-              <div className="flex items-center justify-between border-t border-border/70 pt-6">
+              <div className="flex items-center justify-between rounded-xl bg-secondary/35 p-3.5">
                 <Button
                   type="button"
                   variant="outline"
@@ -776,8 +776,8 @@ export function LessonViewer({
         </div>
       ) : (
         /* MODO 2: LEITURA CONTÍNUA (Tudo em uma página enriquecida) */
-        <Card className="border-indigo-500/30 shadow-xl">
-          <CardHeader className="border-b border-border/60">
+        <Card className="border-border">
+          <CardHeader className="bg-secondary/25 rounded-t-2xl pb-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <Badge variant="default">
                 Tempo estimado: {lesson.estimatedMinutes} min
@@ -797,7 +797,7 @@ export function LessonViewer({
           <CardContent className="space-y-10 pt-6">
             {/* 1. Explicação Didática */}
             <section className="space-y-4">
-              <h3 className="flex items-center gap-2 text-xl font-bold text-indigo-400">
+              <h3 className="flex items-center gap-2 text-xl font-bold text-primary">
                 <BookOpen className="h-5 w-5" />
                 Explicação Didática do Syllabus
               </h3>
@@ -815,7 +815,7 @@ export function LessonViewer({
             {/* 2. Definições Formais (Glossário Ativo) */}
             {lesson.definitions.length > 0 && (
               <section className="space-y-4">
-                <h3 className="flex items-center gap-2 text-xl font-bold text-violet-400">
+                <h3 className="flex items-center gap-2 text-xl font-bold text-primary">
                   <Layers className="h-5 w-5" />
                   Glossário Oficial ISTQB (Memorização Ativa)
                 </h3>
@@ -828,7 +828,7 @@ export function LessonViewer({
 
             {/* 3. Exemplos Práticos */}
             <section className="space-y-4">
-              <h3 className="flex items-center gap-2 text-xl font-bold text-emerald-400">
+              <h3 className="flex items-center gap-2 text-xl font-bold text-emerald-600 dark:text-emerald-400">
                 <Code2 className="h-5 w-5" />
                 Exemplos Práticos (Web, APIs e Banco de Dados)
               </h3>
@@ -840,7 +840,7 @@ export function LessonViewer({
 
             {/* 4. Rotina Real de QA */}
             <section className="space-y-4">
-              <h3 className="flex items-center gap-2 text-xl font-bold text-amber-400">
+              <h3 className="flex items-center gap-2 text-xl font-bold text-amber-600 dark:text-amber-400">
                 <Briefcase className="h-5 w-5" />
                 Aplicação na Rotina Real de QA
               </h3>
@@ -853,16 +853,16 @@ export function LessonViewer({
             </section>
 
             {/* 5. Resumo de Fixação para o Exame */}
-            <section className="space-y-3 rounded-2xl border border-indigo-500/35 bg-gradient-to-br from-indigo-950/40 via-background to-violet-950/30 p-6 sm:p-8 shadow-lg">
-              <h3 className="flex items-center gap-2 text-lg font-extrabold uppercase tracking-wider text-indigo-300">
-                <Sparkles className="h-5 w-5 text-indigo-400" />
+            <section className="space-y-3 rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8">
+              <h3 className="flex items-center gap-2 text-lg font-extrabold text-primary">
+                <Sparkles className="h-5 w-5 text-primary" />
                 Resumo Essencial para o Exame CTFL 4.0.1
               </h3>
               <FormattedText text={lesson.summary} fontSize={fontSize} />
             </section>
 
             {/* Concluir Aula */}
-            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl bg-secondary/35 p-4">
               <div>
                 <p className="text-base font-semibold">
                   {completed
@@ -895,7 +895,7 @@ export function LessonViewer({
         <div id="exercicios-topico" className="space-y-5 pt-4">
           <div>
             <h2 className="flex items-center gap-2 text-2xl font-extrabold tracking-tight">
-              <CheckSquare className="h-6 w-6 text-indigo-400" />
+              <CheckSquare className="h-6 w-6 text-primary" />
               Exercícios de Fixação deste Tópico
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
@@ -909,13 +909,13 @@ export function LessonViewer({
             const fb = feedbacks[q.id];
 
             return (
-              <Card key={q.id} className="border-border/80 shadow-md">
+              <Card key={q.id} className="border-border/80">
                 <CardHeader className="space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <Badge variant="default">Exercício {idx + 1}</Badge>
                       <Badge variant="outline">{q.code}</Badge>
-                      <Badge variant="purple">
+                      <Badge variant="secondary">
                         {q.learningObjectiveCode} ({q.cognitiveLevel})
                       </Badge>
                     </div>
@@ -959,15 +959,14 @@ export function LessonViewer({
                             }))
                           }
                           className={cn(
-                            'flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-all',
+                            'flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-colors',
                             fontSize === 'sm' && 'text-sm',
                             fontSize === 'base' && 'text-base',
                             fontSize === 'lg' && 'text-lg',
                             fontSize === 'xl' && 'text-xl',
                             isSelected
-                              ? 'border-indigo-500 bg-indigo-500/15'
-                              : 'border-border/70 bg-background/40 hover:border-indigo-500/40',
-                            fb &&
+                              ? 'border-primary bg-primary/10'
+                              : 'border-border/70 bg-background/40 hover:border-primary/40',
                               opt.label === fb.correctOptionLabel &&
                               'border-emerald-500 bg-emerald-500/15',
                             fb &&
@@ -1011,19 +1010,19 @@ export function LessonViewer({
                       className={cn(
                         'rounded-xl border p-4 text-xs sm:text-sm space-y-2',
                         fb.isCorrect
-                          ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-200'
-                          : 'border-amber-500/40 bg-amber-950/30 text-amber-200'
+                          ? 'border-emerald-500/35 bg-emerald-500/10 text-foreground'
+                          : 'border-amber-500/35 bg-amber-500/10 text-foreground'
                       )}
                     >
                       <p className="font-bold flex items-center gap-1.5 text-base">
                         {fb.isCorrect ? (
                           <>
-                            <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                            <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                             Correto! Gabarito: Alternativa {fb.correctOptionLabel}
                           </>
                         ) : (
                           <>
-                            <AlertCircle className="h-5 w-5 text-amber-400" />
+                            <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                             Incorreto. O gabarito oficial é a Alternativa{' '}
                             {fb.correctOptionLabel}
                           </>

@@ -79,19 +79,19 @@ function NavigationProgressInner() {
 
   return (
     <>
-      {/* Barra superior contínua no tema Indigo/Violet */}
+      {/* Barra superior contínua no tema Primary Editorial */}
       <div
         role="progressbar"
         aria-label="Carregando página"
-        className="pointer-events-none fixed inset-x-0 top-0 z-[100] h-1 overflow-hidden bg-indigo-500/15"
+        className="pointer-events-none fixed inset-x-0 top-0 z-[100] h-1 overflow-hidden bg-primary/20"
       >
-        <div className="h-full w-2/3 animate-pulse rounded-r-full bg-gradient-to-r from-indigo-500 via-violet-500 to-indigo-400 shadow-[0_0_12px_rgba(99,102,241,0.8)]" />
+        <div className="h-full w-2/3 rounded-r-full bg-primary" />
       </div>
 
       {/* Pílula discreta e elegante no topo central */}
       <div className="pointer-events-none fixed left-1/2 top-3.5 z-[100] -translate-x-1/2 animate-in fade-in slide-in-from-top-2 duration-150">
-        <div className="flex items-center gap-2 rounded-full border border-indigo-500/40 bg-card/95 px-3.5 py-1.5 text-xs font-semibold text-foreground shadow-lg shadow-indigo-500/15 backdrop-blur-md">
-          <Loader2 className="h-3.5 w-3.5 animate-spin text-indigo-400" />
+        <div className="flex items-center gap-2 rounded-full bg-card px-3.5 py-1.5 text-xs font-semibold text-foreground ring-1 ring-primary/35">
+          <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
           <span>Carregando...</span>
         </div>
       </div>

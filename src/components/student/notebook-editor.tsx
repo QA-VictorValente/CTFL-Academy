@@ -19,8 +19,8 @@ import { useToast } from '@/components/providers/toast-provider';
 import { FormattedText } from '@/components/ui/formatted-text';
 
 const QA_EMOJIS = [
-  '🧠', '🐛', '🎯', '📐', '⚙️', '📦', '🛡️', '🚨', '📋',
-  '🔍', '📊', '⚡', '🏆', '💡', '✅', '❌', '📝', '⏳',
+  '\u{1F9E0}', '\u{1F41B}', '\u{1F3AF}', '\u{1F4D0}', '\u{2699}\u{FE0F}', '\u{1F4E6}', '\u{1F6E1}\u{FE0F}', '\u{1F6A8}', '\u{1F4CB}',
+  '\u{1F50D}', '\u{1F4CA}', '\u{26A1}', '\u{1F3C6}', '\u{1F4A1}', '\u{2705}', '\u{274C}', '\u{1F4DD}', '\u{23F3}',
 ];
 
 export function NotebookEditor({
@@ -146,9 +146,9 @@ export function NotebookEditor({
   }
 
   return (
-    <div className="flex flex-col h-full rounded-2xl border border-border/70 bg-background/50 overflow-hidden shadow-inner">
+    <div className="flex flex-col h-full rounded-2xl border border-border/70 bg-background/50 overflow-hidden">
       {/* Barra de Ferramentas Superior */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-card/60 px-3 py-2 text-xs">
+      <div className="flex flex-wrap items-center justify-between gap-2 bg-secondary/40 px-3 py-2 text-xs">
         <div className="flex flex-wrap items-center gap-1">
           {/* Botões de Formatação */}
           <button
@@ -219,7 +219,7 @@ export function NotebookEditor({
               <Smile className="h-3.5 w-3.5" />
             </button>
             {emojiPickerOpen && (
-              <div className="absolute top-9 left-0 z-30 grid grid-cols-6 gap-1 rounded-xl border border-border bg-popover p-2 shadow-2xl backdrop-blur max-w-[200px]">
+              <div className="absolute top-9 left-0 z-30 grid grid-cols-6 gap-1 rounded-xl border border-border bg-popover p-2 max-w-[200px]">
                 {QA_EMOJIS.map((e) => (
                   <button
                     key={e}
@@ -234,13 +234,13 @@ export function NotebookEditor({
             )}
           </div>
 
-          <div className="h-4 w-px bg-border/60 mx-1" />
+          <span className="mx-0.5" />
 
           {/* Botão Capturar Seleção da Aula */}
           <button
             type="button"
             onClick={handleCaptureSelection}
-            className="flex h-7 items-center gap-1 rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-2 text-[11px] font-semibold text-indigo-400 hover:bg-indigo-500/20 transition"
+            className="flex h-7 items-center gap-1 rounded-lg border border-primary/30 bg-primary/10 px-2.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
             title="Capturar trecho selecionado na aula"
           >
             <Copy className="h-3 w-3" />
@@ -251,7 +251,7 @@ export function NotebookEditor({
           <button
             type="button"
             onClick={handleCreateFlashcard}
-            className="flex h-7 items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2 text-[11px] font-semibold text-amber-400 hover:bg-amber-500/20 transition"
+            className="flex h-7 items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 text-xs font-semibold text-amber-700 dark:text-amber-400 hover:bg-amber-500/20 transition-colors"
             title="Transformar trecho em Flashcard"
           >
             <Sparkles className="h-3 w-3" />
@@ -264,9 +264,9 @@ export function NotebookEditor({
           <button
             type="button"
             onClick={() => setActiveTab('editor')}
-            className={`flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium transition ${
+            className={`flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium transition-colors ${
               activeTab === 'editor'
-                ? 'bg-primary text-primary-foreground shadow-sm'
+                ? 'bg-primary text-primary-foreground'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -276,9 +276,9 @@ export function NotebookEditor({
           <button
             type="button"
             onClick={() => setActiveTab('preview')}
-            className={`flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium transition ${
+            className={`flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium transition-colors ${
               activeTab === 'preview'
-                ? 'bg-primary text-primary-foreground shadow-sm'
+                ? 'bg-primary text-primary-foreground'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -312,11 +312,11 @@ export function NotebookEditor({
       </div>
 
       {/* Rodapé com Dicas e Autosave */}
-      <div className="flex items-center justify-between border-t border-border/50 bg-card/40 px-4 py-1.5 text-[11px] text-muted-foreground">
+      <div className="flex items-center justify-between bg-secondary/35 px-4 py-1.5 text-xs text-muted-foreground">
         <span>
           Suporta formatação com **negrito**, *itálico*, ### títulos e listas.
         </span>
-        <span className="text-[10px] text-indigo-400 font-semibold">
+        <span className="text-xs text-primary font-semibold">
           Salvo automaticamente
         </span>
       </div>

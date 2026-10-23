@@ -109,7 +109,7 @@ export default async function TopicLessonPage({
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="default">Capítulo {chapter.number}</Badge>
           <Badge variant="outline">Tópico {topic.code}</Badge>
-          <Badge variant="purple">Nível Cognitivo Máx: {topic.kLevelMax}</Badge>
+          <Badge variant="secondary">Nível Cognitivo Máx: {topic.kLevelMax}</Badge>
         </div>
         <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
           {topic.title}
@@ -145,7 +145,7 @@ export default async function TopicLessonPage({
       />
 
       {/* Navegação entre Tópicos */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border/70 pt-6">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-secondary/40 p-4">
         {prevTopic ? (
           <Link href={`/capitulos/${chapter.slug}/topicos/${prevTopic.slug}`}>
             <Button variant="outline">

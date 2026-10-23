@@ -208,7 +208,7 @@ export function ExamRunner({
   return (
     <div className="space-y-6">
       {/* Barra Superior da Prova: Cronômetro, Status de Persistência e Indicadores */}
-      <Card className="border-indigo-500/30">
+      <Card className="border-primary/25">
         <CardContent className="flex flex-wrap items-center justify-between gap-4 p-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -217,30 +217,30 @@ export function ExamRunner({
                 <Badge variant="warning">Contém questões já vistas</Badge>
               )}
             </div>
-            <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground tabular-nums">
               <span>
                 Respondidas:{' '}
-                <strong className="text-emerald-400">{answeredCount}</strong>
+                <strong className="text-emerald-600 dark:text-emerald-400">{answeredCount}</strong>
               </span>
               <span>
                 Não respondidas:{' '}
-                <strong className="text-amber-400">{unansweredCount}</strong>
+                <strong className="text-amber-600 dark:text-amber-400">{unansweredCount}</strong>
               </span>
               <span>
                 Para revisão:{' '}
-                <strong className="text-violet-400">{markedCount}</strong>
+                <strong className="text-primary">{markedCount}</strong>
               </span>
               {savingStatus === 'saving' && (
-                <span className="text-indigo-400">Salvando no servidor...</span>
+                <span className="text-primary">Salvando no servidor...</span>
               )}
               {savingStatus === 'saved' && (
-                <span className="inline-flex items-center gap-1 text-emerald-400">
+                <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   Salvo
                 </span>
               )}
               {savingStatus === 'offline' && (
-                <span className="inline-flex items-center gap-1 text-rose-400">
+                <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400">
                   <WifiOff className="h-3.5 w-3.5" />
                   Conexão instável (clique novamente para reenviar)
                 </span>
@@ -252,10 +252,10 @@ export function ExamRunner({
             <div
               aria-label="Cronômetro da prova"
               className={cn(
-                'flex items-center gap-2 rounded-xl border px-4 py-2 font-mono text-base font-extrabold',
+                'flex items-center gap-2 rounded-xl border px-4 py-2 text-base font-extrabold tabular-nums',
                 remainingSeconds <= 300
-                  ? 'border-rose-500/50 bg-rose-500/15 text-rose-400 animate-pulse'
-                  : 'border-indigo-500/40 bg-indigo-500/15 text-indigo-300'
+                  ? 'border-rose-500/50 bg-rose-500/15 text-rose-600 dark:text-rose-400'
+                  : 'border-primary/35 bg-primary/10 text-primary'
               )}
             >
               <Clock className="h-4 w-4" />
@@ -279,7 +279,7 @@ export function ExamRunner({
         {/* Coluna Principal: Questão Atual */}
         <div className="lg:col-span-8 space-y-4">
           <Card className="border-border/80">
-            <CardHeader className="border-b border-border/60">
+            <CardHeader className="bg-secondary/25 rounded-t-2xl pb-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="default">
@@ -288,7 +288,7 @@ export function ExamRunner({
                   <Badge variant="outline">
                     Cap. {currentQuestion.chapterNumber} ({currentQuestion.topicCode})
                   </Badge>
-                  <Badge variant="purple">
+                  <Badge variant="secondary">
                     {currentQuestion.learningObjective} (
                     {currentQuestion.cognitiveLevel})
                   </Badge>
@@ -327,17 +327,17 @@ export function ExamRunner({
                     type="button"
                     onClick={() => handleSelectOption(opt.displayLabel)}
                     className={cn(
-                      'flex w-full items-start gap-3.5 rounded-xl border p-4 text-left text-sm transition-all',
+                      'flex w-full items-start gap-3.5 rounded-xl border p-4 text-left text-sm transition-colors',
                       isSelected
-                        ? 'border-indigo-500 bg-indigo-500/20 font-medium shadow-sm'
-                        : 'border-border/70 bg-background/40 hover:border-indigo-500/40'
+                        ? 'border-primary bg-primary/10 font-medium'
+                        : 'border-border/70 bg-background/40 hover:border-primary/40'
                     )}
                   >
                     <span
                       className={cn(
                         'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border text-xs font-bold',
                         isSelected
-                          ? 'border-indigo-400 bg-indigo-600 text-white'
+                          ? 'border-primary bg-primary text-primary-foreground'
                           : 'border-border bg-secondary text-foreground'
                       )}
                     >
@@ -351,7 +351,7 @@ export function ExamRunner({
               })}
 
               {/* Navegação Anterior / Próxima */}
-              <div className="flex items-center justify-between border-t border-border/60 pt-6">
+              <div className="flex items-center justify-between rounded-xl bg-secondary/35 p-3.5 mt-4">
                 <Button
                   type="button"
                   variant="outline"
@@ -411,10 +411,10 @@ export function ExamRunner({
                       aria-label={`Ir para questão ${q.orderIndex}`}
                       onClick={() => setCurrentIndex(idx)}
                       className={cn(
-                        'relative flex h-9 w-full items-center justify-center rounded-lg border text-xs font-bold transition',
-                        isCurrent && 'ring-2 ring-indigo-500 ring-offset-1',
+                        'relative flex h-9 w-full items-center justify-center rounded-lg border text-xs font-bold tabular-nums transition-colors',
+                        isCurrent && 'ring-2 ring-primary ring-offset-1',
                         isAnswered
-                          ? 'border-emerald-500/40 bg-emerald-500/20 text-emerald-300'
+                          ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
                           : 'border-border bg-secondary/40 text-muted-foreground',
                         isMarked && 'border-amber-500/60'
                       )}
@@ -428,7 +428,7 @@ export function ExamRunner({
                 })}
               </div>
 
-              <div className="space-y-1.5 border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
+              <div className="space-y-1.5 rounded-xl bg-secondary/35 p-3 text-xs text-muted-foreground tabular-nums">
                 <div className="flex items-center gap-2">
                   <span className="h-3 w-3 rounded border border-emerald-500/40 bg-emerald-500/20" />
                   <span>Respondida ({answeredCount})</span>

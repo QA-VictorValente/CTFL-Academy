@@ -147,7 +147,7 @@ export default async function ExamResultPage({
             {attempt.title}
           </CardTitle>
           <CardDescription>
-            Revisão oficial da tentativa (somente leitura — os registros da
+            Revisão oficial da tentativa (somente leitura: os registros da
             tentativa são imutáveis)
           </CardDescription>
         </CardHeader>
@@ -156,31 +156,31 @@ export default async function ExamResultPage({
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
             <div className="rounded-xl border border-border/70 bg-background/50 p-4">
               <p className="text-xs text-muted-foreground">Pontuação</p>
-              <p className="mt-1 text-2xl font-extrabold text-indigo-400">
+              <p className="mt-1 text-2xl font-extrabold text-primary tabular-nums">
                 {attempt.scorePoints} pts
               </p>
             </div>
             <div className="rounded-xl border border-border/70 bg-background/50 p-4">
               <p className="text-xs text-muted-foreground">Percentual</p>
-              <p className="mt-1 text-2xl font-extrabold">
+              <p className="mt-1 text-2xl font-extrabold tabular-nums">
                 {attempt.accuracyPercent}%
               </p>
             </div>
             <div className="rounded-xl border border-border/70 bg-background/50 p-4">
               <p className="text-xs text-muted-foreground">Total de Acertos</p>
-              <p className="mt-1 text-2xl font-extrabold text-emerald-400">
+              <p className="mt-1 text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums">
                 {attempt.correctCount}
               </p>
             </div>
             <div className="rounded-xl border border-border/70 bg-background/50 p-4">
               <p className="text-xs text-muted-foreground">Total de Erros</p>
-              <p className="mt-1 text-2xl font-extrabold text-rose-400">
+              <p className="mt-1 text-2xl font-extrabold text-rose-600 dark:text-rose-400 tabular-nums">
                 {attempt.wrongCount}
               </p>
             </div>
             <div className="rounded-xl border border-border/70 bg-background/50 p-4">
               <p className="text-xs text-muted-foreground">Não Respondidas</p>
-              <p className="mt-1 text-2xl font-extrabold text-amber-400">
+              <p className="mt-1 text-2xl font-extrabold text-amber-600 dark:text-amber-400 tabular-nums">
                 {attempt.unansweredCount}
               </p>
             </div>
@@ -190,8 +190,8 @@ export default async function ExamResultPage({
             value={attempt.accuracyPercent}
             indicatorClassName={
               attempt.passed
-                ? 'from-emerald-500 to-teal-500'
-                : 'from-rose-500 to-amber-500'
+                ? 'bg-emerald-500'
+                : 'bg-rose-500'
             }
           />
         </CardContent>
@@ -202,7 +202,7 @@ export default async function ExamResultPage({
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <Target className="h-5 w-5 text-indigo-400" />
+              <Target className="h-5 w-5 text-primary" />
               Resultado por Capítulo
             </CardTitle>
           </CardHeader>
@@ -224,13 +224,13 @@ export default async function ExamResultPage({
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <Award className="h-5 w-5 text-violet-400" />
+              <Award className="h-5 w-5 text-primary" />
               Diagnóstico: Pontos Fortes & Conteúdos para Revisar
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-xs">
             <div>
-              <p className="font-bold text-emerald-400 mb-2">
+              <p className="font-bold text-emerald-600 dark:text-emerald-400 mb-2">
                 Pontos Fortes (≥ 70% de acerto):
               </p>
               {strongTopics.length === 0 ? (
@@ -248,8 +248,8 @@ export default async function ExamResultPage({
               )}
             </div>
 
-            <div className="border-t border-border/60 pt-3">
-              <p className="font-bold text-amber-400 mb-2">
+            <div className="rounded-xl bg-secondary/35 p-3.5">
+              <p className="font-bold text-amber-600 dark:text-amber-400 mb-2">
                 Conteúdos que Precisam ser Revisados (&lt; 70% de acerto):
               </p>
               {weakTopics.length === 0 ? (
@@ -290,7 +290,7 @@ export default async function ExamResultPage({
         <Card className="border-amber-500/30">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <AlertTriangle className="h-5 w-5 text-amber-400" />
+              <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
               Resumo de Questões Erradas ou Não Respondidas (
               {wrongQuestions.length})
             </CardTitle>
@@ -305,7 +305,7 @@ export default async function ExamResultPage({
                 <a
                   key={wq.id}
                   href={`#questao-${wq.orderIndex}`}
-                  className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 transition"
+                  className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-700 dark:text-rose-300 hover:bg-rose-500/20 transition-colors"
                 >
                   Questão {wq.orderIndex} ({wq.learningObjectiveSnapshot})
                 </a>
@@ -358,7 +358,7 @@ export default async function ExamResultPage({
                       Cap. {eq.chapterNumberSnapshot} • Tópico{' '}
                       {eq.topicCodeSnapshot}
                     </Badge>
-                    <Badge variant="purple">
+                    <Badge variant="secondary">
                       {eq.learningObjectiveSnapshot} ({eq.cognitiveLevelSnapshot}
                       )
                     </Badge>
@@ -435,8 +435,8 @@ export default async function ExamResultPage({
                   })}
                 </div>
 
-                <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4 text-xs space-y-1">
-                  <p className="font-bold text-indigo-300">
+                <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 text-xs space-y-1">
+                  <p className="font-bold text-primary">
                     Explicação Oficial da Questão (Gabarito:{' '}
                     {eq.correctDisplayLabel}):
                   </p>

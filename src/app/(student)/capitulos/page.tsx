@@ -59,7 +59,7 @@ export default async function CapitulosListPage() {
           return (
             <Card
               key={ch.id}
-              className="border-border/80 hover:border-indigo-500/40 transition"
+              className="border-border/80 hover:border-primary/40 transition-colors"
             >
               <CardHeader>
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -70,7 +70,7 @@ export default async function CapitulosListPage() {
                       {Math.round((ch.examWeightQuestions / 40) * 100)}%)
                     </Badge>
                   </div>
-                  <span className="text-xs font-semibold text-indigo-400">
+                  <span className="text-xs font-semibold text-primary tabular-nums">
                     {pct}% concluído ({completedCount}/{totalTopics} tópicos)
                   </span>
                 </div>
@@ -93,13 +93,13 @@ export default async function CapitulosListPage() {
                       <Link
                         key={topic.id}
                         href={`/capitulos/${ch.slug}/topicos/${topic.slug}`}
-                        className="flex items-center justify-between gap-2 rounded-xl border border-border/70 bg-background/50 px-3.5 py-2.5 text-xs hover:border-indigo-500/40 transition"
+                        className="flex items-center justify-between gap-2 rounded-xl border border-border/70 bg-background/50 px-3.5 py-2.5 text-xs hover:border-primary/40 transition-colors"
                       >
                         <div className="flex items-center gap-2 min-w-0">
                           <CheckCircle2
                             className={
                               isDone
-                                ? 'h-4 w-4 shrink-0 text-emerald-400'
+                                ? 'h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400'
                                 : 'h-4 w-4 shrink-0 text-muted-foreground/40'
                             }
                           />
@@ -113,18 +113,18 @@ export default async function CapitulosListPage() {
                   })}
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/60 pt-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-secondary/40 p-3.5">
                   <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1.5">
-                      <BookOpen className="h-3.5 w-3.5 text-indigo-400" />
+                      <BookOpen className="h-3.5 w-3.5 text-primary" />
                       {totalTopics} tópicos
                     </span>
                     <span className="inline-flex items-center gap-1.5">
-                      <CheckSquare className="h-3.5 w-3.5 text-emerald-400" />
+                      <CheckSquare className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
                       {ch._count.questions} questões publicadas
                     </span>
                     <span className="inline-flex items-center gap-1.5">
-                      <Layers className="h-3.5 w-3.5 text-violet-400" />
+                      <Layers className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
                       {ch._count.flashcards} flashcards
                     </span>
                   </div>

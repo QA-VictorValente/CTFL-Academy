@@ -49,23 +49,23 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               key={item.id}
               role="status"
               className={cn(
-                'pointer-events-auto flex items-start gap-3 rounded-xl border p-4 shadow-xl backdrop-blur-md transition-all animate-in fade-in slide-in-from-bottom-4',
+                'pointer-events-auto flex items-start gap-3 rounded-xl p-4 ring-1 transition-[transform,opacity] duration-150 animate-in fade-in slide-in-from-bottom-4',
                 variant === 'success' &&
-                  'border-emerald-500/40 bg-emerald-950/90 text-emerald-100',
+                  'ring-emerald-600/40 bg-card text-foreground',
                 variant === 'error' &&
-                  'border-rose-500/40 bg-rose-950/90 text-rose-100',
+                  'ring-rose-600/40 bg-card text-foreground',
                 variant === 'info' &&
-                  'border-indigo-500/40 bg-slate-900/95 text-slate-100'
+                  'ring-primary/40 bg-card text-foreground'
               )}
             >
               {variant === 'success' && (
-                <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+                <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
               )}
               {variant === 'error' && (
-                <AlertCircle className="h-5 w-5 text-rose-400 shrink-0 mt-0.5" />
+                <AlertCircle className="h-5 w-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
               )}
               {variant === 'info' && (
-                <Info className="h-5 w-5 text-indigo-400 shrink-0 mt-0.5" />
+                <Info className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               )}
               <div className="flex-1 text-sm">
                 <p className="font-semibold">{item.title}</p>

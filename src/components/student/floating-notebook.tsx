@@ -183,22 +183,22 @@ export function FloatingNotebook() {
           type="button"
           onClick={() => setIsOpen(true)}
           className={cn(
-            'fixed bottom-4 right-2.5 sm:bottom-5 sm:right-3.5 z-40 flex items-center gap-1.5 rounded-xl border border-indigo-500/40 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 p-2 sm:px-3 sm:py-2 font-semibold text-white shadow-xl shadow-indigo-500/25 transition-all duration-300 hover:scale-105 active:scale-95 group',
+            'fixed bottom-4 right-2.5 sm:bottom-5 sm:right-3.5 z-40 flex items-center gap-1.5 rounded-xl border border-primary/40 bg-primary p-2 sm:px-3 sm:py-2 font-semibold text-primary-foreground transition-[transform,opacity] duration-200 hover:scale-[1.02] active:scale-[0.98] group',
             isScrolling
-              ? 'opacity-35 hover:opacity-100 hover:scale-105'
+              ? 'opacity-35 hover:opacity-100'
               : 'opacity-95 hover:opacity-100'
           )}
           title="Abrir Caderno de Estudos e Mapa Mental (Alt + N)"
         >
-          <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-white/20 text-white">
-            <Brain className="h-3.5 w-3.5 transition group-hover:rotate-12" />
+          <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-primary-foreground/15 text-primary-foreground">
+            <Brain className="h-3.5 w-3.5 transition-transform group-hover:rotate-12" />
           </div>
           <div className="hidden sm:flex flex-col text-left leading-none">
-            <span className="text-[11px] font-bold">Caderno & Mapas</span>
-            <span className="text-[9px] text-indigo-200">Alt + N</span>
+            <span className="text-xs font-bold">Caderno & Mapas</span>
+            <span className="text-xs opacity-80">Alt + N</span>
           </div>
           {isLessonPage && (
-            <span className="ml-0.5 flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="ml-0.5 flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
           )}
         </button>
       )}
@@ -229,11 +229,11 @@ export function FloatingNotebook() {
                   left: '24px',
                 }
           }
-          className={`fixed z-50 flex flex-col border border-indigo-500/30 bg-card/95 text-card-foreground shadow-2xl backdrop-blur-xl transition-all ${
+          className={`fixed z-50 flex flex-col border border-border bg-card text-card-foreground transition-[width,height] ${
             dockMode === 'floating'
               ? 'rounded-3xl'
               : dockMode === 'docked'
-              ? 'border-l border-y-0 border-r-0'
+              ? 'rounded-none'
               : 'rounded-3xl'
           }`}
         >
@@ -249,26 +249,26 @@ export function FloatingNotebook() {
           )}
 
           {/* Cabeçalho da Janela */}
-          <div className="flex items-center justify-between border-b border-border/60 bg-gradient-to-r from-indigo-950/40 via-card to-violet-950/30 px-4 py-3 select-none">
+          <div className="flex items-center justify-between bg-secondary/40 px-4 py-3 select-none">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-md">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                 <Brain className="h-4 w-4" />
               </div>
               <div>
                 <h3 className="text-xs sm:text-sm font-bold tracking-tight flex items-center gap-1.5">
                   Caderno & Mapa Mental
                   {isLessonPage && (
-                    <Badge variant="purple" className="text-[9px] px-1.5 py-0 h-4">
+                    <Badge variant="secondary" className="text-xs px-1.5 py-0 h-5">
                       Aula Ativa
                     </Badge>
                   )}
                 </h3>
-                <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                <span className="text-xs text-muted-foreground flex items-center gap-1">
                   {saveStatus === 'saving' ? (
                     <>Salvando...</>
                   ) : (
                     <>
-                      <Check className="h-2.5 w-2.5 text-emerald-400" /> Salvo no navegador
+                      <Check className="h-2.5 w-2.5 text-emerald-600 dark:text-emerald-400" /> Salvo no navegador
                     </>
                   )}
                 </span>
@@ -280,9 +280,9 @@ export function FloatingNotebook() {
               <button
                 type="button"
                 onClick={() => setActiveTab('mindmap')}
-                className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors ${
                   activeTab === 'mindmap'
-                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -292,9 +292,9 @@ export function FloatingNotebook() {
               <button
                 type="button"
                 onClick={() => setActiveTab('notes')}
-                className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors ${
                   activeTab === 'notes'
-                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >

@@ -110,7 +110,7 @@ export function ExamConfigManager({ config, chapters }: ExamConfigProps) {
             </CardTitle>
             <CardDescription>{config.description}</CardDescription>
           </div>
-          <Badge variant="info">Versão Ativa v{config.version}</Badge>
+          <Badge variant="info" className="tabular-nums">Versão Ativa v{config.version}</Badge>
         </div>
       </CardHeader>
 
@@ -184,19 +184,21 @@ export function ExamConfigManager({ config, chapters }: ExamConfigProps) {
               type="checkbox"
               checked={allowNonNativeBonus}
               onChange={(e) => setAllowNonNativeBonus(e.target.checked)}
+              data-ui
               className="h-4 w-4 rounded border-border"
             />
             Permitir que candidatos ativem o tempo estendido (+{nonNativeBonusPercent}%) para idioma não-nativo
           </label>
 
           {/* Distribuição por Capítulo */}
-          <div className="space-y-3 rounded-xl border border-border bg-secondary/10 p-4">
+          <div data-ui className="space-y-3 rounded-xl border border-border bg-secondary/20 p-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <h4 className="text-xs font-semibold text-muted-foreground">
                 Distribuição de Questões por Capítulo no Simulado Completo
               </h4>
               <Badge
                 variant={sumDistribution === totalQuestions ? 'success' : 'warning'}
+                className="tabular-nums"
               >
                 Soma atual: {sumDistribution} / {totalQuestions} questões
               </Badge>

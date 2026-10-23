@@ -144,7 +144,7 @@ export default async function StudentDashboardPage() {
   return (
     <div className="space-y-8">
       {/* Saudação e Botão Continuar de Onde Parou */}
-      <div className="flex flex-col justify-between gap-4 rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/60 via-card to-violet-950/40 p-6 sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-4 rounded-2xl border border-primary/25 bg-card p-6 sm:flex-row sm:items-center">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <Badge variant="default">Estudante CTFL v4.0.1</Badge>
@@ -190,7 +190,7 @@ export default async function StudentDashboardPage() {
         <CardContent className="p-5">
           <div className="flex items-center justify-between text-sm font-medium mb-2">
             <span>Progresso Geral no Syllabus CTFL 4.0.1</span>
-            <span className="font-bold text-indigo-400">
+            <span className="font-bold text-primary tabular-nums">
               {overallProgressPercent}% ({completedTopicsCount}/{totalTopicsCount}{' '}
               tópicos concluídos)
             </span>
@@ -206,7 +206,7 @@ export default async function StudentDashboardPage() {
           value={`${chaptersStudiedCount} / ${chapters.length}`}
           subtitle="Com atividade registrada"
           icon={BookOpen}
-          accent="indigo"
+          accent="emerald"
         />
         <StatCard
           title="Questões Respondidas"
@@ -227,7 +227,7 @@ export default async function StudentDashboardPage() {
           value={completedExamsCount}
           subtitle="Tentativas finalizadas"
           icon={Clock}
-          accent="violet"
+          accent="blue"
         />
         <StatCard
           title="Sequência de Estudos"
@@ -241,7 +241,7 @@ export default async function StudentDashboardPage() {
           value={`${user.totalXp} XP`}
           subtitle={`${userAchievements.length} conquistas`}
           icon={Zap}
-          accent="indigo"
+          accent="emerald"
         />
       </div>
 
@@ -303,7 +303,7 @@ export default async function StudentDashboardPage() {
             return (
               <Card
                 key={ch.id}
-                className="flex flex-col justify-between hover:border-indigo-500/40 transition"
+                className="flex flex-col justify-between hover:border-primary/40 transition-colors"
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
@@ -325,7 +325,7 @@ export default async function StudentDashboardPage() {
                       <span className="text-muted-foreground">
                         {doneTopics}/{totalChTopics} tópicos concluídos
                       </span>
-                      <span className="font-semibold">{pct}%</span>
+                      <span className="font-semibold tabular-nums">{pct}%</span>
                     </div>
                     <Progress value={pct} />
                   </div>
@@ -347,7 +347,7 @@ export default async function StudentDashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <AlertTriangle className="h-5 w-5 text-amber-400" />
+              <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
               Assuntos com Maior Dificuldade & Sugestões de Revisão
             </CardTitle>
             <CardDescription className="text-xs">
@@ -372,7 +372,7 @@ export default async function StudentDashboardPage() {
                       <p className="text-xs font-semibold">
                         {tp.topic.title}
                       </p>
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-xs text-muted-foreground">
                         Acerto: {tp.accuracyPercent}% ({tp.questionsCorrect}/
                         {tp.questionsAnswered} questões)
                       </p>
@@ -394,7 +394,7 @@ export default async function StudentDashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <BarChart3 className="h-5 w-5 text-indigo-400" />
+              <BarChart3 className="h-5 w-5 text-primary" />
               Últimos Resultados de Simulados
             </CardTitle>
             <CardDescription className="text-xs">
@@ -424,7 +424,7 @@ export default async function StudentDashboardPage() {
                       <p className="text-xs font-semibold line-clamp-1">
                         {att.title}
                       </p>
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-xs text-muted-foreground">
                         {formatDateTimeBR(att.completedAt)} • {att.correctCount}/
                         {att.totalQuestions} acertos ({att.accuracyPercent}%)
                       </p>
@@ -452,7 +452,7 @@ export default async function StudentDashboardPage() {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2 text-base">
-              <Award className="h-5 w-5 text-violet-400" />
+              <Award className="h-5 w-5 text-primary" />
               Conquistas Desbloqueadas ({userAchievements.length})
             </CardTitle>
             <CardDescription className="text-xs">
@@ -476,15 +476,14 @@ export default async function StudentDashboardPage() {
               {userAchievements.map((ua) => (
                 <div
                   key={ua.id}
-                  className="flex items-center gap-3 rounded-xl border border-violet-500/30 bg-violet-500/10 p-3"
+                  className="flex items-center gap-3 rounded-xl border border-primary/25 bg-primary/5 p-3"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-violet-500/20 text-violet-300">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
                     <Award className="h-5 w-5" />
                   </div>
                   <div>
                     <p className="text-xs font-bold">{ua.achievement.title}</p>
-                    <p className="text-[11px] text-muted-foreground">
-                      +{ua.achievement.xpReward} XP •{' '}
+                    <p className="text-xs text-muted-foreground">
                       {formatDateTimeBR(ua.unlockedAt)}
                     </p>
                   </div>

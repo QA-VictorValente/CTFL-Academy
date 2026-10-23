@@ -139,7 +139,7 @@ export function ReviewQueueManager({
                 </Badge>
                 <Badge variant="outline">Versão {q.version}</Badge>
               </div>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs tabular-nums text-muted-foreground">
                 Atualizada em {formatDateTimePtBr(q.updatedAt)}
               </span>
             </div>
@@ -156,10 +156,11 @@ export function ReviewQueueManager({
               {q.options.map((opt) => (
                 <div
                   key={opt.id}
+                  data-ui
                   className={`rounded-lg border p-3 text-xs ${
                     opt.isCorrect
                       ? 'border-emerald-500/40 bg-emerald-500/10'
-                      : 'border-border bg-secondary/10'
+                      : 'border-border bg-secondary/20'
                   }`}
                 >
                   <div className="font-semibold">
@@ -174,7 +175,7 @@ export function ReviewQueueManager({
               ))}
             </div>
 
-            <div className="rounded-lg border border-border bg-secondary/20 p-3 text-xs space-y-1">
+            <div data-ui className="rounded-lg border border-border bg-secondary/20 p-3 text-xs space-y-1">
               <strong>Explicação Didática:</strong>
               <FormattedText
                 text={q.explanation}
@@ -182,7 +183,7 @@ export function ReviewQueueManager({
               />
             </div>
 
-            <div className="space-y-3 rounded-xl border border-border p-3.5">
+            <div data-ui className="space-y-3 rounded-xl border border-border p-3.5">
               <Textarea
                 label="Parecer Técnico do Revisor"
                 rows={2}

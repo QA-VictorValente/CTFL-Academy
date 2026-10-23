@@ -163,7 +163,7 @@ export default async function ProgressoPage() {
                     stat.accuracy >= 65 ? 'bg-emerald-500' : 'bg-amber-500'
                   }
                 />
-                <p className="mt-2 text-[11px] text-muted-foreground">
+                <p className="mt-2 text-xs text-muted-foreground">
                   {stat.correct} acertos de {stat.total} questões respondidas
                 </p>
               </div>
@@ -219,8 +219,8 @@ export default async function ProgressoPage() {
                           chAnswers.length === 0
                             ? 'text-muted-foreground'
                             : chAccuracy >= 65
-                              ? 'text-emerald-500'
-                              : 'text-amber-500'
+                              ? 'text-emerald-600 dark:text-emerald-400'
+                              : 'text-amber-600 dark:text-amber-400'
                         }`}
                       >
                         {chAnswers.length > 0 ? `${chAccuracy}%` : 'Sem respostas'}
@@ -232,7 +232,7 @@ export default async function ProgressoPage() {
               </CardHeader>
 
               <CardContent>
-                <div className="divide-y divide-border rounded-lg border border-border">
+                <div className="space-y-2">
                   {ch.topics.map((topic) => {
                     const tp = progressMap.get(topic.id);
                     const isCompleted = Boolean(tp?.lessonsCompleted);
@@ -244,12 +244,12 @@ export default async function ProgressoPage() {
                     return (
                       <div
                         key={topic.id}
-                        className="flex flex-col justify-between gap-2 p-3 text-sm sm:flex-row sm:items-center"
+                        className="flex flex-col justify-between gap-2 rounded-xl bg-secondary/35 p-3 text-sm sm:flex-row sm:items-center"
                       >
                         <div className="flex items-center gap-2.5">
                           <CheckCircle2
                             className={`h-4 w-4 shrink-0 ${
-                              isCompleted ? 'text-emerald-500' : 'text-muted-foreground/40'
+                              isCompleted ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground/40'
                             }`}
                           />
                           <div>
@@ -257,7 +257,7 @@ export default async function ProgressoPage() {
                               href={`/capitulos/${ch.slug}/topicos/${topic.slug}`}
                               className="font-medium hover:text-primary hover:underline"
                             >
-                              {topic.code} — {topic.title}
+                              {topic.code} - {topic.title}
                             </Link>
                             <span className="ml-2 text-xs text-muted-foreground">
                               ({topic.kLevelMax})

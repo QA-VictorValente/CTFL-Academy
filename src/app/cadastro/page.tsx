@@ -79,12 +79,12 @@ export default function CadastroPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh flex-col bg-background text-foreground">
       <PublicHeader />
       <main className="flex flex-1 items-center justify-center p-4">
-        <Card className="w-full max-w-md border-indigo-500/20 shadow-xl">
+        <Card className="w-full max-w-md border-border bg-card">
           <CardHeader className="space-y-2 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-md">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/15 text-primary">
               <ShieldCheck className="h-6 w-6" />
             </div>
             <CardTitle className="text-2xl font-bold">
@@ -100,7 +100,7 @@ export default function CadastroPage() {
               {serverError && (
                 <div
                   role="alert"
-                  className="rounded-lg border border-rose-500/40 bg-rose-500/10 p-3 text-xs font-medium text-rose-400"
+                  className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs font-medium text-destructive"
                 >
                   {serverError}
                 </div>
@@ -109,7 +109,7 @@ export default function CadastroPage() {
               <div className="space-y-1.5">
                 <label
                   htmlFor="fullName"
-                  className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                  className="text-sm font-medium text-foreground"
                 >
                   Nome Completo
                 </label>
@@ -125,7 +125,7 @@ export default function CadastroPage() {
                   />
                 </div>
                 {errors.fullName && (
-                  <p className="text-xs text-rose-400">
+                  <p className="text-xs text-destructive">
                     {errors.fullName.message}
                   </p>
                 )}
@@ -134,7 +134,7 @@ export default function CadastroPage() {
               <div className="space-y-1.5">
                 <label
                   htmlFor="email"
-                  className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                  className="text-sm font-medium text-foreground"
                 >
                   E-mail
                 </label>
@@ -150,14 +150,14 @@ export default function CadastroPage() {
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-xs text-rose-400">{errors.email.message}</p>
+                  <p className="text-xs text-destructive">{errors.email.message}</p>
                 )}
               </div>
 
               <div className="space-y-1.5">
                 <label
                   htmlFor="password"
-                  className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                  className="text-sm font-medium text-foreground"
                 >
                   Senha (mínimo 8 caracteres)
                 </label>
@@ -173,7 +173,7 @@ export default function CadastroPage() {
                   />
                 </div>
                 {errors.password && (
-                  <p className="text-xs text-rose-400">
+                  <p className="text-xs text-destructive">
                     {errors.password.message}
                   </p>
                 )}
@@ -189,11 +189,11 @@ export default function CadastroPage() {
               </Button>
             </form>
 
-            <div className="mt-6 border-t border-border/60 pt-4 text-center text-xs text-muted-foreground">
+            <div className="mt-6 rounded-lg bg-secondary/50 p-3 text-center text-xs text-muted-foreground">
               Já possui uma conta?{' '}
               <Link
                 href="/login"
-                className="font-semibold text-indigo-400 hover:underline"
+                className="font-semibold text-primary hover:underline"
               >
                 Fazer login
               </Link>

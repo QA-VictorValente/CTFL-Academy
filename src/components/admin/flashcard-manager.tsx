@@ -216,7 +216,7 @@ export function FlashcardManager({
                 <div className="mt-3 text-sm font-bold text-foreground">
                   Frente: <InlineMarkdown text={fc.front} />
                 </div>
-                <div className="mt-2 rounded-lg border border-border bg-secondary/20 p-2.5 text-xs text-muted-foreground">
+                <div data-ui className="mt-2 rounded-lg border border-border bg-secondary/30 p-2.5 text-xs text-muted-foreground">
                   <strong>Verso:</strong> <InlineMarkdown text={fc.back} />
                 </div>
               </div>
@@ -225,7 +225,7 @@ export function FlashcardManager({
                 {fc.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary"
+                    className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary"
                   >
                     #{tag}
                   </span>
@@ -237,9 +237,9 @@ export function FlashcardManager({
       </div>
 
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 p-4">
           <Card className="w-full max-w-xl">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-border">
+            <CardHeader data-ui className="flex flex-row items-center justify-between border-b border-border">
               <div>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <Layers className="h-4 w-4 text-primary" />
@@ -322,6 +322,7 @@ export function FlashcardManager({
                     type="checkbox"
                     checked={isPublished}
                     onChange={(e) => setIsPublished(e.target.checked)}
+                    data-ui
                     className="h-4 w-4 rounded border-border"
                   />
                   Publicar imediatamente para os estudantes

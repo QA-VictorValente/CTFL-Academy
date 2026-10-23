@@ -10,18 +10,18 @@ export function PublicHeader() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full bg-card/95 ring-1 ring-border/80">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
           className="flex items-center gap-2.5 font-bold tracking-tight"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-md shadow-indigo-500/20">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <ShieldCheck className="h-5 w-5" />
           </div>
           <div className="flex flex-col leading-none">
             <span className="text-base font-extrabold">CTFL Academy</span>
-            <span className="text-[10px] font-medium uppercase tracking-widest text-indigo-400">
+            <span className="mt-0.5 text-xs font-medium text-primary">
               Syllabus v4.0.1
             </span>
           </div>
@@ -87,7 +87,7 @@ export function PublicHeader() {
       </div>
 
       {mobileOpen && (
-        <div className="border-b border-border bg-card px-4 py-4 md:hidden">
+        <div className="bg-card ring-1 ring-border px-4 py-4 md:hidden">
           <nav className="flex flex-col space-y-3">
             <Link
               href="/sobre"

@@ -66,7 +66,7 @@ export default async function AdminAuditoriaPage({
               <Link
                 key={et.entityType}
                 href={`/admin/auditoria?entityType=${encodeURIComponent(et.entityType)}`}
-                className={`rounded-lg px-2.5 py-1 text-xs font-medium ${
+                className={`rounded-lg px-2.5 py-1 text-xs font-medium tabular-nums ${
                   entityFilter === et.entityType
                     ? 'bg-primary text-primary-foreground'
                     : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
@@ -81,7 +81,7 @@ export default async function AdminAuditoriaPage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
+          <CardTitle className="flex items-center gap-2 text-base tabular-nums">
             <FileSearch className="h-4 w-4 text-primary" />
             Registros de Auditoria ({logs.length})
           </CardTitle>
@@ -90,7 +90,7 @@ export default async function AdminAuditoriaPage({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="divide-y divide-border rounded-xl border border-border">
+          <div data-ui className="divide-y divide-border rounded-xl border border-border bg-card">
             {logs.map((log) => (
               <div
                 key={log.id}
@@ -100,9 +100,9 @@ export default async function AdminAuditoriaPage({
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="info">{log.action}</Badge>
                     <Badge variant="outline">{log.entityType}</Badge>
-                    <span className="font-mono text-[11px] text-muted-foreground">
+                    <code className="rounded bg-secondary/60 px-1.5 py-0.5 text-xs tabular-nums text-muted-foreground">
                       ID: {log.entityId}
-                    </span>
+                    </code>
                   </div>
                   <p className="text-muted-foreground">
                     Operador:{' '}
@@ -112,14 +112,14 @@ export default async function AdminAuditoriaPage({
                     {log.actor?.email ? `(${log.actor.email})` : ''}
                   </p>
                   {log.details && (
-                    <pre className="mt-1 overflow-x-auto rounded bg-secondary/30 px-2 py-1 font-mono text-[10px] text-muted-foreground">
+                    <pre className="mt-1 overflow-x-auto rounded bg-secondary/40 px-2.5 py-1.5 text-xs text-muted-foreground">
                       {JSON.stringify(log.details)}
                     </pre>
                   )}
                 </div>
 
-                <div className="flex items-center gap-1.5 text-muted-foreground sm:text-right">
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                <div className="flex items-center gap-1.5 tabular-nums text-muted-foreground sm:text-right">
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
                   <span>{formatDateTimePtBr(log.createdAt)}</span>
                 </div>
               </div>

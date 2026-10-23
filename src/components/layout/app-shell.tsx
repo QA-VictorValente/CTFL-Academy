@@ -126,17 +126,17 @@ export function AppShell({
             onNavigate?.();
           }}
           className={cn(
-            'flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all',
+            'flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors',
             isActive || isPending
-              ? 'bg-gradient-to-r from-indigo-600/20 to-violet-600/20 text-indigo-400 border border-indigo-500/30 font-semibold'
+              ? 'bg-primary/12 text-primary ring-1 ring-inset ring-primary/25 font-semibold'
               : 'text-muted-foreground hover:bg-secondary/70 hover:text-foreground'
           )}
         >
           {isPending ? (
-            <Loader2 className="h-4 w-4 shrink-0 animate-spin text-indigo-400" />
+            <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" />
           ) : (
             <Icon
-              className={cn('h-4 w-4 shrink-0', isActive && 'text-indigo-400')}
+              className={cn('h-4 w-4 shrink-0', isActive && 'text-primary')}
             />
           )}
           <span>{item.label}</span>
@@ -145,19 +145,19 @@ export function AppShell({
     });
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-dvh bg-background">
       {/* Desktop Sidebar */}
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col overflow-hidden border-r border-border/70 bg-card/60 lg:flex">
-        <div className="flex h-16 shrink-0 items-center gap-2.5 border-b border-border/70 px-5">
+      <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col overflow-hidden bg-card ring-1 ring-border/80 lg:flex">
+        <div className="flex h-16 shrink-0 items-center gap-2.5 bg-secondary/40 px-5">
           <Link href="/dashboard" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-md shadow-indigo-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <ShieldCheck className="h-5 w-5" />
             </div>
             <div className="flex flex-col leading-none">
               <span className="text-base font-extrabold tracking-tight">
                 CTFL Academy
               </span>
-              <span className="text-[10px] font-medium uppercase tracking-widest text-indigo-400">
+              <span className="mt-0.5 text-xs font-medium text-primary">
                 Syllabus 4.0.1
               </span>
             </div>
@@ -166,7 +166,7 @@ export function AppShell({
 
         <div className="sidebar-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-4 space-y-6">
           <div>
-            <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <p className="mb-2 px-3 text-xs font-semibold text-muted-foreground">
               Área do Estudante
             </p>
             <nav aria-label="Menu do estudante" className="space-y-1">
@@ -176,7 +176,7 @@ export function AppShell({
 
           {user.role === 'ADMIN' && (
             <div>
-              <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-violet-400">
+              <p className="mb-2 px-3 text-xs font-semibold text-primary">
                 Administração & Curadoria
               </p>
               <nav aria-label="Menu administrativo" className="space-y-1">
@@ -186,7 +186,7 @@ export function AppShell({
           )}
         </div>
 
-        <div className="shrink-0 border-t border-border/70 p-4">
+        <div className="shrink-0 bg-secondary/40 p-4">
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold">{user.fullName}</p>
@@ -215,7 +215,7 @@ export function AppShell({
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col min-w-0">
         {/* Top AppHeader */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border/70 bg-background/85 px-4 backdrop-blur-md sm:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between bg-card/95 ring-1 ring-border/80 px-4 sm:px-6">
           <div className="flex items-center gap-3">
             <Button
               type="button"
@@ -239,7 +239,7 @@ export function AppShell({
           <div className="flex items-center gap-2.5 sm:gap-3">
             <div
               title="Sequência de dias estudados"
-              className="flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-400"
+              className="flex items-center gap-1.5 rounded-full bg-amber-500/12 ring-1 ring-inset ring-amber-600/30 px-3 py-1 text-xs font-semibold text-amber-800 dark:text-amber-300 tabular-nums"
             >
               <Flame className="h-3.5 w-3.5" />
               <span>{user.currentStreak}d</span>
@@ -247,7 +247,7 @@ export function AppShell({
 
             <div
               title="XP Acumulado"
-              className="flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-400"
+              className="flex items-center gap-1.5 rounded-full bg-primary/12 ring-1 ring-inset ring-primary/30 px-3 py-1 text-xs font-semibold text-primary tabular-nums"
             >
               <Zap className="h-3.5 w-3.5" />
               <span>{user.totalXp} XP</span>
@@ -284,11 +284,11 @@ export function AppShell({
         {mobileOpen && (
           <div className="fixed inset-0 z-50 flex lg:hidden">
             <div
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+              className="fixed inset-0 bg-black/60"
               onClick={() => setMobileOpen(false)}
             />
-            <div className="relative z-10 flex h-full max-h-screen w-72 max-w-[85vw] flex-col overflow-hidden bg-card p-4 shadow-2xl">
-              <div className="flex shrink-0 items-center justify-between border-b border-border pb-3">
+            <div className="relative z-10 flex h-full max-h-dvh w-72 max-w-[85vw] flex-col overflow-hidden bg-card p-4 ring-1 ring-border">
+              <div className="flex shrink-0 items-center justify-between rounded-lg bg-secondary/50 px-3 py-2">
                 <span className="font-bold">CTFL Academy</span>
                 <Button
                   type="button"
@@ -302,7 +302,7 @@ export function AppShell({
               </div>
               <div className="sidebar-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain py-4 space-y-6">
                 <div>
-                  <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="mb-2 px-3 text-xs font-semibold text-muted-foreground">
                     Estudante
                   </p>
                   <nav className="space-y-1">
@@ -311,7 +311,7 @@ export function AppShell({
                 </div>
                 {user.role === 'ADMIN' && (
                   <div>
-                    <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-violet-400">
+                    <p className="mb-2 px-3 text-xs font-semibold text-primary">
                       Administração
                     </p>
                     <nav className="space-y-1">
@@ -320,7 +320,7 @@ export function AppShell({
                   </div>
                 )}
               </div>
-              <div className="shrink-0 border-t border-border pt-3">
+              <div className="shrink-0 pt-3">
                 <Button
                   type="button"
                   variant="outline"

@@ -67,7 +67,7 @@ export function InteractiveGlossary({
     setMasteredTerms((prev) => ({ ...prev, [term]: isNowMastered }));
     if (isNowMastered) {
       toast({
-        title: 'Termo fixado! 🎯',
+        title: 'Termo fixado!',
         description: `"${term}" marcado como dominado no seu estudo.`,
         variant: 'success',
       });
@@ -114,12 +114,12 @@ export function InteractiveGlossary({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar termo ou conceito no glossário..."
-            className="pl-9 bg-background/50 border-violet-500/30"
+            className="pl-9 bg-background/50 border-border"
           />
         </div>
 
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Badge variant="purple" className="font-semibold">
+          <Badge variant="secondary" className="font-semibold">
             {masteredCount} de {definitions.length} termos dominados
           </Badge>
           <Button
@@ -133,7 +133,7 @@ export function InteractiveGlossary({
                 Object.keys(prev).length === definitions.length ? {} : allHidden
               );
             }}
-            className="text-xs text-violet-300 hover:text-violet-200"
+            className="text-xs text-primary hover:text-primary/80"
           >
             <EyeOff className="h-3.5 w-3.5 mr-1" />
             Desafio de Memória (Ocultar Tudo)
@@ -151,18 +151,18 @@ export function InteractiveGlossary({
             <Card
               key={def.term}
               className={cn(
-                'transition-all duration-200 border-violet-500/30 bg-gradient-to-br from-violet-950/20 via-background to-background',
-                isMastered && 'border-emerald-500/50 bg-emerald-950/15'
+                'transition-colors duration-200 border-border bg-card',
+                isMastered && 'border-emerald-500/45 bg-emerald-500/5'
               )}
             >
               <CardContent className="p-4 space-y-2.5">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-violet-300 text-base">
+                    <span className="font-bold text-primary text-base">
                       {def.term}
                     </span>
                     {isMastered && (
-                      <Badge variant="success" className="h-5 px-1.5 text-[10px]">
+                      <Badge variant="success" className="h-5 px-1.5 text-xs">
                         Dominado
                       </Badge>
                     )}
@@ -175,8 +175,8 @@ export function InteractiveGlossary({
                       size="sm"
                       onClick={() => speakTerm(def.term, def.definition)}
                       className={cn(
-                        'h-7 w-7 p-0 text-muted-foreground hover:text-violet-300',
-                        isSpeaking && 'text-violet-400 bg-violet-500/20 animate-pulse'
+                        'h-7 w-7 p-0 text-muted-foreground hover:text-primary',
+                        isSpeaking && 'text-primary bg-primary/15'
                       )}
                       title="Ouvir definição em áudio"
                     >
@@ -198,8 +198,8 @@ export function InteractiveGlossary({
                       size="sm"
                       onClick={() => toggleMastered(def.term)}
                       className={cn(
-                        'h-7 w-7 p-0 text-muted-foreground hover:text-emerald-400',
-                        isMastered && 'text-emerald-400 bg-emerald-500/20'
+                        'h-7 w-7 p-0 text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400',
+                        isMastered && 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/15'
                       )}
                       title={isMastered ? 'Desmarcar como dominado' : 'Marcar como dominado'}
                     >
@@ -213,9 +213,9 @@ export function InteractiveGlossary({
                     onClick={() => toggleHide(def.term)}
                     role="button"
                     tabIndex={0}
-                    className="cursor-pointer rounded-lg border border-dashed border-violet-500/40 bg-violet-500/5 p-3 text-center text-xs text-violet-300 hover:bg-violet-500/10 transition"
+                    className="cursor-pointer rounded-lg border border-dashed border-primary/35 bg-primary/5 p-3 text-center text-xs text-primary hover:bg-primary/10 transition-colors"
                   >
-                    🔒 Definição oculta. Tente lembrar com suas palavras e clique para conferir!
+                    Definição oculta. Tente lembrar com suas palavras e clique para conferir!
                   </div>
                 ) : (
                   <p
@@ -268,7 +268,7 @@ export function InlineCheckpoint({
     const opt = checkpoint.options.find((o) => o.label === label);
     if (opt?.isCorrect) {
       toast({
-        title: 'Mandou bem! Resposta Correta! 🌟',
+        title: 'Mandou bem! Resposta Correta!',
         description: opt.feedback,
         variant: 'success',
       });
@@ -288,14 +288,14 @@ export function InlineCheckpoint({
   }
 
   return (
-    <div className="my-6 rounded-2xl border border-indigo-500/40 bg-gradient-to-br from-indigo-950/30 via-background to-violet-950/20 p-5 sm:p-6 shadow-lg shadow-indigo-950/30">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-500/20 pb-3 mb-4">
+    <div className="my-6 rounded-2xl border border-primary/30 bg-card p-5 sm:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-secondary/35 p-3 mb-4">
         <div className="flex items-center gap-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/20 text-indigo-400">
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/15 text-primary">
             <Sparkles className="h-4 w-4" />
           </span>
           <div>
-            <h4 className="text-sm font-bold text-indigo-300 uppercase tracking-wider">
+            <h4 className="text-sm font-bold text-primary">
               Pausa Rápida de Fixação (Active Recall)
             </h4>
             <p className="text-xs text-muted-foreground">
@@ -333,10 +333,10 @@ export function InlineCheckpoint({
                 disabled={revealed}
                 onClick={() => handleSelect(opt.label)}
                 className={cn(
-                  'w-full flex items-start gap-3 rounded-xl border p-3.5 text-left text-sm transition-all',
-                  !revealed && 'border-border/70 bg-background/50 hover:border-indigo-500/50 hover:bg-indigo-500/5 cursor-pointer',
-                  revealed && opt.isCorrect && 'border-emerald-500/70 bg-emerald-500/15 text-emerald-200 font-semibold',
-                  revealed && isSelected && !opt.isCorrect && 'border-rose-500/70 bg-rose-500/15 text-rose-200'
+                  'w-full flex items-start gap-3 rounded-xl border p-3.5 text-left text-sm transition-colors',
+                  !revealed && 'border-border/70 bg-background/50 hover:border-primary/50 hover:bg-primary/5 cursor-pointer',
+                  revealed && opt.isCorrect && 'border-emerald-500/70 bg-emerald-500/15 text-foreground font-semibold',
+                  revealed && isSelected && !opt.isCorrect && 'border-rose-500/70 bg-rose-500/15 text-foreground'
                 )}
               >
                 <span
@@ -360,19 +360,19 @@ export function InlineCheckpoint({
             className={cn(
               'rounded-xl border p-4 text-xs sm:text-sm leading-relaxed space-y-1',
               selectedOpt.isCorrect
-                ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-200'
-                : 'border-amber-500/40 bg-amber-950/30 text-amber-200'
+                ? 'border-emerald-500/35 bg-emerald-500/10 text-foreground'
+                : 'border-amber-500/35 bg-amber-500/10 text-foreground'
             )}
           >
             <p className="font-bold flex items-center gap-1.5">
               {selectedOpt.isCorrect ? (
                 <>
-                  <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                   Excelente! Explicação:
                 </>
               ) : (
                 <>
-                  <HelpCircle className="h-4 w-4 text-amber-400" />
+                  <HelpCircle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                   Atenção ao conceito:
                 </>
               )}
@@ -451,21 +451,21 @@ function getVoiceLabel(voice: SpeechSynthesisVoice): string {
     .trim();
 
   if (name.includes('Francisca') || name.includes('Thalita')) {
-    return `🌸 ${cleanName} (Natural HD)`;
+    return `${cleanName} (Natural HD)`;
   }
   if (name.includes('Antonio')) {
-    return `🎙️ ${cleanName} (Natural HD)`;
+    return `${cleanName} (Natural HD)`;
   }
   if (isNatural) {
-    return `✨ ${cleanName} (Natural HD)`;
+    return `${cleanName} (Natural HD)`;
   }
   if (isGoogle) {
-    return `🌐 Google Português (Online HD)`;
+    return `Google Português (Online HD)`;
   }
   if (isDesktop) {
-    return `🖥️ ${cleanName} (Desktop)`;
+    return `${cleanName} (Desktop)`;
   }
-  return `🎙️ ${cleanName}`;
+  return cleanName;
 }
 
 export function AudioLessonPlayer({
@@ -596,26 +596,26 @@ export function AudioLessonPlayer({
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/30 via-background to-violet-950/20 p-3.5 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-secondary/30 p-3.5">
         <div className="flex items-center gap-2.5">
           <span
             className={cn(
-              'flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 shrink-0',
-              isPlaying && 'animate-pulse text-indigo-300 ring-2 ring-indigo-500/50'
+              'flex h-9 w-9 items-center justify-center rounded-xl bg-primary/15 text-primary shrink-0',
+              isPlaying && 'ring-2 ring-primary/50'
             )}
           >
             <Volume2 className="h-4 w-4" />
           </span>
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-xs font-bold text-indigo-300">
+              <p className="text-xs font-bold text-foreground">
                 {isPlaying ? 'Narrando Aula em Áudio...' : 'Ouvir Aula em Áudio'}
               </p>
-              <Badge variant="purple" className="text-[10px] h-4 px-1.5 font-normal">
+              <Badge variant="secondary" className="text-xs h-5 px-2 font-normal">
                 Voz Calma
               </Badge>
             </div>
-            <p className="text-[11px] text-muted-foreground hidden sm:block">
+            <p className="text-xs text-muted-foreground hidden sm:block">
               Narração suave e natural para estudar sem cansaço visual
             </p>
           </div>
@@ -637,7 +637,7 @@ export function AudioLessonPlayer({
                   setTimeout(handlePlay, 100);
                 }
               }}
-              className="h-8 max-w-[210px] truncate rounded-lg border border-border/70 bg-background/70 px-2 py-0.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
+              className="h-8 max-w-[210px] truncate rounded-lg border border-border/70 bg-background/70 px-2 py-0.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary font-medium"
               title="Escolha a voz para a narração"
             >
               {voices.map((v) => (
@@ -652,10 +652,10 @@ export function AudioLessonPlayer({
           <button
             type="button"
             onClick={() => setShowVoiceTips(true)}
-            className="flex items-center gap-1 text-[11px] text-indigo-300 hover:text-indigo-200 bg-indigo-500/10 hover:bg-indigo-500/20 px-2 py-1 rounded-lg border border-indigo-500/30 transition"
+            className="flex items-center gap-1 text-xs text-primary hover:bg-primary/15 bg-primary/10 px-2.5 py-1 rounded-lg border border-primary/25 transition-colors"
             title="Dicas de como usar vozes ultra-realistas gratuitamente"
           >
-            <Sparkles className="h-3 w-3 text-amber-400" />
+            <Sparkles className="h-3 w-3 text-amber-500" />
             <span className="font-semibold hidden sm:inline">Vozes HD Grátis</span>
           </button>
 
@@ -677,9 +677,9 @@ export function AudioLessonPlayer({
                   }
                 }}
                 className={cn(
-                  'rounded px-2 py-0.5 font-medium transition',
+                  'rounded px-2 py-0.5 font-medium transition-colors',
                   rate === r.val
-                    ? 'bg-indigo-500 text-white font-bold'
+                    ? 'bg-primary text-primary-foreground font-bold'
                     : 'text-muted-foreground hover:text-foreground'
                 )}
               >
@@ -695,7 +695,7 @@ export function AudioLessonPlayer({
               variant="outline"
               size="sm"
               onClick={handlePause}
-              className="h-8 border-indigo-500/40 text-indigo-300"
+              className="h-8 border-primary/40 text-primary"
             >
               <Pause className="h-3.5 w-3.5 mr-1" />
               Pausar
@@ -706,7 +706,7 @@ export function AudioLessonPlayer({
               variant="default"
               size="sm"
               onClick={handlePlay}
-              className="h-8 shadow-sm font-semibold"
+              className="h-8 font-semibold"
             >
               <Play className="h-3.5 w-3.5 mr-1" />
               {isPaused ? 'Continuar' : 'Ouvir Aula'}
@@ -730,16 +730,16 @@ export function AudioLessonPlayer({
 
       {/* Modal Educativo: Dicas de Vozes Gratuitas de Alta Fidelidade */}
       {showVoiceTips && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-md rounded-2xl border border-indigo-500/40 bg-background/95 backdrop-blur-xl p-5 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 p-4 animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md rounded-2xl border border-border bg-card p-5 space-y-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400">
-                  <Sparkles className="h-4 w-4 text-amber-400" />
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                  <Sparkles className="h-4 w-4 text-amber-500" />
                 </span>
                 <div>
                   <h3 className="font-bold text-sm text-foreground">Como Ouvir com Vozes Humanas (100% Grátis)</h3>
-                  <p className="text-[11px] text-muted-foreground">Livre-se da voz robótica antiga do Windows</p>
+                  <p className="text-xs text-muted-foreground">Livre-se da voz robótica antiga do Windows</p>
                 </div>
               </div>
               <Button
@@ -754,27 +754,27 @@ export function AudioLessonPlayer({
             </div>
 
             <div className="space-y-2.5 text-xs text-muted-foreground">
-              <div className="rounded-xl border border-indigo-500/30 bg-indigo-950/20 p-3 space-y-1">
-                <p className="font-bold text-indigo-300 flex items-center gap-1.5">
-                  <span>🌸</span> Opção 1: Microsoft Edge (Mais Fácil)
+              <div className="rounded-xl border border-primary/25 bg-primary/5 p-3 space-y-1">
+                <p className="font-bold text-primary flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5" /> Opção 1: Microsoft Edge (Mais Fácil)
                 </p>
                 <p>
                   Abra esta página no <strong>Microsoft Edge</strong>. Ele disponibiliza de graça as vozes neurais <strong>Francisca (Natural HD)</strong> e <strong>Thalita (Natural HD)</strong>, com entonação humana ultra-realista de estúdio sem precisar instalar nada!
                 </p>
               </div>
 
-              <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-3 space-y-1">
-                <p className="font-bold text-emerald-300 flex items-center gap-1.5">
-                  <span>🌐</span> Opção 2: Google Chrome
+              <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/5 p-3 space-y-1">
+                <p className="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
+                  <Globe className="h-3.5 w-3.5" /> Opção 2: Google Chrome
                 </p>
                 <p>
-                  No Chrome com internet conectada, selecione no menu acima a opção <strong>&quot;🌐 Google Português (Online HD)&quot;</strong>, muito superior à voz Maria Desktop.
+                  No Chrome com internet conectada, selecione no menu acima a opção <strong>&quot;Google Português (Online HD)&quot;</strong>, muito superior à voz Maria Desktop.
                 </p>
               </div>
 
-              <div className="rounded-xl border border-violet-500/30 bg-violet-950/20 p-3 space-y-1">
-                <p className="font-bold text-violet-300 flex items-center gap-1.5">
-                  <span>💻</span> Opção 3: Vozes Naturais do Windows 11/10
+              <div className="rounded-xl border border-border bg-secondary/40 p-3 space-y-1">
+                <p className="font-bold text-foreground flex items-center gap-1.5">
+                  <Server className="h-3.5 w-3.5 text-primary" /> Opção 3: Vozes Naturais do Windows 11/10
                 </p>
                 <p>
                   No Windows, abra <em>Configurações &gt; Hora e Idioma &gt; Fala &gt; Adicionar vozes</em> e instale o pacote <strong>Português (Brasil) (Naturais)</strong> para ter vozes fluidas em todos os programas.
@@ -813,7 +813,7 @@ export function InteractivePracticalLab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2 border-b border-border/70 pb-3">
+      <div className="flex flex-wrap items-center gap-2 rounded-xl bg-secondary/35 p-2.5">
         <span className="text-xs font-semibold text-muted-foreground mr-1">
           Filtrar Exemplos:
         </span>

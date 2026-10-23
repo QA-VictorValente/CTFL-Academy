@@ -298,7 +298,7 @@ export default async function RevisaoErrosPage({
                       className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
                     >
                       <BookOpen className="h-3.5 w-3.5" />
-                      Revisar aula teórica: {q.topic.code} — {q.topic.title}
+                      Revisar aula teórica: {q.topic.code} - {q.topic.title}
                     </Link>
                     <Link href={`/exercicios?chapterId=${q.chapterId}&topicId=${q.topicId}`}>
                       <Button variant="outline" size="sm">

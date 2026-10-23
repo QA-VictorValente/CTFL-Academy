@@ -114,7 +114,7 @@ export function AchievementManager({
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-2 text-xs">
+        <div className="flex flex-wrap items-center gap-2 text-xs tabular-nums">
           <Badge variant="info" className="gap-1">
             <Zap className="h-3 w-3" /> Aula Concluída: +{XP_RULES.LESSON_COMPLETED} XP
           </Badge>
@@ -160,7 +160,7 @@ export function AchievementManager({
                 </p>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3 text-xs">
+              <div data-ui className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3 text-xs tabular-nums">
                 <Badge variant="success">+{ach.xpReward} XP</Badge>
                 <span className="text-muted-foreground">
                   {ach.ruleType} ≥ {ach.ruleThreshold}
@@ -175,9 +175,9 @@ export function AchievementManager({
       </div>
 
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 p-4">
           <Card className="w-full max-w-lg">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-border">
+            <CardHeader data-ui className="flex flex-row items-center justify-between border-b border-border">
               <div>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <Award className="h-4 w-4 text-primary" />
@@ -258,6 +258,7 @@ export function AchievementManager({
                     type="checkbox"
                     checked={isActive}
                     onChange={(e) => setIsActive(e.target.checked)}
+                    data-ui
                     className="h-4 w-4 rounded border-border"
                   />
                   Conquista ativa para desbloqueio automático

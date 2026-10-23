@@ -158,7 +158,8 @@ export default async function AdminEstatisticasPage() {
           {rankedTopics.map((item) => (
             <div
               key={item.id}
-              className="rounded-xl border border-border bg-secondary/10 p-3.5"
+              data-ui
+              className="rounded-xl border border-border bg-secondary/20 p-3.5"
             >
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                 <div className="flex items-center gap-2">
@@ -167,7 +168,7 @@ export default async function AdminEstatisticasPage() {
                     {item.code} — {item.title}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 tabular-nums">
                   <span className="text-muted-foreground">
                     {item.correct} acertos / {item.total} respostas
                   </span>

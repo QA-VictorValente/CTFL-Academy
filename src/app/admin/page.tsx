@@ -99,7 +99,7 @@ export default async function AdminDashboardPage() {
             </Button>
           </Link>
           <Link href="/admin/revisao">
-            <Button variant="outline" size="sm" className="gap-1.5">
+            <Button variant="outline" size="sm" className="gap-1.5 tabular-nums">
               <ClipboardCheck className="h-4 w-4" />
               Fila Editorial ({inReviewQuestions + draftQuestions + approvedQuestions})
             </Button>
@@ -159,7 +159,7 @@ export default async function AdminDashboardPage() {
                     <span className="font-semibold">
                       Cap. {ch.number} — {ch.title}
                     </span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 tabular-nums">
                       <Badge variant={healthy ? 'success' : 'danger'}>
                         {published} publicadas / mín. {required}
                       </Badge>
@@ -174,21 +174,21 @@ export default async function AdminDashboardPage() {
               );
             })}
 
-            <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-border bg-secondary/20 p-3 text-center text-xs sm:grid-cols-6">
+            <div data-ui className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-border bg-secondary/40 p-3 text-center text-xs tabular-nums sm:grid-cols-6">
               <div>
                 <span className="block font-bold">{draftQuestions}</span>
                 <span className="text-muted-foreground">DRAFT</span>
               </div>
               <div>
-                <span className="block font-bold text-amber-500">{inReviewQuestions}</span>
+                <span className="block font-bold text-amber-600 dark:text-amber-400">{inReviewQuestions}</span>
                 <span className="text-muted-foreground">IN_REVIEW</span>
               </div>
               <div>
-                <span className="block font-bold text-sky-400">{approvedQuestions}</span>
+                <span className="block font-bold text-sky-600 dark:text-sky-400">{approvedQuestions}</span>
                 <span className="text-muted-foreground">APPROVED</span>
               </div>
               <div>
-                <span className="block font-bold text-emerald-500">{publishedQuestions}</span>
+                <span className="block font-bold text-emerald-600 dark:text-emerald-400">{publishedQuestions}</span>
                 <span className="text-muted-foreground">PUBLISHED</span>
               </div>
               <div>
@@ -230,7 +230,8 @@ export default async function AdminDashboardPage() {
                 {recentAuditLogs.map((log) => (
                   <div
                     key={log.id}
-                    className="flex items-start justify-between gap-2 rounded-lg border border-border bg-secondary/10 p-2.5 text-xs"
+                    data-ui
+                    className="flex items-start justify-between gap-2 rounded-lg border border-border bg-secondary/20 p-2.5 text-xs"
                   >
                     <div>
                       <div className="flex items-center gap-1.5">
@@ -243,7 +244,7 @@ export default async function AdminDashboardPage() {
                         Operador: {log.actor?.fullName || log.actor?.email || 'Sistema'}
                       </p>
                     </div>
-                    <span className="shrink-0 text-[11px] text-muted-foreground">
+                    <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
                       {formatDateTimePtBr(log.createdAt)}
                     </span>
                   </div>

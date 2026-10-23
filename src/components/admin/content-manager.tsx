@@ -283,12 +283,13 @@ export function ContentManager({ chapters }: { chapters: ChapterItem[] }) {
                   return (
                     <button
                       key={topic.id}
+                      data-ui
                       type="button"
                       onClick={() => handleSelectTopic(topic)}
                       className={`flex w-full items-center justify-between rounded-lg border p-3 text-left text-xs transition-colors ${
                         active
                           ? 'border-primary bg-primary/10 font-semibold'
-                          : 'border-border bg-secondary/10 hover:bg-secondary/30'
+                          : 'border-border bg-secondary/20 hover:bg-secondary/40'
                       }`}
                     >
                       <span>

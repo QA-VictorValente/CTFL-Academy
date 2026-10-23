@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export default function PrivacidadePage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh flex-col bg-background text-foreground">
       <PublicHeader />
 
       <main className="flex-1 py-16">

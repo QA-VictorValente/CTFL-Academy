@@ -217,7 +217,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg text-destructive">
             <ShieldAlert className="h-5 w-5" />
-            Zona de Perigo — Exclusão Segura de Conta (LGPD)
+            Zona de Perigo - Exclusão Segura de Conta (LGPD)
           </CardTitle>
           <CardDescription>
             Ao excluir sua conta, seu histórico de simulados, respostas, progresso por tópico, revisões de flashcards e XP serão permanentemente removidos e seu perfil será anonimizado.

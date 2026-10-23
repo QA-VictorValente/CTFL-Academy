@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button';
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 text-center">
-      <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-indigo-500/30 bg-indigo-500/15 text-indigo-400">
+    <div className="flex min-h-dvh flex-col items-center justify-center bg-background px-4 text-center text-foreground">
+      <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-primary/30 bg-primary/15 text-primary">
         <ShieldAlert className="h-8 w-8" />
       </div>
-      <span className="rounded-full border border-violet-500/30 bg-violet-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-violet-400">
+      <span className="rounded-full border border-border bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
         Erro 404 • Rota Não Encontrada
       </span>
       <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">

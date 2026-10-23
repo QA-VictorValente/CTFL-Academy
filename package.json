@@ -9,6 +9,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:ui": "node .claude/skills/design-taste-frontend/scripts/lint.mjs src/app src/components",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
@@ -33,12 +34,13 @@
     "test:web": "playwright test --project=web",
     "test:integration": "vitest run tests/integration",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test --project=e2e",
     "test:performance": "k6 run tests/performance/smoke.k6.js",
     "test:performance:smoke": "k6 run tests/performance/smoke.k6.js",
     "test:performance:load": "k6 run tests/performance/load.k6.js",
     "test:performance:stress": "k6 run tests/performance/stress.k6.js",
-    "pipeline": "tsx scripts/run-pipeline.ts"
+    "pipeline": "tsx scripts/run-pipeline.ts",
+    "pipeline:fast": "tsx scripts/run-pipeline.ts --fast"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

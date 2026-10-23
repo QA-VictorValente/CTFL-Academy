@@ -75,14 +75,12 @@ const SYLLABUS_CHAPTERS = [
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh flex-col bg-background text-foreground">
       <PublicHeader />
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative overflow-hidden border-b border-border/60 py-16 sm:py-24">
-          <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/20 via-background to-background" />
-
+        <section className="relative overflow-hidden bg-secondary/40 py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
               <div className="space-y-6 lg:col-span-7">
@@ -91,9 +89,9 @@ export default function LandingPage() {
                   Alinhado 100% ao Syllabus Oficial ISTQB® CTFL v4.0.1
                 </Badge>
 
-                <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+                <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
                   Domine a Certificação{' '}
-                  <span className="bg-gradient-to-r from-indigo-400 via-blue-400 to-violet-400 bg-clip-text text-transparent">
+                  <span className="text-primary">
                     ISTQB CTFL 4.0.1
                   </span>{' '}
                   com Engenharia e Método
@@ -121,28 +119,28 @@ export default function LandingPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 pt-6 sm:grid-cols-4">
-                  <div className="rounded-xl border border-border/70 bg-card/60 p-3.5">
-                    <p className="text-2xl font-extrabold text-indigo-400">6</p>
+                  <div className="rounded-xl border border-border bg-card p-3.5">
+                    <p className="text-2xl font-extrabold tabular-nums text-primary">6</p>
                     <p className="text-xs text-muted-foreground">
                       Capítulos do Syllabus
                     </p>
                   </div>
-                  <div className="rounded-xl border border-border/70 bg-card/60 p-3.5">
-                    <p className="text-2xl font-extrabold text-violet-400">40</p>
+                  <div className="rounded-xl border border-border bg-card p-3.5">
+                    <p className="text-2xl font-extrabold tabular-nums text-foreground">40</p>
                     <p className="text-xs text-muted-foreground">
                       Questões por Exame
                     </p>
                   </div>
-                  <div className="rounded-xl border border-border/70 bg-card/60 p-3.5">
-                    <p className="text-2xl font-extrabold text-emerald-400">
+                  <div className="rounded-xl border border-border bg-card p-3.5">
+                    <p className="text-2xl font-extrabold tabular-nums text-emerald-700 dark:text-emerald-400">
                       65%
                     </p>
                     <p className="text-xs text-muted-foreground">
                       Nota de Corte (26 pts)
                     </p>
                   </div>
-                  <div className="rounded-xl border border-border/70 bg-card/60 p-3.5">
-                    <p className="text-2xl font-extrabold text-blue-400">
+                  <div className="rounded-xl border border-border bg-card p-3.5">
+                    <p className="text-2xl font-extrabold tabular-nums text-teal-700 dark:text-teal-400">
                       60m
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -154,10 +152,10 @@ export default function LandingPage() {
 
               {/* SaaS Preview Panel */}
               <div className="lg:col-span-5">
-                <div className="rounded-2xl border border-indigo-500/30 bg-card/90 p-6 shadow-2xl shadow-indigo-500/10">
-                  <div className="flex items-center justify-between border-b border-border pb-4">
+                <div data-ui className="rounded-2xl border border-border bg-card p-6">
+                  <div data-ui className="flex items-center justify-between border-b border-border pb-4">
                     <div className="flex items-center gap-2.5">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/20 text-indigo-400">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 text-primary">
                         <Target className="h-5 w-5" />
                       </div>
                       <div>
@@ -176,10 +174,10 @@ export default function LandingPage() {
                     {SYLLABUS_CHAPTERS.map((ch) => (
                       <div
                         key={ch.number}
-                        className="flex items-center justify-between rounded-xl border border-border/60 bg-background/60 px-3.5 py-2.5 text-xs"
+                        className="flex items-center justify-between rounded-xl border border-border/70 bg-background/80 px-3.5 py-2.5 text-xs"
                       >
                         <div className="flex items-center gap-2.5">
-                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-indigo-500/15 font-bold text-indigo-400">
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary/15 font-bold tabular-nums text-primary">
                             {ch.number}
                           </span>
                           <span className="font-medium line-clamp-1">
@@ -188,7 +186,7 @@ export default function LandingPage() {
                         </div>
                         <div className="flex shrink-0 items-center gap-2">
                           <Badge variant="outline">{ch.kLevels}</Badge>
-                          <span className="font-semibold text-indigo-400">
+                          <span className="font-semibold tabular-nums text-primary">
                             {ch.questionsWeight} questões
                           </span>
                         </div>
@@ -196,11 +194,11 @@ export default function LandingPage() {
                     ))}
                   </div>
 
-                  <div className="mt-5 rounded-xl border border-violet-500/30 bg-violet-500/10 p-3.5 text-xs text-violet-200">
-                    <p className="font-semibold">
+                  <div className="mt-5 rounded-xl border border-primary/25 bg-primary/10 p-3.5 text-xs text-foreground">
+                    <p className="font-semibold text-primary">
                       Motor de Simulado Determinístico & Auditado
                     </p>
-                    <p className="mt-1 opacity-90">
+                    <p className="mt-1 text-muted-foreground">
                       Prioriza questões inéditas, respeita equivalência
                       editorial, controla o tempo pelo servidor e gera diagnóstico
                       detalhado por Objetivo de Aprendizagem (FL-x.x.x).
@@ -216,7 +214,7 @@ export default function LandingPage() {
         <section id="syllabus" className="py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl space-y-3">
-              <Badge variant="purple">Estrutura Curricular Oficial</Badge>
+              <Badge variant="secondary">Estrutura Curricular Oficial</Badge>
               <h2 className="text-3xl font-bold tracking-tight">
                 Os 6 Capítulos do Syllabus ISTQB CTFL 4.0.1
               </h2>
@@ -231,12 +229,12 @@ export default function LandingPage() {
               {SYLLABUS_CHAPTERS.map((chapter) => (
                 <Card
                   key={chapter.number}
-                  className="flex flex-col justify-between border-border/80 hover:border-indigo-500/40 transition-all"
+                  className="flex flex-col justify-between border-border transition-colors hover:border-primary/40"
                 >
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <Badge variant="default">Capítulo {chapter.number}</Badge>
-                      <span className="text-xs font-medium text-muted-foreground">
+                      <span className="text-xs font-medium tabular-nums text-muted-foreground">
                         {chapter.questionsWeight} questões na prova (
                         {Math.round((chapter.questionsWeight / 40) * 100)}%)
                       </span>
@@ -249,7 +247,7 @@ export default function LandingPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center justify-between border-t border-border/60 pt-4 text-xs text-muted-foreground">
+                    <div className="flex items-center justify-between rounded-lg bg-secondary/60 px-3 py-2 text-xs tabular-nums text-muted-foreground">
                       <span>{chapter.topicsCount} tópicos oficiais</span>
                       <span>Níveis: {chapter.kLevels}</span>
                     </div>
@@ -263,7 +261,7 @@ export default function LandingPage() {
         {/* Features / Simulados Section */}
         <section
           id="simulados"
-          className="border-t border-border/60 bg-card/30 py-16 sm:py-20"
+          className="bg-secondary/50 py-16 sm:py-20"
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto space-y-3">
@@ -280,7 +278,7 @@ export default function LandingPage() {
             <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <Card>
                 <CardHeader>
-                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/15 text-indigo-400">
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary">
                     <BookOpen className="h-5 w-5" />
                   </div>
                   <CardTitle className="text-base">
@@ -296,7 +294,7 @@ export default function LandingPage() {
 
               <Card>
                 <CardHeader>
-                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/15 text-violet-400">
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/15 text-teal-700 dark:text-teal-400">
                     <Clock className="h-5 w-5" />
                   </div>
                   <CardTitle className="text-base">
@@ -312,7 +310,7 @@ export default function LandingPage() {
 
               <Card>
                 <CardHeader>
-                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400">
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
                     <Brain className="h-5 w-5" />
                   </div>
                   <CardTitle className="text-base">
@@ -328,7 +326,7 @@ export default function LandingPage() {
 
               <Card>
                 <CardHeader>
-                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/15 text-amber-400">
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/15 text-amber-700 dark:text-amber-400">
                     <FileCheck2 className="h-5 w-5" />
                   </div>
                   <CardTitle className="text-base">
@@ -344,7 +342,7 @@ export default function LandingPage() {
 
               <Card>
                 <CardHeader>
-                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/15 text-blue-400">
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/15 text-sky-700 dark:text-sky-400">
                     <Award className="h-5 w-5" />
                   </div>
                   <CardTitle className="text-base">
@@ -360,7 +358,7 @@ export default function LandingPage() {
 
               <Card>
                 <CardHeader>
-                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/15 text-rose-400">
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary">
                     <BarChart3 className="h-5 w-5" />
                   </div>
                   <CardTitle className="text-base">

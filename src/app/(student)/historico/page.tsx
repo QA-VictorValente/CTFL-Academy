@@ -67,7 +67,7 @@ export default async function HistoricoTentativasPage() {
             return (
               <Card
                 key={att.id}
-                className="border-border/80 hover:border-indigo-500/40 transition"
+                className="border-border/80 hover:border-primary/40 transition-colors"
               >
                 <CardContent className="flex flex-col justify-between gap-4 p-5 sm:flex-row sm:items-center">
                   <div className="space-y-1.5">

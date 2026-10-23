@@ -30,10 +30,7 @@ export function renderInlineMarkdown(
 
     if (part.startsWith('`') && part.endsWith('`') && part.length >= 2) {
       return (
-        <code
-          key={key}
-          className="rounded border border-indigo-500/25 bg-indigo-500/10 px-1.5 py-0.5 font-mono text-[0.88em] font-semibold text-indigo-300"
-        >
+        <code key={key} className="rounded bg-primary/10 ring-1 ring-inset ring-primary/25 px-1.5 py-0.5 font-mono text-[0.88em] font-semibold text-primary">
           {part.slice(1, -1)}
         </code>
       );
@@ -79,29 +76,29 @@ const FONT_STYLES: Record<
   sm: {
     p: 'text-sm leading-relaxed text-foreground/90 my-1',
     li: 'text-sm leading-relaxed text-foreground/90',
-    h2: 'text-base font-extrabold text-indigo-300 mt-4 mb-2',
-    h3: 'text-sm font-bold text-indigo-400 mt-3 mb-1.5',
+    h2: 'text-base font-extrabold text-foreground mt-4 mb-2',
+    h3: 'text-sm font-bold text-primary mt-3 mb-1.5',
     callout: 'text-sm',
   },
   base: {
     p: 'text-base leading-relaxed text-foreground/95 my-1.5',
     li: 'text-base leading-relaxed text-foreground/95',
-    h2: 'text-lg sm:text-xl font-extrabold text-indigo-300 mt-5 mb-2.5',
-    h3: 'text-base sm:text-lg font-bold text-indigo-400 mt-4 mb-2',
+    h2: 'text-lg sm:text-xl font-extrabold text-foreground mt-5 mb-2.5',
+    h3: 'text-base sm:text-lg font-bold text-primary mt-4 mb-2',
     callout: 'text-base',
   },
   lg: {
     p: 'text-lg leading-loose text-foreground my-2',
     li: 'text-lg leading-loose text-foreground',
-    h2: 'text-xl sm:text-2xl font-extrabold text-indigo-300 mt-6 mb-3',
-    h3: 'text-lg sm:text-xl font-bold text-indigo-400 mt-5 mb-2.5',
+    h2: 'text-xl sm:text-2xl font-extrabold text-foreground mt-6 mb-3',
+    h3: 'text-lg sm:text-xl font-bold text-primary mt-5 mb-2.5',
     callout: 'text-lg',
   },
   xl: {
     p: 'text-xl leading-loose text-foreground my-2.5',
     li: 'text-xl leading-loose text-foreground',
-    h2: 'text-2xl sm:text-3xl font-extrabold text-indigo-300 mt-7 mb-3.5',
-    h3: 'text-xl sm:text-2xl font-bold text-indigo-400 mt-6 mb-3',
+    h2: 'text-2xl sm:text-3xl font-extrabold text-foreground mt-7 mb-3.5',
+    h3: 'text-xl sm:text-2xl font-bold text-primary mt-6 mb-3',
     callout: 'text-xl',
   },
 };
@@ -138,7 +135,7 @@ export function FormattedText({
               key={`li-${keySuffix}-${i}`}
               className={cn('flex items-start gap-2.5', style.li)}
             >
-              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-indigo-400 shadow-sm shadow-indigo-500/50" />
+              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-primary" />
               <div className="flex-1">{item}</div>
             </li>
           ))}
@@ -152,7 +149,7 @@ export function FormattedText({
               key={`oli-${keySuffix}-${i}`}
               className={cn('flex items-start gap-2.5', style.li)}
             >
-              <span className="shrink-0 font-bold text-violet-400 text-[0.9em] mt-0.5">
+              <span className="shrink-0 font-bold text-primary text-[0.9em] mt-0.5 tabular-nums">
                 {i + 1}.
               </span>
               <div className="flex-1">{item}</div>
@@ -180,10 +177,10 @@ export function FormattedText({
       elements.push(
         <div
           key={`quote-${lineIdx}`}
-          className="my-3 rounded-xl border-l-4 border-indigo-500 bg-indigo-500/10 p-4 shadow-sm"
+          className="my-3 rounded-xl bg-primary/10 ring-1 ring-inset ring-primary/25 p-4"
         >
           <div className={cn('flex items-start gap-3', style.callout)}>
-            <Lightbulb className="h-5 w-5 shrink-0 text-indigo-400 mt-0.5" />
+            <Lightbulb className="h-5 w-5 shrink-0 text-primary mt-0.5" />
             <div className="flex-1 text-foreground/95 leading-relaxed">
               {renderInlineMarkdown(quoteContent, `quote-${lineIdx}`)}
             </div>
@@ -203,11 +200,11 @@ export function FormattedText({
       elements.push(
         <div
           key={`alert-${lineIdx}`}
-          className="my-3.5 rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 shadow-sm shadow-rose-950/20"
+          className="my-3.5 rounded-xl bg-rose-500/10 ring-1 ring-inset ring-rose-500/30 p-4"
         >
           <div className={cn('flex items-start gap-3', style.callout)}>
-            <AlertCircle className="h-5 w-5 shrink-0 text-rose-400 mt-0.5" />
-            <div className="flex-1 leading-relaxed text-rose-200">
+            <AlertCircle className="h-5 w-5 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
+            <div className="flex-1 leading-relaxed text-rose-900 dark:text-rose-200">
               {renderInlineMarkdown(trimmed, `alert-${lineIdx}`)}
             </div>
           </div>
@@ -226,11 +223,11 @@ export function FormattedText({
       elements.push(
         <div
           key={`tip-${lineIdx}`}
-          className="my-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 shadow-sm shadow-amber-950/20"
+          className="my-3.5 rounded-xl bg-amber-500/10 ring-1 ring-inset ring-amber-500/30 p-4"
         >
           <div className={cn('flex items-start gap-3', style.callout)}>
-            <Lightbulb className="h-5 w-5 shrink-0 text-amber-400 mt-0.5" />
-            <div className="flex-1 leading-relaxed text-amber-200">
+            <Lightbulb className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
+            <div className="flex-1 leading-relaxed text-amber-900 dark:text-amber-200">
               {renderInlineMarkdown(trimmed, `tip-${lineIdx}`)}
             </div>
           </div>
@@ -248,11 +245,11 @@ export function FormattedText({
       elements.push(
         <div
           key={`gold-${lineIdx}`}
-          className="my-3.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 shadow-sm shadow-emerald-950/20"
+          className="my-3.5 rounded-xl bg-emerald-500/10 ring-1 ring-inset ring-emerald-500/30 p-4"
         >
           <div className={cn('flex items-start gap-3', style.callout)}>
-            <Sparkles className="h-5 w-5 shrink-0 text-emerald-400 mt-0.5" />
-            <div className="flex-1 leading-relaxed text-emerald-200">
+            <Sparkles className="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
+            <div className="flex-1 leading-relaxed text-emerald-900 dark:text-emerald-200">
               {renderInlineMarkdown(trimmed, `gold-${lineIdx}`)}
             </div>
           </div>

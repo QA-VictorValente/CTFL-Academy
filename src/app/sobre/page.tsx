@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function SobrePage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh flex-col bg-background text-foreground">
       <PublicHeader />
 
       <main className="flex-1 py-16">
@@ -38,7 +38,7 @@ export default function SobrePage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <BookOpen className="h-5 w-5 text-indigo-400" />
+                  <BookOpen className="h-5 w-5 text-primary" />
                   Fidelidade ao Syllabus 4.0.1
                 </CardTitle>
               </CardHeader>
@@ -55,7 +55,7 @@ export default function SobrePage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <Layers className="h-5 w-5 text-violet-400" />
+                  <Layers className="h-5 w-5 text-teal-700 dark:text-teal-400" />
                   Simulados Determinísticos sem IA
                 </CardTitle>
               </CardHeader>
@@ -72,7 +72,7 @@ export default function SobrePage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <Award className="h-5 w-5 text-emerald-400" />
+                  <Award className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
                   Aprendizagem Baseada em Evidências
                 </CardTitle>
               </CardHeader>
@@ -89,7 +89,7 @@ export default function SobrePage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <Lock className="h-5 w-5 text-blue-400" />
+                  <Lock className="h-5 w-5 text-sky-700 dark:text-sky-400" />
                   Privacidade e Segurança
                 </CardTitle>
               </CardHeader>
@@ -104,7 +104,7 @@ export default function SobrePage() {
             </Card>
           </div>
 
-          <div className="rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-8 text-center space-y-4">
+          <div className="rounded-2xl border border-primary/25 bg-secondary/60 p-8 text-center space-y-4">
             <h2 className="text-xl font-bold">
               Pronto para iniciar sua preparação estruturada?
             </h2>

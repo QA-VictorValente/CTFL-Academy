@@ -126,9 +126,9 @@ export default async function ConquistasPage() {
               return (
                 <div
                   key={ach.id}
-                  className={`flex flex-col justify-between rounded-xl border p-4 transition-all ${
+                  className={`flex flex-col justify-between rounded-xl border p-4 transition-colors ${
                     isUnlocked
-                      ? 'border-primary/40 bg-primary/5 shadow-sm'
+                      ? 'border-primary/40 bg-primary/5'
                       : 'border-border bg-secondary/10 opacity-75'
                   }`}
                 >
@@ -158,9 +158,9 @@ export default async function ConquistasPage() {
                     </p>
                   </div>
 
-                  <div className="mt-4 border-t border-border/60 pt-2.5 text-[11px]">
+                  <div className="mt-4 rounded-lg bg-secondary/40 px-2.5 py-1.5 text-xs">
                     {isUnlocked && unlockedAt ? (
-                      <span className="inline-flex items-center gap-1 font-medium text-emerald-500">
+                      <span className="inline-flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400">
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         Desbloqueada em {formatDateTimePtBr(unlockedAt)}
                       </span>
@@ -232,11 +232,11 @@ export default async function ConquistasPage() {
                   >
                     <div>
                       <p className="font-medium text-foreground">{act.description}</p>
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-xs text-muted-foreground">
                         {formatDateTimePtBr(act.createdAt)}
                       </p>
                     </div>
-                    <span className="shrink-0 font-bold text-emerald-500">
+                    <span className="shrink-0 font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
                       +{act.xpEarned} XP
                     </span>
                   </div>

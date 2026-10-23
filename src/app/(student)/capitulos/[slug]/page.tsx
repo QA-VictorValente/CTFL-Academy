@@ -106,16 +106,16 @@ export default async function CapituloDetailPage({
       </div>
 
       {/* Cabeçalho e Introdução do Capítulo */}
-      <Card className="border-indigo-500/30">
+      <Card className="border-primary/25">
         <CardHeader className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Badge variant="default">Capítulo {chapter.number}</Badge>
-              <Badge variant="purple">
+              <Badge variant="secondary">
                 {chapter.examWeightQuestions} questões no exame oficial
               </Badge>
             </div>
-            <span className="text-xs font-semibold text-indigo-400">
+            <span className="text-xs font-semibold text-primary tabular-nums">
               Progresso no capítulo: {pct}% ({completedTopics}/{totalTopics}{' '}
               tópicos)
             </span>
@@ -130,8 +130,8 @@ export default async function CapituloDetailPage({
 
         <CardContent className="space-y-4">
           <Progress value={pct} />
-          <div className="rounded-2xl border border-indigo-500/20 bg-background/60 p-5">
-            <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-400">
+          <div className="rounded-2xl border border-primary/20 bg-secondary/40 p-5">
+            <h2 className="flex items-center gap-2 text-sm font-bold text-primary">
               <Target className="h-4 w-4" />
               Síntese dos Objetivos de Aprendizagem do Capítulo
             </h2>
@@ -163,7 +163,7 @@ export default async function CapituloDetailPage({
             return (
               <Card
                 key={topic.id}
-                className="border-border/80 hover:border-indigo-500/40 transition"
+                className="border-border/80 hover:border-primary/40 transition-colors"
               >
                 <CardHeader>
                   <div className="flex flex-wrap items-center justify-between gap-2">
@@ -191,7 +191,7 @@ export default async function CapituloDetailPage({
 
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="text-xs font-semibold text-muted-foreground">
                       Objetivos de Aprendizagem Oficiais (Syllabus 4.0.1):
                     </p>
                     <ul className="space-y-2">
@@ -211,9 +211,9 @@ export default async function CapituloDetailPage({
                     </ul>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/60 pt-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-secondary/40 p-3.5">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <BookOpen className="h-4 w-4 text-indigo-400" />
+                      <BookOpen className="h-4 w-4 text-primary" />
                       <span>
                         {topic.lessons.length} aula(s) didática(s) completa(s)
                       </span>

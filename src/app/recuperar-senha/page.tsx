@@ -89,12 +89,12 @@ export default function RecuperarSenhaPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh flex-col bg-background text-foreground">
       <PublicHeader />
       <main className="flex flex-1 items-center justify-center p-4">
-        <Card className="w-full max-w-md border-indigo-500/20 shadow-xl">
+        <Card className="w-full max-w-md border-border bg-card">
           <CardHeader className="space-y-2 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/15 text-indigo-400">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/15 text-primary">
               <KeyRound className="h-6 w-6" />
             </div>
             <CardTitle className="text-2xl font-bold">
@@ -108,7 +108,7 @@ export default function RecuperarSenhaPage() {
           <CardContent>
             {completed ? (
               <div className="space-y-4 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -128,7 +128,7 @@ export default function RecuperarSenhaPage() {
                 {serverError && (
                   <div
                     role="alert"
-                    className="rounded-lg border border-rose-500/40 bg-rose-500/10 p-3 text-xs font-medium text-rose-400"
+                    className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs font-medium text-destructive"
                   >
                     {serverError}
                   </div>
@@ -136,7 +136,7 @@ export default function RecuperarSenhaPage() {
                 <div className="space-y-1.5">
                   <label
                     htmlFor="email"
-                    className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                    className="text-sm font-medium text-foreground"
                   >
                     E-mail da Conta
                   </label>
@@ -151,7 +151,7 @@ export default function RecuperarSenhaPage() {
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-xs text-rose-400">
+                    <p className="text-xs text-destructive">
                       {errors.email.message}
                     </p>
                   )}
@@ -160,7 +160,7 @@ export default function RecuperarSenhaPage() {
                 <div className="space-y-1.5">
                   <label
                     htmlFor="newPassword"
-                    className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                    className="text-sm font-medium text-foreground"
                   >
                     Nova Senha (mínimo 8 caracteres)
                   </label>
@@ -175,7 +175,7 @@ export default function RecuperarSenhaPage() {
                     />
                   </div>
                   {errors.newPassword && (
-                    <p className="text-xs text-rose-400">
+                    <p className="text-xs text-destructive">
                       {errors.newPassword.message}
                     </p>
                   )}
@@ -191,10 +191,10 @@ export default function RecuperarSenhaPage() {
               </form>
             )}
 
-            <div className="mt-6 border-t border-border/60 pt-4 text-center">
+            <div className="mt-6 rounded-lg bg-secondary/50 p-3 text-center">
               <Link
                 href="/login"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-400 hover:underline"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
                 Voltar para o login

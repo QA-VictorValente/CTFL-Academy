@@ -40,3 +40,6 @@ next-env.d.ts
 # Local PostgreSQL data (embedded-postgres / docker volume local)
 /.pgdata
 /backups/*.sql
+
+# Local AI/CLI tool sandboxes & unpacked browser extensions (non-application)
+/.tools/

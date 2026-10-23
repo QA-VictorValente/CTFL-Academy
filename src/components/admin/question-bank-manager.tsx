@@ -348,6 +348,7 @@ export function QuestionBankManager({
                   setSearchText(e.target.value);
                   setCurrentPage(1);
                 }}
+                data-ui
                 className="h-9 w-full rounded-lg border border-input bg-background pl-9 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
@@ -428,7 +429,7 @@ export function QuestionBankManager({
       </Card>
 
       {/* Contagem e Paginação Superior */}
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs tabular-nums text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
           <Filter className="h-3.5 w-3.5" />
           Exibindo <strong>{paginatedQuestions.length}</strong> de{' '}
@@ -563,7 +564,7 @@ export function QuestionBankManager({
                 <InlineMarkdown text={q.statement} />
               </div>
 
-              <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+              <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs tabular-nums text-muted-foreground">
                 <span>
                   Gabarito: <strong>Alternativa {q.correctOptionLabel}</strong> • Fonte:{' '}
                   {q.source.name}
@@ -577,9 +578,9 @@ export function QuestionBankManager({
 
       {/* Modal de Criação / Edição de Questão */}
       {editorOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 p-4 overflow-y-auto">
           <Card className="my-8 max-h-[90vh] w-full max-w-3xl overflow-y-auto">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-border">
+            <CardHeader data-ui className="flex flex-row items-center justify-between border-b border-border">
               <div>
                 <CardTitle className="text-lg">
                   {editingId ? `Editar Questão (${code})` : 'Cadastrar Nova Questão Autoral'}
@@ -673,13 +674,14 @@ export function QuestionBankManager({
                   required
                 />
 
-                <div className="space-y-3 rounded-xl border border-border bg-secondary/10 p-4">
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                <div data-ui className="space-y-3 rounded-xl border border-border bg-secondary/20 p-4">
+                  <p className="text-xs font-semibold text-muted-foreground">
                     Alternativas (Selecione exatamente 1 alternativa correta)
                   </p>
                   {options.map((opt, idx) => (
                     <div
                       key={opt.label}
+                      data-ui
                       className="grid gap-2 rounded-lg border border-border bg-card p-3 sm:grid-cols-12"
                     >
                       <div className="flex items-center gap-2 sm:col-span-2">
@@ -784,9 +786,9 @@ export function QuestionBankManager({
 
       {/* Modal de Prévia e Histórico de Versões */}
       {previewQuestion && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 p-4 overflow-y-auto">
           <Card className="my-8 max-h-[90vh] w-full max-w-2xl overflow-y-auto">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-border">
+            <CardHeader data-ui className="flex flex-row items-center justify-between border-b border-border">
               <div>
                 <CardTitle className="text-base">
                   Prévia e Histórico — {previewQuestion.code} (v{previewQuestion.version})
@@ -809,10 +811,11 @@ export function QuestionBankManager({
                 {previewQuestion.options.map((opt) => (
                   <div
                     key={opt.label}
+                    data-ui
                     className={`rounded-lg border p-3 text-xs ${
                       opt.isCorrect
                         ? 'border-emerald-500/40 bg-emerald-500/10'
-                        : 'border-border bg-secondary/10'
+                        : 'border-border bg-secondary/20'
                     }`}
                   >
                     <span className="font-bold">{opt.label})</span>{' '}
@@ -826,7 +829,7 @@ export function QuestionBankManager({
                 ))}
               </div>
 
-              <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs space-y-1">
+              <div data-ui className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs space-y-1">
                 <strong>Explicação:</strong>
                 <FormattedText
                   text={previewQuestion.explanation}
@@ -834,8 +837,8 @@ export function QuestionBankManager({
                 />
               </div>
 
-              <div className="border-t border-border pt-3">
-                <h4 className="flex items-center gap-1.5 text-xs font-bold uppercase text-muted-foreground">
+              <div data-ui className="border-t border-border pt-3">
+                <h4 className="flex items-center gap-1.5 text-xs font-semibold tabular-nums text-muted-foreground">
                   <History className="h-3.5 w-3.5" />
                   Histórico de Versões ({revisionsHistory.length})
                 </h4>
@@ -848,7 +851,8 @@ export function QuestionBankManager({
                     {revisionsHistory.map((rev) => (
                       <div
                         key={rev.id}
-                        className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-xs"
+                        data-ui
+                        className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-xs tabular-nums"
                       >
                         <div>
                           <span className="font-bold">Versão {rev.version}:</span>{' '}

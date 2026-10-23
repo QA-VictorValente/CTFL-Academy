@@ -151,7 +151,7 @@ export function ExercisesHub({
                 <option value="ALL">Todos os Capítulos (1 a 6)</option>
                 {chapters.map((ch) => (
                   <option key={ch.id} value={ch.id}>
-                    Cap. {ch.number} — {ch.title}
+                    Cap. {ch.number} - {ch.title}
                   </option>
                 ))}
               </Select>
@@ -173,9 +173,9 @@ export function ExercisesHub({
                 }}
               >
                 <option value="ALL">Todos (K1, K2, K3)</option>
-                <option value="K1">K1 — Lembrar</option>
-                <option value="K2">K2 — Compreender</option>
-                <option value="K3">K3 — Aplicar</option>
+                <option value="K1">K1 - Lembrar</option>
+                <option value="K2">K2 - Compreender</option>
+                <option value="K3">K3 - Aplicar</option>
               </Select>
             </div>
 
@@ -223,7 +223,7 @@ export function ExercisesHub({
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="default">Cap. {q.chapterNumber}</Badge>
                     <Badge variant="outline">Tópico {q.topicCode}</Badge>
-                    <Badge variant="purple">
+                    <Badge variant="secondary">
                       {q.learningObjectiveCode} ({q.cognitiveLevel})
                     </Badge>
                     <Badge variant="secondary">{q.code}</Badge>
@@ -254,10 +254,10 @@ export function ExercisesHub({
                           }))
                         }
                         className={cn(
-                          'flex w-full items-start gap-3 rounded-xl border p-3.5 text-left text-sm transition-all',
+                          'flex w-full items-start gap-3 rounded-xl border p-3.5 text-left text-sm transition-colors',
                           isSelected
-                            ? 'border-indigo-500 bg-indigo-500/15'
-                            : 'border-border/70 bg-background/40 hover:border-indigo-500/40',
+                            ? 'border-primary bg-primary/10'
+                            : 'border-border/70 bg-background/40 hover:border-primary/40',
                           fb &&
                             opt.label === fb.correctOptionLabel &&
                             'border-emerald-500 bg-emerald-500/15',
@@ -298,19 +298,19 @@ export function ExercisesHub({
                     className={cn(
                       'rounded-xl border p-4 text-xs space-y-1.5',
                       fb.isCorrect
-                        ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-200'
-                        : 'border-amber-500/40 bg-amber-950/30 text-amber-200'
+                        ? 'border-emerald-500/35 bg-emerald-500/10 text-foreground'
+                        : 'border-amber-500/35 bg-amber-500/10 text-foreground'
                     )}
                   >
                     <p className="font-bold flex items-center gap-1.5 text-sm">
                       {fb.isCorrect ? (
                         <>
-                          <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                          <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                           Correto! Gabarito: Alternativa {fb.correctOptionLabel}
                         </>
                       ) : (
                         <>
-                          <AlertCircle className="h-4 w-4 text-amber-400" />
+                          <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                           Incorreto. Gabarito correto: Alternativa{' '}
                           {fb.correctOptionLabel}
                         </>

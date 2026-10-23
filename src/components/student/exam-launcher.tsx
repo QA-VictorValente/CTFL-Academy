@@ -118,7 +118,7 @@ export function ExamLauncher({
     <div className="space-y-8">
       {/* Banner de Retomada de Tentativa em Andamento */}
       {inProgressAttempt && (
-        <div className="flex flex-col justify-between gap-4 rounded-2xl border border-emerald-500/40 bg-emerald-950/30 p-5 sm:flex-row sm:items-center">
+        <div className="flex flex-col justify-between gap-4 rounded-2xl border border-emerald-500/35 bg-emerald-500/10 p-5 sm:flex-row sm:items-center">
           <div className="space-y-1">
             <Badge variant="success">Tentativa em Andamento Detectada</Badge>
             <h2 className="text-lg font-bold">{inProgressAttempt.title}</h2>
@@ -138,10 +138,10 @@ export function ExamLauncher({
 
       {/* Opção de Tempo Adicional para Idioma Não Nativo */}
       {nonNativeEligible && (
-        <Card className="border-indigo-500/30 bg-indigo-500/5">
+        <Card className="border-primary/25 bg-primary/5">
           <CardContent className="flex items-center justify-between gap-4 p-4">
             <div className="text-xs">
-              <p className="font-bold text-indigo-300">
+              <p className="font-bold text-primary">
                 Extensão Oficial de Tempo (+25%) para Exame em Idioma Não Nativo
               </p>
               <p className="text-muted-foreground">
@@ -166,11 +166,11 @@ export function ExamLauncher({
       {/* As 3 Modalidades de Simulado */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* 1. Simulado Completo Oficial */}
-        <Card className="flex flex-col justify-between border-indigo-500/40 shadow-lg">
+        <Card className="flex flex-col justify-between border-primary/35">
           <CardHeader>
             <div className="flex items-center justify-between">
               <Badge variant="default">Modalidade 1 • Oficial</Badge>
-              <Clock className="h-5 w-5 text-indigo-400" />
+              <Clock className="h-5 w-5 text-primary" />
             </div>
             <CardTitle className="pt-2 text-xl">
               Simulado Completo CTFL v4.0
@@ -213,8 +213,8 @@ export function ExamLauncher({
         <Card className="flex flex-col justify-between border-border/80">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <Badge variant="purple">Modalidade 2 • Focado</Badge>
-              <BookOpen className="h-5 w-5 text-violet-400" />
+              <Badge variant="secondary">Modalidade 2 • Focado</Badge>
+              <BookOpen className="h-5 w-5 text-teal-600 dark:text-teal-400" />
             </div>
             <CardTitle className="pt-2 text-xl">
               Simulado por Capítulo
@@ -240,7 +240,7 @@ export function ExamLauncher({
               >
                 {chapters.map((ch) => (
                   <option key={ch.id} value={ch.id}>
-                    Cap. {ch.number} — {ch.title}
+                    Cap. {ch.number} - {ch.title}
                   </option>
                 ))}
               </Select>
@@ -270,7 +270,7 @@ export function ExamLauncher({
           <CardHeader>
             <div className="flex items-center justify-between">
               <Badge variant="outline">Modalidade 3 • Customizado</Badge>
-              <Sliders className="h-5 w-5 text-emerald-400" />
+              <Sliders className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
             <CardTitle className="pt-2 text-xl">
               Simulado Personalizado

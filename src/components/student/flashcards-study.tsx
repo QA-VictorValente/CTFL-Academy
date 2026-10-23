@@ -133,7 +133,7 @@ export function FlashcardsStudy({
     if (!currentCard?.review) {
       return {
         label: 'Novo Cartão',
-        className: 'border-sky-500/40 bg-sky-500/15 text-sky-300 font-semibold',
+        className: 'border-sky-500/40 bg-sky-500/15 text-sky-700 dark:text-sky-300 font-semibold',
         dotColor: 'bg-sky-400',
         description: 'Nunca respondido',
       };
@@ -153,8 +153,8 @@ export function FlashcardsStudy({
       return {
         label: 'Difícil (Aprendendo)',
         className:
-          'border-rose-500/60 bg-rose-500/20 text-rose-300 font-bold shadow-sm shadow-rose-950/40',
-        dotColor: 'bg-rose-500 animate-pulse',
+          'border-rose-500/45 bg-rose-500/15 text-rose-700 dark:text-rose-300 font-bold',
+        dotColor: 'bg-rose-500',
         description: 'Revisão prioritária em 1 dia',
       };
     }
@@ -163,7 +163,7 @@ export function FlashcardsStudy({
       return {
         label: 'Médio (Em Revisão)',
         className:
-          'border-amber-500/60 bg-amber-500/20 text-amber-300 font-bold shadow-sm shadow-amber-950/40',
+          'border-amber-500/45 bg-amber-500/15 text-amber-700 dark:text-amber-300 font-bold',
         dotColor: 'bg-amber-400',
         description: 'Em fixação espaçada',
       };
@@ -173,7 +173,7 @@ export function FlashcardsStudy({
       return {
         label: 'Fácil (Dominado)',
         className:
-          'border-emerald-500/60 bg-emerald-500/20 text-emerald-300 font-bold shadow-sm shadow-emerald-950/40',
+          'border-emerald-500/45 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-bold',
         dotColor: 'bg-emerald-400',
         description: 'Conceito bem fixado',
       };
@@ -181,7 +181,7 @@ export function FlashcardsStudy({
 
     return {
       label: 'Novo Cartão',
-      className: 'border-sky-500/40 bg-sky-500/15 text-sky-300 font-semibold',
+      className: 'border-sky-500/40 bg-sky-500/15 text-sky-700 dark:text-sky-300 font-semibold',
       dotColor: 'bg-sky-400',
       description: 'Nunca respondido',
     };
@@ -302,7 +302,7 @@ export function FlashcardsStudy({
       setFlipped(false);
 
       toast({
-        title: 'Cartão redefinido para Novo! 🔄',
+        title: 'Cartão redefinido para Novo!',
         description:
           'Histórico zerado com sucesso. O cartão agora está como se nunca tivesse sido respondido.',
         variant: 'info',
@@ -366,7 +366,7 @@ export function FlashcardsStudy({
       setLastRatedAction(null);
 
       toast({
-        title: 'Ação desfeita com sucesso! ↩️',
+        title: 'Ação desfeita com sucesso!',
         description: !previousReview
           ? 'O cartão voltou a ser Novo, exatamente como antes do clique.'
           : 'O cartão foi restaurado para a avaliação anterior.',
@@ -413,13 +413,13 @@ export function FlashcardsStudy({
         <Card>
           <CardContent className="p-4">
             <p className="text-xs text-muted-foreground">Total de Cartões</p>
-            <p className="mt-1 text-2xl font-bold">{stats.total}</p>
+            <p className="mt-1 text-2xl font-bold tabular-nums">{stats.total}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
             <p className="text-xs text-muted-foreground">Já Estudados</p>
-            <p className="mt-1 text-2xl font-bold text-indigo-400">
+            <p className="mt-1 text-2xl font-bold text-primary tabular-nums">
               {stats.reviewed}
             </p>
           </CardContent>
@@ -427,7 +427,7 @@ export function FlashcardsStudy({
         <Card>
           <CardContent className="p-4">
             <p className="text-xs text-muted-foreground">Dominados</p>
-            <p className="mt-1 text-2xl font-bold text-emerald-400">
+            <p className="mt-1 text-2xl font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
               {stats.mastered}
             </p>
           </CardContent>
@@ -435,7 +435,7 @@ export function FlashcardsStudy({
         <Card>
           <CardContent className="p-4">
             <p className="text-xs text-muted-foreground">Para Rever Hoje</p>
-            <p className="mt-1 text-2xl font-bold text-amber-400">
+            <p className="mt-1 text-2xl font-bold text-amber-600 dark:text-amber-400 tabular-nums">
               {stats.dueCount}
             </p>
           </CardContent>
@@ -467,7 +467,7 @@ export function FlashcardsStudy({
                   <option value="ALL">Todos os Capítulos (1 a 6)</option>
                   {chapters.map((ch) => (
                     <option key={ch.id} value={ch.id}>
-                      Cap. {ch.number} — {ch.title}
+                      Cap. {ch.number} - {ch.title}
                     </option>
                   ))}
                 </Select>
@@ -506,10 +506,10 @@ export function FlashcardsStudy({
                   size="sm"
                   onClick={handleUndoLastRating}
                   disabled={submitting}
-                  className="border-indigo-500/50 bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 shadow-sm"
+                  className="border-primary/40 bg-primary/10 text-primary hover:bg-primary/20"
                   title="Desfazer última avaliação (Atalho: Ctrl+Z)"
                 >
-                  <Undo2 className="h-4 w-4 mr-1.5 text-indigo-400" />
+                  <Undo2 className="h-4 w-4 mr-1.5 text-primary" />
                   Desfazer última avaliação
                 </Button>
               )}
@@ -535,7 +535,7 @@ export function FlashcardsStudy({
       {!currentCard ? (
         <Card>
           <CardContent className="p-10 text-center space-y-3">
-            <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-400" />
+            <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-600 dark:text-emerald-400" />
             <h3 className="text-lg font-bold">
               Nenhum cartão pendente neste filtro!
             </h3>
@@ -554,8 +554,8 @@ export function FlashcardsStudy({
           </CardContent>
         </Card>
       ) : (
-        <Card className="border-indigo-500/30 shadow-xl">
-          <CardHeader className="border-b border-border/60">
+        <Card className="border-primary/25">
+          <CardHeader className="bg-secondary/25 rounded-t-2xl pb-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               {/* Badges de Identificação */}
               <div className="flex flex-wrap items-center gap-2">
@@ -570,7 +570,7 @@ export function FlashcardsStudy({
                   Nível {DIFFICULTY_LABELS[currentCard.difficulty] || currentCard.difficulty}
                 </Badge>
                 {currentCard.tags.map((tag) => (
-                  <Badge key={tag} variant="purple">
+                  <Badge key={tag} variant="secondary">
                     {tag}
                   </Badge>
                 ))}
@@ -598,7 +598,7 @@ export function FlashcardsStudy({
 
                 {currentCard.review ? (
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] text-muted-foreground hidden md:inline">
+                    <span className="text-xs text-muted-foreground hidden md:inline">
                       Próxima: {formatDateBR(currentCard.review.nextReviewAt)}
                     </span>
                     <Button
@@ -607,7 +607,7 @@ export function FlashcardsStudy({
                       size="sm"
                       disabled={submitting}
                       onClick={() => handleResetCard(currentCard.id)}
-                      className="h-7 px-2.5 text-xs text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 border border-border/50 hover:border-rose-500/30 transition rounded-lg"
+                      className="h-7 rounded-lg border border-border/50 px-2.5 text-xs text-muted-foreground hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                       title="Clique caso tenha clicado por engano ou queira zerar o cartão para Novo"
                     >
                       <RotateCcw className="h-3 w-3 mr-1" />
@@ -615,7 +615,7 @@ export function FlashcardsStudy({
                     </Button>
                   </div>
                 ) : (
-                  <span className="text-[11px] text-muted-foreground hidden sm:inline">
+                  <span className="text-xs text-muted-foreground hidden sm:inline">
                     Cartão inédito
                   </span>
                 )}
@@ -634,9 +634,9 @@ export function FlashcardsStudy({
                   setFlipped(!flipped);
                 }
               }}
-              className="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-950/30 via-background to-violet-950/20 p-8 text-center transition hover:border-indigo-400"
+              className="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-2xl border border-primary/25 bg-secondary/35 p-8 text-center transition-colors hover:border-primary/50"
             >
-              <span className="mb-3 rounded-full border border-border px-3 py-0.5 text-[11px] font-semibold uppercase tracking-widest text-indigo-400">
+              <span className="mb-3 rounded-full border border-border px-3 py-0.5 text-xs font-semibold text-primary">
                 {flipped ? 'Verso (Resposta Oficial)' : 'Frente (Pergunta)'}
               </span>
               <FormattedText
@@ -650,7 +650,7 @@ export function FlashcardsStudy({
             </div>
 
             {/* Botões de Navegação e Avaliação de Repetição Espaçada */}
-            <div className="flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-4 sm:flex-row">
+            <div className="flex flex-col items-center justify-between gap-4 rounded-xl bg-secondary/35 p-3.5 sm:flex-row">
               <div className="flex items-center gap-2">
                 <Button
                   type="button"
@@ -711,7 +711,7 @@ export function FlashcardsStudy({
                   disabled={submitting}
                   onClick={() => handleRate('MEDIUM')}
                   title="Marca como Médio: Estado vira Médio (Em Revisão) em Amarelo"
-                  className="border-amber-500/40 bg-amber-500/15 text-amber-300 hover:bg-amber-500/25 font-medium"
+                  className="border-amber-500/40 bg-amber-500/15 text-amber-700 dark:text-amber-300 hover:bg-amber-500/25 font-medium"
                 >
                   Médio
                 </Button>

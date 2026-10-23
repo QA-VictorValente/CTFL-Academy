@@ -19,20 +19,20 @@ import { MindMapNode, MindMapData } from '@/types/notebook';
 import { CTFL_MINDMAP_TEMPLATES } from '@/lib/mindmap-templates';
 
 const QA_EMOJIS = [
-  '🧠', '🐛', '🎯', '📐', '⚙️', '📦', '🛡️', '🚨', '📋',
-  '🔍', '📊', '⚡', '🏆', '🔬', '🔗', '🖥️', '🌐', '✍️',
-  '🎨', '🧱', '⏳', '💰', '🧪', '😴', '🔄', '🚫', '💡',
-  '📄', '🌿', '🕵️', '🧭', '🛠️', '🚀', '🏁', '📝', '📅',
+  '\u{1F9E0}', '\u{1F41B}', '\u{1F3AF}', '\u{1F4D0}', '\u{2699}\u{FE0F}', '\u{1F4E6}', '\u{1F6E1}\u{FE0F}', '\u{1F6A8}', '\u{1F4CB}',
+  '\u{1F50D}', '\u{1F4CA}', '\u{26A1}', '\u{1F3C6}', '\u{1F52C}', '\u{1F517}', '\u{1F5A5}\u{FE0F}', '\u{1F310}', '\u{270D}\u{FE0F}',
+  '\u{1F3A8}', '\u{1F9F1}', '\u{23F3}', '\u{1F4B0}', '\u{1F9EA}', '\u{1F634}', '\u{1F504}', '\u{1F6AB}', '\u{1F4A1}',
+  '\u{1F4C4}', '\u{1F33F}', '\u{1F575}\u{FE0F}', '\u{1F9ED}', '\u{1F6E0}\u{FE0F}', '\u{1F680}', '\u{1F3C1}', '\u{1F4DD}', '\u{1F4C5}',
 ];
 
 const NODE_COLORS = [
-  { name: 'Índigo', value: '#6366f1' },
-  { name: 'Violeta', value: '#8b5cf6' },
-  { name: 'Esmeralda', value: '#10b981' },
-  { name: 'Âmbar', value: '#f59e0b' },
-  { name: 'Rosa', value: '#ec4899' },
-  { name: 'Ciano', value: '#06b6d4' },
-  { name: 'Vermelho', value: '#ef4444' },
+  { name: 'Teal', value: '#0e8074' },
+  { name: 'Esmeralda', value: '#059669' },
+  { name: 'Azul Petróleo', value: '#0284c7' },
+  { name: 'Âmbar', value: '#d97706' },
+  { name: 'Terracota', value: '#e11d48' },
+  { name: 'Ciano', value: '#0891b2' },
+  { name: 'Grafite', value: '#475569' },
 ];
 
 function generateId(prefix = 'node'): string {
@@ -59,25 +59,25 @@ export function MindMapCanvas({
       root: {
         id: generateId('root'),
         text: 'Conceito Central CTFL v4.0.1',
-        emoji: '🧠',
-        color: '#6366f1',
+        emoji: '\u{1F9E0}',
+        color: '#0e8074',
         children: [
           {
             id: generateId('node'),
             text: 'Primeiro Tópico',
-            emoji: '🎯',
-            color: '#10b981',
+            emoji: '\u{1F3AF}',
+            color: '#059669',
             children: [
-              { id: generateId('node'), text: 'Detalhe ou Regra de Teste', emoji: '💡' },
+              { id: generateId('node'), text: 'Detalhe ou Regra de Teste', emoji: '\u{1F4A1}' },
             ],
           },
           {
             id: generateId('node'),
             text: 'Segundo Tópico',
-            emoji: '⚙️',
-            color: '#8b5cf6',
+            emoji: '\u{2699}\u{FE0F}',
+            color: '#0284c7',
             children: [
-              { id: generateId('node'), text: 'Exemplo prático de QA', emoji: '📋' },
+              { id: generateId('node'), text: 'Exemplo prático de QA', emoji: '\u{1F4CB}' },
             ],
           },
         ],
@@ -128,7 +128,7 @@ export function MindMapCanvas({
     const newNode: MindMapNode = {
       id: generateId('node'),
       text: 'Novo subtópico',
-      emoji: '💡',
+      emoji: '\u{1F4A1}',
     };
 
     updateTree((root) => {
@@ -155,7 +155,7 @@ export function MindMapCanvas({
     const newNode: MindMapNode = {
       id: generateId('node'),
       text: 'Novo tópico irmão',
-      emoji: '🎯',
+      emoji: '\u{1F3AF}',
     };
 
     updateTree((root) => {
@@ -285,7 +285,7 @@ export function MindMapCanvas({
   ) => {
     const hasChildren = Boolean(node.children && node.children.length > 0);
     const isExpanded = node.isExpanded !== false;
-    const currentColor = node.color || parentColor || '#6366f1';
+    const currentColor = node.color || parentColor || '#0e8074';
     const isSelected = selectedNodeId === node.id;
 
     return (
@@ -293,10 +293,10 @@ export function MindMapCanvas({
         {/* Caixa do Nó */}
         <div
           onClick={() => setSelectedNodeId(node.id)}
-          className={`group relative flex items-center gap-2 rounded-2xl border px-3.5 py-2 transition-all shadow-md ${
+          className={`group relative flex items-center gap-2 rounded-2xl border px-3.5 py-2 transition-colors ${
             isRoot
-              ? 'bg-gradient-to-r from-indigo-950 via-background to-violet-950 border-indigo-500/50 shadow-indigo-500/20'
-              : 'bg-card/90 hover:bg-card border-border/80'
+              ? 'bg-primary/10 border-primary/40'
+              : 'bg-card hover:bg-secondary/40 border-border/80'
           } ${
             isSelected
               ? 'ring-2 ring-primary ring-offset-2 ring-offset-background'
@@ -322,7 +322,7 @@ export function MindMapCanvas({
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-border/50 bg-secondary/50 text-base hover:scale-110 transition active:scale-95"
             title="Alterar emoji"
           >
-            {node.emoji || '💡'}
+            {node.emoji || '\u{1F4A1}'}
           </button>
 
           {/* Campo de Texto Editável */}
@@ -358,7 +358,7 @@ export function MindMapCanvas({
                 e.stopPropagation();
                 toggleCollapse(node.id);
               }}
-              className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary/80 text-muted-foreground hover:text-foreground text-[10px]"
+              className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary/80 text-muted-foreground hover:text-foreground text-xs"
               title={isExpanded ? 'Recolher ramo' : 'Expandir ramo'}
             >
               {isExpanded ? (
@@ -371,7 +371,7 @@ export function MindMapCanvas({
 
           {/* Barra de Ações Rápidas Flutuante no Hover */}
           {!readOnly && (
-            <div className="absolute -top-7 left-1/2 -translate-x-1/2 hidden group-hover:flex items-center gap-1 rounded-lg border border-border bg-popover/95 px-1.5 py-0.5 shadow-lg backdrop-blur z-20">
+            <div className="absolute -top-7 left-1/2 -translate-x-1/2 hidden group-hover:flex items-center gap-1 rounded-lg border border-border bg-popover px-1.5 py-0.5 z-20">
               <button
                 type="button"
                 onClick={(e) => {
@@ -429,7 +429,7 @@ export function MindMapCanvas({
           {activePicker?.nodeId === node.id && activePicker.type === 'emoji' && (
             <div
               onClick={(e) => e.stopPropagation()}
-              className="absolute top-10 left-0 z-30 grid grid-cols-6 gap-1 rounded-xl border border-border bg-popover p-2 shadow-2xl backdrop-blur max-w-[200px]"
+              className="absolute top-10 left-0 z-30 grid grid-cols-6 gap-1 rounded-xl border border-border bg-popover p-2 max-w-[200px]"
             >
               {QA_EMOJIS.map((emoji) => (
                 <button
@@ -451,7 +451,7 @@ export function MindMapCanvas({
           {activePicker?.nodeId === node.id && activePicker.type === 'color' && (
             <div
               onClick={(e) => e.stopPropagation()}
-              className="absolute top-10 left-0 z-30 flex items-center gap-1.5 rounded-xl border border-border bg-popover p-2 shadow-2xl backdrop-blur"
+              className="absolute top-10 left-0 z-30 flex items-center gap-1.5 rounded-xl border border-border bg-popover p-2"
             >
               {NODE_COLORS.map((c) => (
                 <button
@@ -472,7 +472,7 @@ export function MindMapCanvas({
 
         {/* Linha de Conexão e Filhos */}
         {hasChildren && isExpanded && (
-          <div className="relative ml-6 flex flex-col gap-4 border-l-2 border-indigo-500/20 pl-6 my-2">
+          <div className="relative ml-6 flex flex-col gap-4 border-l-2 border-primary/25 pl-6 my-2">
             {node.children!.map((child) => renderNode(child, false, currentColor))}
           </div>
         )}
@@ -481,11 +481,11 @@ export function MindMapCanvas({
   };
 
   return (
-    <div className="flex flex-col h-full rounded-2xl border border-border/70 bg-background/50 overflow-hidden shadow-inner">
+    <div className="flex flex-col h-full rounded-2xl border border-border/70 bg-background/50 overflow-hidden">
       {/* Barra de Ferramentas Superior */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-card/60 px-4 py-2 text-xs">
+      <div className="flex flex-wrap items-center justify-between gap-2 bg-secondary/40 px-4 py-2 text-xs">
         <div className="flex items-center gap-2">
-          <Badge variant="purple" className="gap-1">
+          <Badge variant="secondary" className="gap-1">
             <Sparkles className="h-3 w-3" />
             Mapa Mental CTFL
           </Badge>
@@ -498,7 +498,7 @@ export function MindMapCanvas({
                 if (e.target.value) handleLoadTemplate(e.target.value);
               }}
               defaultValue=""
-              className="h-7 rounded-lg border border-border bg-background px-2 text-[11px] font-medium outline-none text-muted-foreground hover:text-foreground"
+              className="h-7 rounded-lg border border-border bg-background px-2 text-xs font-medium outline-none text-muted-foreground hover:text-foreground"
             >
               <option value="" disabled>
                 Carregar Template Oficial...
@@ -522,7 +522,7 @@ export function MindMapCanvas({
           >
             <ZoomIn className="h-3.5 w-3.5" />
           </button>
-          <span className="text-[10px] text-muted-foreground font-mono w-9 text-center">
+          <span className="text-xs text-muted-foreground tabular-nums w-10 text-center">
             {Math.round(zoom * 100)}%
           </span>
           <button
@@ -542,7 +542,7 @@ export function MindMapCanvas({
             <RotateCcw className="h-3.5 w-3.5" />
           </button>
 
-          <div className="h-4 w-px bg-border/60 mx-1" />
+          <span className="mx-0.5" />
 
           <button
             type="button"
@@ -563,7 +563,7 @@ export function MindMapCanvas({
           setSelectedNodeId(null);
           setActivePicker(null);
         }}
-        className="flex-1 overflow-auto p-8 bg-[radial-gradient(#6366f115_1px,transparent_1px)] [background-size:16px_16px]"
+        className="flex-1 overflow-auto p-8 bg-secondary/20"
       >
         <div
           style={{
@@ -579,12 +579,12 @@ export function MindMapCanvas({
 
       {/* Dica de Teclado no Rodapé */}
       {!readOnly && (
-        <div className="flex items-center justify-between border-t border-border/50 bg-card/40 px-4 py-1.5 text-[11px] text-muted-foreground">
+        <div className="flex items-center justify-between bg-secondary/35 px-4 py-1.5 text-xs text-muted-foreground">
           <span>
             Dica: clique em um nó e pressione <strong>Tab</strong> para criar um
             ramo filho ou <strong>Enter</strong> para criar um irmão.
           </span>
-          <span className="text-[10px] text-indigo-400 font-semibold">
+          <span className="text-xs text-primary font-semibold">
             Salvo automaticamente
           </span>
         </div>

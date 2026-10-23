@@ -4,23 +4,23 @@ import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-[transform,opacity,background-color,color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
         default:
-          'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-500/20 hover:from-indigo-500 hover:to-violet-500 active:scale-[0.99]',
+          'bg-primary text-primary-foreground hover:bg-primary/90 motion-safe:active:scale-[0.98]',
         primary:
-          'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-500/20 hover:from-indigo-500 hover:to-violet-500 active:scale-[0.99]',
+          'bg-primary text-primary-foreground hover:bg-primary/90 motion-safe:active:scale-[0.98]',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border',
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 ring-1 ring-inset ring-border',
         outline:
-          'border border-border bg-transparent hover:bg-secondary/60 text-foreground',
-        ghost: 'hover:bg-secondary/60 text-foreground',
+          'bg-transparent hover:bg-secondary/70 text-foreground ring-1 ring-inset ring-border',
+        ghost: 'hover:bg-secondary/70 text-foreground',
         destructive:
-          'bg-rose-600 text-white hover:bg-rose-500 shadow-sm shadow-rose-500/20',
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90 motion-safe:active:scale-[0.98]',
         success:
-          'bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm shadow-emerald-500/20',
+          'bg-emerald-700 text-white hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500 motion-safe:active:scale-[0.98]',
       },
       size: {
         default: 'h-10 px-4 py-2',

@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "trail": {
+      "command": "node",
+      "args": [
+        ".tools/ai-cli/node_modules/@trailhq/trail-code/dist/bin/trail.js",
+        "mcp"
+      ]
+    },
+    "agent-browser": {
+      "command": "node",
+      "args": [
+        ".tools/ai-cli/node_modules/agent-browser/bin/agent-browser.js",
+        "mcp"
+      ]
+    }
+  }
+}

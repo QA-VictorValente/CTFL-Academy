@@ -41,9 +41,9 @@ export function ConfirmModal({
       aria-modal="true"
       aria-labelledby="confirm-modal-title"
       aria-describedby="confirm-modal-desc"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm animate-in fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 animate-in fade-in duration-150"
     >
-      <div className="relative w-full max-w-md rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-2xl">
+      <div className="relative w-full max-w-md rounded-2xl bg-card p-6 text-card-foreground ring-1 ring-border">
         <button
           type="button"
           onClick={handleDismiss}
@@ -58,8 +58,8 @@ export function ConfirmModal({
           <div
             className={
               variant === 'destructive'
-                ? 'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/15 text-rose-500'
-                : 'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/15 text-indigo-400'
+                ? 'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400'
+                : 'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary'
             }
           >
             <AlertTriangle className="h-5 w-5" />
