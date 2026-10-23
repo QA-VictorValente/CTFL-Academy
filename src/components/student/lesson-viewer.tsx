@@ -724,9 +724,10 @@ export function LessonViewer({
                       size="lg"
                       onClick={handleCompleteLesson}
                       isLoading={completing}
+                      disabled={completing}
                       className="font-bold"
                     >
-                      <CheckCircle2 className="h-5 w-5 mr-1.5" />
+                      {!completing && <CheckCircle2 className="h-5 w-5 mr-1.5" />}
                       {completed ? 'Aula Concluída (+30 XP)' : 'Concluir Aula (+30 XP)'}
                     </Button>
                   </div>
@@ -880,9 +881,10 @@ export function LessonViewer({
                 size="lg"
                 onClick={handleCompleteLesson}
                 isLoading={completing}
+                disabled={completing}
                 className="font-bold"
               >
-                <CheckCircle2 className="h-5 w-5 mr-1" />
+                {!completing && <CheckCircle2 className="h-5 w-5 mr-1" />}
                 {completed ? 'Aula Concluída (+30 XP)' : 'Concluir Aula (+30 XP)'}
               </Button>
             </div>

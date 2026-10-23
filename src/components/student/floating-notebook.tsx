@@ -39,6 +39,7 @@ export function FloatingNotebook() {
   const [noteContent, setNoteContent] = React.useState('');
   const [mindMapData, setMindMapData] = React.useState<MindMapData | null>(null);
   const [saveStatus, setSaveStatus] = React.useState<'idle' | 'saving' | 'saved'>('idle');
+  const [isConverting, setIsConverting] = React.useState(false);
 
   // Detecta se está em uma aula ou capítulo
   const isLessonPage = pathname?.includes('/capitulos/') && pathname?.includes('/topicos/');
@@ -136,6 +137,8 @@ export function FloatingNotebook() {
   };
 
   async function handleConvertToFlashcard(front: string, back: string) {
+    if (isConverting) return;
+    setIsConverting(true);
     try {
       const res = await fetch('/api/notes/to-flashcard', {
         method: 'POST',
@@ -166,6 +169,8 @@ export function FloatingNotebook() {
         description: 'Não foi possível salvar o flashcard.',
         variant: 'error',
       });
+    } finally {
+      setIsConverting(false);
     }
   }
 
@@ -367,6 +372,7 @@ export function FloatingNotebook() {
                 onChange={(newContent) => setNoteContent(newContent)}
                 onConvertToFlashcard={handleConvertToFlashcard}
                 contextTitle={isLessonPage ? 'Aula atual do Syllabus CTFL 4.0.1' : undefined}
+                isConverting={isConverting}
               />
             )}
           </div>

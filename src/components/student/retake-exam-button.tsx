@@ -54,8 +54,13 @@ export function RetakeExamButton({
   }
 
   return (
-    <Button type="button" onClick={handleRetake} isLoading={loading}>
-      <RotateCcw className="h-4 w-4" />
+    <Button
+      type="button"
+      onClick={handleRetake}
+      isLoading={loading}
+      disabled={loading}
+    >
+      {!loading && <RotateCcw className="h-4 w-4" />}
       Refazer Simulado (Gerar Nova Seleção)
     </Button>
   );

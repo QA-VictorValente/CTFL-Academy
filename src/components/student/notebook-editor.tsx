@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/components/providers/toast-provider';
 import { FormattedText } from '@/components/ui/formatted-text';
+import { Button } from '@/components/ui/button';
 
 const QA_EMOJIS = [
   '\u{1F9E0}', '\u{1F41B}', '\u{1F3AF}', '\u{1F4D0}', '\u{2699}\u{FE0F}', '\u{1F4E6}', '\u{1F6E1}\u{FE0F}', '\u{1F6A8}', '\u{1F4CB}',
@@ -28,11 +29,13 @@ export function NotebookEditor({
   onChange,
   onConvertToFlashcard,
   contextTitle,
+  isConverting,
 }: {
   initialContent?: string;
   onChange?: (content: string) => void;
   onConvertToFlashcard?: (front: string, back: string) => void;
   contextTitle?: string;
+  isConverting?: boolean;
 }) {
   const { toast } = useToast();
   const [content, setContent] = React.useState(initialContent);
@@ -248,15 +251,19 @@ export function NotebookEditor({
           </button>
 
           {/* Botão Gerar Flashcard */}
-          <button
+          <Button
             type="button"
+            size="sm"
+            variant="outline"
             onClick={handleCreateFlashcard}
-            className="flex h-7 items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 text-xs font-semibold text-amber-700 dark:text-amber-400 hover:bg-amber-500/20 transition-colors"
+            isLoading={isConverting}
+            disabled={isConverting}
+            className="h-7 items-center gap-1 border-amber-500/30 bg-amber-500/10 px-2.5 text-xs font-semibold text-amber-700 dark:text-amber-400 hover:bg-amber-500/20 transition-colors"
             title="Transformar trecho em Flashcard"
           >
-            <Sparkles className="h-3 w-3" />
+            {!isConverting && <Sparkles className="h-3 w-3" />}
             <span className="hidden sm:inline">Gerar Flashcard</span>
-          </button>
+          </Button>
         </div>
 
         {/* Alternância Editor / Visualização */}

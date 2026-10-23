@@ -80,6 +80,9 @@ export function FlashcardsStudy({
     React.useState<FlashcardStudyItem[]>(flashcards);
   const [lastRatedAction, setLastRatedAction] =
     React.useState<LastRatedAction | null>(null);
+  const [activeAction, setActiveAction] = React.useState<
+    'HARD' | 'MEDIUM' | 'EASY' | 'RESET' | 'UNDO' | null
+  >(null);
 
   const deck = React.useMemo(() => {
     const now = Date.now();
@@ -191,7 +194,7 @@ export function FlashcardsStudy({
   async function handleRate(rating: 'EASY' | 'MEDIUM' | 'HARD') {
     if (!currentCard || submitting) return;
     setSubmitting(true);
-
+    setActiveAction(rating);
     const prevReview = currentCard.review;
     const cardId = currentCard.id;
     const cardIdx = currentIndex;
@@ -261,6 +264,7 @@ export function FlashcardsStudy({
       router.refresh();
     } finally {
       setSubmitting(false);
+      setActiveAction(null);
     }
   }
 
@@ -268,9 +272,9 @@ export function FlashcardsStudy({
   async function handleResetCard(flashcardId: string) {
     if (submitting) return;
     setSubmitting(true);
+    setActiveAction('RESET');
     try {
       const res = await fetch('/api/flashcards/reset', {
-        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ flashcardId }),
       });
@@ -317,6 +321,7 @@ export function FlashcardsStudy({
       });
     } finally {
       setSubmitting(false);
+      setActiveAction(null);
     }
   }
 
@@ -326,9 +331,9 @@ export function FlashcardsStudy({
     const { cardId, cardIndex: targetIdx, previousReview } = lastRatedAction;
 
     setSubmitting(true);
+    setActiveAction('UNDO');
     try {
       if (!previousReview) {
-        // Antes era um cartão NOVO -> reset completo no backend
         const res = await fetch('/api/flashcards/reset', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -382,6 +387,7 @@ export function FlashcardsStudy({
       });
     } finally {
       setSubmitting(false);
+      setActiveAction(null);
     }
   }, [lastRatedAction, submitting, toast, router]);
 
@@ -506,10 +512,13 @@ export function FlashcardsStudy({
                   size="sm"
                   onClick={handleUndoLastRating}
                   disabled={submitting}
+                  isLoading={submitting && activeAction === 'UNDO'}
                   className="border-primary/40 bg-primary/10 text-primary hover:bg-primary/20"
                   title="Desfazer última avaliação (Atalho: Ctrl+Z)"
                 >
-                  <Undo2 className="h-4 w-4 mr-1.5 text-primary" />
+                  {!(submitting && activeAction === 'UNDO') && (
+                    <Undo2 className="h-4 w-4 mr-1.5 text-primary" />
+                  )}
                   Desfazer última avaliação
                 </Button>
               )}
@@ -606,11 +615,14 @@ export function FlashcardsStudy({
                       variant="ghost"
                       size="sm"
                       disabled={submitting}
+                      isLoading={submitting && activeAction === 'RESET'}
                       onClick={() => handleResetCard(currentCard.id)}
                       className="h-7 rounded-lg border border-border/50 px-2.5 text-xs text-muted-foreground hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                       title="Clique caso tenha clicado por engano ou queira zerar o cartão para Novo"
                     >
-                      <RotateCcw className="h-3 w-3 mr-1" />
+                      {!(submitting && activeAction === 'RESET') && (
+                        <RotateCcw className="h-3 w-3 mr-1" />
+                      )}
                       Voltar para Novo
                     </Button>
                   </div>
@@ -698,6 +710,7 @@ export function FlashcardsStudy({
                   variant="destructive"
                   size="sm"
                   disabled={submitting}
+                  isLoading={submitting && activeAction === 'HARD'}
                   onClick={() => handleRate('HARD')}
                   title="Marca como Difícil: Estado vira Difícil (Aprendendo) em Vermelho"
                   className="font-medium"
@@ -709,6 +722,7 @@ export function FlashcardsStudy({
                   variant="secondary"
                   size="sm"
                   disabled={submitting}
+                  isLoading={submitting && activeAction === 'MEDIUM'}
                   onClick={() => handleRate('MEDIUM')}
                   title="Marca como Médio: Estado vira Médio (Em Revisão) em Amarelo"
                   className="border-amber-500/40 bg-amber-500/15 text-amber-700 dark:text-amber-300 hover:bg-amber-500/25 font-medium"
@@ -720,6 +734,7 @@ export function FlashcardsStudy({
                   variant="success"
                   size="sm"
                   disabled={submitting}
+                  isLoading={submitting && activeAction === 'EASY'}
                   onClick={() => handleRate('EASY')}
                   title="Marca como Fácil: Estado vira Fácil (Dominado) em Verde"
                   className="font-medium"
@@ -733,11 +748,14 @@ export function FlashcardsStudy({
                     variant="ghost"
                     size="sm"
                     disabled={submitting}
+                    isLoading={submitting && activeAction === 'RESET'}
                     onClick={() => handleResetCard(currentCard.id)}
                     className="text-xs text-muted-foreground hover:text-rose-400"
                     title="Zerar resposta e voltar este cartão para Novo"
                   >
-                    <RotateCcw className="h-3.5 w-3.5 mr-1" />
+                    {!(submitting && activeAction === 'RESET') && (
+                      <RotateCcw className="h-3.5 w-3.5 mr-1" />
+                    )}
                     Resetar
                   </Button>
                 )}

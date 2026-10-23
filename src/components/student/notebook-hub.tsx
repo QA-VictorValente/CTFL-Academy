@@ -44,6 +44,7 @@ export function NotebookHub({
   const [typeFilter, setTypeFilter] = React.useState<'ALL' | 'MINDMAP' | 'NOTE'>('ALL');
   const [chapterFilter, setChapterFilter] = React.useState('ALL');
   const [saving, setSaving] = React.useState(false);
+  const [isConverting, setIsConverting] = React.useState(false);
 
   const currentNote = notes.find((n) => n.id === selectedNoteId) || null;
 
@@ -169,6 +170,8 @@ export function NotebookHub({
   }
 
   async function handleConvertToFlashcard(front: string, back: string) {
+    if (isConverting) return;
+    setIsConverting(true);
     try {
       const res = await fetch('/api/notes/to-flashcard', {
         method: 'POST',
@@ -201,6 +204,8 @@ export function NotebookHub({
         description: 'Não foi possível salvar o flashcard.',
         variant: 'error',
       });
+    } finally {
+      setIsConverting(false);
     }
   }
 
@@ -453,6 +458,7 @@ export function NotebookHub({
                     onChange={(newContent) => handleUpdateCurrent({ content: newContent })}
                     onConvertToFlashcard={handleConvertToFlashcard}
                     contextTitle={currentNote.title}
+                    isConverting={isConverting}
                   />
                 )}
               </div>
