@@ -53,8 +53,25 @@ export default async function StudentDashboardPage() {
         chapter: { select: { id: true, number: true, slug: true, title: true } },
       },
     }),
-    prisma.userAnswer.count({ where: { userId: user.id } }),
-    prisma.userAnswer.count({ where: { userId: user.id, isCorrect: true } }),
+    prisma.userAnswer.count({
+      where: {
+        userId: user.id,
+        OR: [
+          { attemptId: null },
+          { attempt: { status: { in: ['COMPLETED', 'EXPIRED'] } } },
+        ],
+      },
+    }),
+    prisma.userAnswer.count({
+      where: {
+        userId: user.id,
+        isCorrect: true,
+        OR: [
+          { attemptId: null },
+          { attempt: { status: { in: ['COMPLETED', 'EXPIRED'] } } },
+        ],
+      },
+    }),
     prisma.examAttempt.findMany({
       where: {
         userId: user.id,

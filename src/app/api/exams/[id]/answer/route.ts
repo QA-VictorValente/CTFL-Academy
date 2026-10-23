@@ -87,15 +87,14 @@ export async function POST(
     }
 
     if (selectedLabel !== undefined) {
-      const isCorrect =
-        selectedLabel !== null &&
-        selectedLabel === examQuestion.correctDisplayLabel;
-
+      // Blindagem anti-side-channel leak: enquanto attempt.status === 'IN_PROGRESS',
+      // NUNCA persistir isCorrect real no banco para evitar vazamento via contadores.
+      // O cálculo real de acertos é efetuado atomicamente na finalização do simulado.
       await prisma.userAnswer.upsert({
         where: { examQuestionId: examQuestion.id },
         update: {
           selectedLabel,
-          isCorrect,
+          isCorrect: false,
         },
         create: {
           attemptId: attempt.id,
@@ -103,7 +102,7 @@ export async function POST(
           userId: user.id,
           questionId: examQuestion.questionId,
           selectedLabel,
-          isCorrect,
+          isCorrect: false,
           context: 'EXAM',
         },
       });

@@ -27,6 +27,8 @@ import {
   Shield,
   Loader2,
   Brain,
+  Maximize2,
+  Minimize2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -87,7 +89,38 @@ export function AppShell({
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [loggingOut, setLoggingOut] = React.useState(false);
   const [pendingHref, setPendingHref] = React.useState<string | null>(null);
+  const [focusMode, setFocusMode] = React.useState(false);
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const isEditing =
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT' ||
+          target.isContentEditable);
+
+      if (e.key === 'Escape' && focusMode) {
+        setFocusMode(false);
+        return;
+      }
+
+      if (
+        (e.key === 'f' || e.key === 'F') &&
+        !isEditing &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        !e.altKey
+      ) {
+        e.preventDefault();
+        setFocusMode((prev) => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [focusMode]);
   React.useEffect(() => {
     setPendingHref(null);
   }, [pathname]);
@@ -147,7 +180,12 @@ export function AppShell({
   return (
     <div className="flex min-h-dvh bg-background">
       {/* Desktop Sidebar */}
-      <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col overflow-hidden bg-card ring-1 ring-border/80 lg:flex">
+      <aside
+        className={cn(
+          'sticky top-0 hidden h-dvh w-64 shrink-0 flex-col overflow-hidden bg-card ring-1 ring-border/80 lg:flex',
+          focusMode && '!hidden'
+        )}
+      >
         <div className="flex h-16 shrink-0 items-center gap-2.5 bg-secondary/40 px-5">
           <Link href="/dashboard" className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -214,8 +252,27 @@ export function AppShell({
 
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col min-w-0">
+        {/* Floating exit control when Focus Mode is active */}
+        {focusMode && (
+          <div className="fixed top-3 right-4 z-50">
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => setFocusMode(false)}
+              className="border border-border bg-card gap-2 text-xs font-semibold ring-1 ring-border/80 hover:bg-secondary"
+              aria-label="Sair do Modo Foco (ESC ou F)"
+              title="Sair do Modo Foco (ESC ou F)"
+            >
+              <Minimize2 className="h-3.5 w-3.5 text-primary" />
+              <span>Sair do Foco (ESC)</span>
+            </Button>
+          </div>
+        )}
+
         {/* Top AppHeader */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between bg-card/95 ring-1 ring-border/80 px-4 sm:px-6">
+        {!focusMode && (
+          <header className="sticky top-0 z-30 flex h-16 items-center justify-between bg-card/95 ring-1 ring-border/80 px-4 sm:px-6">
           <div className="flex items-center gap-3">
             <Button
               type="button"
@@ -264,8 +321,23 @@ export function AppShell({
               </Link>
             )}
 
-            <ThemeToggle />
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setFocusMode(true)}
+              title="Ativar Modo Foco (Atalho: F)"
+              aria-label="Ativar Modo Foco para leitura imersiva"
+              className="hidden md:inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+            >
+              <Maximize2 className="h-3.5 w-3.5" />
+              <span className="font-medium">Modo Foco</span>
+              <kbd className="ml-0.5 rounded border border-border/80 bg-muted px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground">
+                F
+              </kbd>
+            </Button>
 
+            <ThemeToggle />
             <Button
               type="button"
               variant="ghost"
@@ -278,7 +350,8 @@ export function AppShell({
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
-        </header>
+          </header>
+        )}
 
         {/* Mobile Drawer */}
         {mobileOpen && (
@@ -337,8 +410,15 @@ export function AppShell({
           </div>
         )}
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 sm:pb-28 lg:pb-32">
-          <div className="mx-auto max-w-7xl">{children}</div>
+        <main
+          className={cn(
+            'flex-1 p-4 sm:p-6 lg:p-8 pb-24 sm:pb-28 lg:pb-32',
+            focusMode && 'pt-6 max-w-5xl mx-auto w-full'
+          )}
+        >
+          <div className={cn('mx-auto', focusMode ? 'max-w-4xl' : 'max-w-7xl')}>
+            {children}
+          </div>
         </main>
 
         <FloatingNotebook />

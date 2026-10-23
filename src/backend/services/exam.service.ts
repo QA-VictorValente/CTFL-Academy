@@ -50,17 +50,30 @@ export async function finalizeExamAttemptIdempotent(
 
   const finalStatus = timer.isExpired ? 'EXPIRED' : 'COMPLETED';
 
-  const updatedAttempt = await prisma.$transaction(async (tx) => {
-    const current = await tx.examAttempt.findUnique({
-      where: { id: attempt.id },
+  const updatedAttemptResult = await prisma.$transaction(async (tx) => {
+    // Trava atômica CAS (Compare-And-Swap) para blindagem contra race condition
+    const updated = await tx.examAttempt.updateMany({
+      where: {
+        id: attempt.id,
+        status: 'IN_PROGRESS',
+      },
+      data: {
+        status: finalStatus,
+        completedAt: now,
+        timeSpentSeconds: timer.elapsedSeconds,
+        scorePoints: scoreSummary.scorePoints,
+        correctCount: scoreSummary.correctCount,
+        wrongCount: scoreSummary.wrongCount,
+        unansweredCount: scoreSummary.unansweredCount,
+        accuracyPercent: scoreSummary.accuracyPercent,
+        passed: scoreSummary.passed,
+      },
     });
 
-    if (
-      !current ||
-      current.status === 'COMPLETED' ||
-      current.status === 'EXPIRED'
-    ) {
-      return tx.examAttempt.findUniqueOrThrow({
+    if (updated.count === 0) {
+      // Concorrência: outra requisição já transicionou o simulado.
+      // Retorna a tentativa existente sem reprocessar XP nem duplicar registros.
+      const existing = await tx.examAttempt.findUniqueOrThrow({
         where: { id: attempt.id },
         include: {
           examQuestions: {
@@ -70,18 +83,38 @@ export async function finalizeExamAttemptIdempotent(
           configuration: true,
         },
       });
+      return { attempt: existing, wasCasWinner: false };
     }
 
-    // Atualizar o flag isCorrect de cada resposta registrada na tentativa
+    // Apuração de isCorrect em lote e batching (correctAnswerIds e wrongAnswerIds)
+    const correctAnswerIds: string[] = [];
+    const wrongAnswerIds: string[] = [];
+
     for (const eq of attempt.examQuestions) {
       if (eq.userAnswer) {
         const isCorrect =
+          eq.userAnswer.selectedLabel !== null &&
           eq.userAnswer.selectedLabel === eq.correctDisplayLabel;
-        await tx.userAnswer.update({
-          where: { id: eq.userAnswer.id },
-          data: { isCorrect },
-        });
+        if (isCorrect) {
+          correctAnswerIds.push(eq.userAnswer.id);
+        } else {
+          wrongAnswerIds.push(eq.userAnswer.id);
+        }
       }
+    }
+
+    if (correctAnswerIds.length > 0) {
+      await tx.userAnswer.updateMany({
+        where: { id: { in: correctAnswerIds } },
+        data: { isCorrect: true },
+      });
+    }
+
+    if (wrongAnswerIds.length > 0) {
+      await tx.userAnswer.updateMany({
+        where: { id: { in: wrongAnswerIds } },
+        data: { isCorrect: false },
+      });
     }
 
     // Atualizar TopicProgress por questão respondida
@@ -164,19 +197,8 @@ export async function finalizeExamAttemptIdempotent(
       });
     }
 
-    return tx.examAttempt.update({
+    const finalAttempt = await tx.examAttempt.findUniqueOrThrow({
       where: { id: attempt.id },
-      data: {
-        status: finalStatus,
-        completedAt: now,
-        timeSpentSeconds: timer.elapsedSeconds,
-        scorePoints: scoreSummary.scorePoints,
-        correctCount: scoreSummary.correctCount,
-        wrongCount: scoreSummary.wrongCount,
-        unansweredCount: scoreSummary.unansweredCount,
-        accuracyPercent: scoreSummary.accuracyPercent,
-        passed: scoreSummary.passed,
-      },
       include: {
         examQuestions: {
           orderBy: { orderIndex: 'asc' },
@@ -185,7 +207,13 @@ export async function finalizeExamAttemptIdempotent(
         configuration: true,
       },
     });
+
+    return { attempt: finalAttempt, wasCasWinner: true };
   });
+
+  if (!updatedAttemptResult.wasCasWinner) {
+    return updatedAttemptResult.attempt;
+  }
 
   // Conceder XP idempotente pela finalização e eventual aprovação
   await awardXpAndRecordActivity({
@@ -210,5 +238,5 @@ export async function finalizeExamAttemptIdempotent(
     });
   }
 
-  return updatedAttempt;
+  return updatedAttemptResult.attempt;
 }

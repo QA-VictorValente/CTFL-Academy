@@ -45,7 +45,13 @@ export default async function ProgressoPage() {
       where: { userId: user.id },
     }),
     prisma.userAnswer.findMany({
-      where: { userId: user.id },
+      where: {
+        userId: user.id,
+        OR: [
+          { attemptId: null },
+          { attempt: { status: { in: ['COMPLETED', 'EXPIRED'] } } },
+        ],
+      },
       include: {
         question: {
           select: { chapterId: true, topicId: true, cognitiveLevel: true },

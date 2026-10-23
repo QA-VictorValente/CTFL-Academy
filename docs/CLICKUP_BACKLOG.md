@@ -157,9 +157,15 @@ Conforme configurado no quadro da **Sprint 1 - Qualidade & Testes**:
 | `86e3vhaa3` | **[FEAT] Evolução do Caderno de Erros: Status Pendentes vs. Superados, Filtros K1-K3 e Reteste Ativo** | Alta (2) | Feature | PO & Desenvolvedor |
 | `86e3vhaa6` | **[FEAT] Exportação do Caderno de Notas e Flashcards em Markdown e JSON** | Normal (3) | Feature | Desenvolvedor & QA |
 | `86e3vhaab` | **[TECH] Padronização de 100% Thin Route Handlers e Clientes @frontend/api-clients** | Normal (3) | Refatoração | Desenvolvedor & DevOps |
-| `86e3vhaaf` | **[FEAT] Modo Foco e Imersão na Visualização de Aulas e Simulados** | Normal (3) | UX / Acessibilidade | PO & Desenvolvedor |
+| `86e3vhaaf` | **[FEAT] Modo Foco e Imersão na Visualização de Aulas e Simulados** | Normal (3) | UX / Acessibilidade | PO & Desenvolvedor (Concluído) |
 | `86e3vhaaj` | **[IMPROV] Auditoria Automatizada Contínua de Acessibilidade com @axe-core/playwright no CI** | Normal (3) | QA / CI | QA Engineer & DevOps |
 | `86e3vhaap` | **[FEAT] Gráfico de Radar de Competências por Capítulo e Nível Cognitivo K1/K2/K3** | Normal (3) | Analytics | Desenvolvedor & PO |
+| `86e3vhfx4` | **[FEAT] Sistema de Destaques e Anotações Inline nas Aulas com Sincronização ao Caderno** | Alta (2) | Feature / UX | PO & Desenvolvedor |
+| `86e3vhfx6` | **[FEAT] Trilha de Aprendizagem com Cronograma Adaptativo e Horas Restantes até a Prova** | Alta (2) | Feature / Trilha | PO & Scrum Master |
+| `86e3vhfx9` | **[FEAT] Modo Simulador Oficial de Exame (Pearson VUE / Prometric Interface Mode)** | Alta (2) | Feature / Simulado | PO & Desenvolvedor |
+| `86e3vhfxd` | **[SEC] Sanitização Estrita de Markdown e Prevenção de Stored XSS em Anotações (AppSec)** | Urgente (1) | Segurança / AppSec | Scrum Master & Dev |
+| `86e3vhfxh` | **[SEC] Rate-Limit Multicamada (Compound userId + IP) em Mutações Críticas (AppSec)** | Alta (2) | Segurança / API | Scrum Master & Dev |
+| `86e3vhfxp` | **[SEC] Hardening de Cabeçalhos HTTP (CSP Estrito, HSTS, COOP/CORP) em next.config.mjs** | Alta (2) | SecOps / Infra | Scrum Master & DevOps |
 ---
 
 ## 3. MATRIZ DE RASTREABILIDADE (SPRINT 1 - CLICKUP)
@@ -177,3 +183,6 @@ Conforme configurado no quadro da **Sprint 1 - Qualidade & Testes**:
 | **[TELA] Design Anti-Slop** | `86e3vha9n` | UI-UX | PO / Dev / QA | **`Teste Pré-Produção`** | 0 FAIL no lint.mjs, tema quente e build 47/47 |
 | **[QA] Sincronização Docs** | `86e3vha9x` | QA / Docs | PO / QA / Dev | **`Teste Pré-Produção`** | +30 XP, Cap 4 = 12, 80Q e LESSON: |
 | **[FEAT] Vozes Neurais** | `86e3vhaa0` | UX / Audio | Dev & QA | **`Teste Pré-Produção`** | Catálogo inteligente e modal educativo |
+| **[BUG/SEC] Anti-Side-Channel & CAS** | `86e3ry4k1` | Segurança / Simulado | Dev & QA | **`Teste Pré-Produção`** | Trava CAS, isCorrect provisório e batching SQL |
+| **[BUG/SEC] Anti-Enumeração Auth** | `86e3ry4jz` | Segurança / Auth | Dev & QA | **`Teste Pré-Produção`** | Resposta 200 uniforme (anti-enumeração OWASP) |
+| **[FEAT] Modo Foco [F]** | `86e3vhaaf` | UX / Foco | Dev & PO | **`Teste Pré-Produção`** | Modo imersivo com atalho 'F' e Escape |

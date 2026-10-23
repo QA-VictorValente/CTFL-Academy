@@ -38,16 +38,17 @@ export async function POST(req: Request) {
         deletedAt: null,
       },
     });
+    // Hardening contra enumeração de usuários (OWASP Top 10):
+    // Não diferencia e-mails existentes de inexistentes com status 404.
+    // Retorna HTTP 200 uniforme para prevenir discovery de contas cadastradas.
+    const genericSuccessMessage =
+      'Se o e-mail informado estiver cadastrado, as instruções para redefinição foram processadas com sucesso.';
 
     if (!user) {
-      return NextResponse.json(
-        {
-          error:
-            'E-mail não cadastrado. Verifique o e-mail informado ou crie uma conta.',
-          field: 'email',
-        },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        success: true,
+        message: genericSuccessMessage,
+      });
     }
 
     if (newPassword) {
@@ -68,8 +69,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      message:
-        'Sua senha foi redefinida com sucesso! Você já pode entrar com a nova senha.',
+      message: genericSuccessMessage,
     });
   } catch (error) {
     console.error('[Auth Recover] Erro:', error);
