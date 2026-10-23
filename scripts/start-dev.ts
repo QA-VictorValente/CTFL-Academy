@@ -4,7 +4,26 @@ import fs from 'fs';
 import net from 'net';
 import { spawn, execSync } from 'child_process';
 
-const PG_DATA_DIR = path.resolve(process.cwd(), '.pgdata');
+function resolvePgDataDir(): string {
+  if (process.env.PG_DATA_DIR) {
+    return path.resolve(process.cwd(), process.env.PG_DATA_DIR);
+  }
+  try {
+    const commonDir = execSync('git rev-parse --git-common-dir', { stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf-8' }).trim();
+    if (commonDir) {
+      const mainRoot = path.resolve(process.cwd(), commonDir, '..');
+      const mainPgData = path.resolve(mainRoot, '.pgdata');
+      if (fs.existsSync(path.join(mainPgData, 'PG_VERSION'))) {
+        return mainPgData;
+      }
+    }
+  } catch {
+    // fallback
+  }
+  return path.resolve(process.cwd(), '.pgdata');
+}
+
+const PG_DATA_DIR = resolvePgDataDir();
 const PG_PORT = 5432;
 
 function loadEnvFile(): Record<string, string> {
