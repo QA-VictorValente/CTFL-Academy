@@ -126,17 +126,54 @@ Conforme configurado no quadro da **Sprint 1 - Qualidade & Testes**:
 - **Comentário de Transição para o ClickUp:**
   > *"💬 [Status -> Teste Pré-Produção] Validação técnica homologada: Formulário de cadastro de aluno implementado com validação Zod no cliente e no servidor, feedback amigável de campos inválidos, IDs semânticos para automação E2E e testes unitários de validação aprovados."*
 
+
+#### 9. `[TELA]` Reformulação Visual Anti-Slop (Light & Dark Mode Editorial Teal)
+- **ClickUp ID:** `86e3vha9n`
+- **Status:** `TESTE PRÉ-PRODUÇÃO`
+- **Prioridade:** Alta | **Responsável:** PO, Desenvolvedor & QA
+- **O que foi implementado:**
+  - Direção Editorial Técnico Quente + Teal/Esmeralda nos temas Claro e Escuro, zeramento de 412 FAIL para 0 FAIL no linter design-taste-frontend em 102 arquivos de UI, transições táteis suaves de 200ms e botões de loading (>1s).
+
+#### 10. `[QA]` Sincronização Canônica de Documentação (+30 XP, Cap 4 = 12, Banco 80Q, Prefixo LESSON:)
+- **ClickUp ID:** `86e3vha9x`
+- **Status:** `TESTE PRÉ-PRODUÇÃO`
+- **Prioridade:** Alta | **Responsável:** PO, QA & Desenvolvedor
+- **O que foi implementado:**
+  - Sincronização de +30 XP em docs/ROTEIRO_DE_TESTES_QA.md:86, Cap. 4 = 12 questões na linha 73, 80 questões em README.md e prefixo LESSON: em lesson.service.ts:83.
+
+#### 11. `[FEAT]` Síntese de Áudio com Priorização de Vozes Neurais HD e Modal Educativo
+- **ClickUp ID:** `86e3vhaa0`
+- **Status:** `TESTE PRÉ-PRODUÇÃO`
+- **Prioridade:** Alta | **Responsável:** Desenvolvedor & QA
+- **O que foi implementado:**
+  - Ordenação inteligente com vozes neurais HD no topo, isolamento de vozes [Desktop], modal educativo e persistência em localStorage.
+
+---
+
+## 2.1. BACKLOG DE MELHORIAS & E2E (NOVAS TAREFAS ESTRUTURADAS PELO PO E SM)
+
+| ClickUp ID | Nome da Tarefa no ClickUp | Prioridade | Tipo | Responsável |
+|:---|:---|:---:|:---:|:---|
+| `86e3vhaa3` | **[FEAT] Evolução do Caderno de Erros: Status Pendentes vs. Superados, Filtros K1-K3 e Reteste Ativo** | Alta (2) | Feature | PO & Desenvolvedor |
+| `86e3vhaa6` | **[FEAT] Exportação do Caderno de Notas e Flashcards em Markdown e JSON** | Normal (3) | Feature | Desenvolvedor & QA |
+| `86e3vhaab` | **[TECH] Padronização de 100% Thin Route Handlers e Clientes @frontend/api-clients** | Normal (3) | Refatoração | Desenvolvedor & DevOps |
+| `86e3vhaaf` | **[FEAT] Modo Foco e Imersão na Visualização de Aulas e Simulados** | Normal (3) | UX / Acessibilidade | PO & Desenvolvedor |
+| `86e3vhaaj` | **[IMPROV] Auditoria Automatizada Contínua de Acessibilidade com @axe-core/playwright no CI** | Normal (3) | QA / CI | QA Engineer & DevOps |
+| `86e3vhaap` | **[FEAT] Gráfico de Radar de Competências por Capítulo e Nível Cognitivo K1/K2/K3** | Normal (3) | Analytics | Desenvolvedor & PO |
 ---
 
 ## 3. MATRIZ DE RASTREABILIDADE (SPRINT 1 - CLICKUP)
 
-| Código ClickUp | Tipo | Responsável | Status no Quadro | Evidência Principal |
-|:---|:---|:---|:---:|:---|
-| **[QA-000]** | DevOps / CI | DevOps | **`Teste Pré-Produção`** | `.github/workflows/ci.yml` (9 gates ativos) |
-| **[TELA] Flashcards** | Feature | Dev & QA | **`Teste Pré-Produção`** | `/flashcards` com SM-2, audio e loading |
-| **[TELA] Simulados** | Feature | Dev & QA | **`Teste Pré-Produção`** | `/simulados` e `/simulados/[id]` com matriz 40Q |
-| **[BUG-001]** | Bug / Concorrência | Dev & QA | **`Teste Pré-Produção`** | Trava CAS no backend + button disabled/spinner |
-| **[QA-001]** | QA Test / Timer | QA & Dev | **`Teste Pré-Produção`** | Timer regressivo autoritativo persistido no F5 |
-| **[QA-002]** | QA Test / SM-2 | QA & Dev | **`Teste Pré-Produção`** | Cálculo determinístico de intervalos SM-2 |
-| **[QA-003]** | Segurança / RBAC | QA & DevOps | **`Teste Pré-Produção`** | RBAC 403, anti-IDOR e trilha em AuditLog |
-| **[QA-004]** | Frontend / Zod | Dev & QA | **`Teste Pré-Produção`** | Validação Zod amigável em `/cadastro` |
+| Código ClickUp | ClickUp ID | Tipo | Responsável | Status no Quadro | Evidência Principal |
+|:---|:---|:---|:---|:---:|:---|
+| **[QA-000]** | `86e3rqz45` | DevOps / CI | DevOps | **`Teste Pré-Produção`** | `.github/workflows/ci.yml` (9 gates ativos) |
+| **[TELA] Flashcards** | `86e3ry4cy` | Feature | Dev & QA | **`Teste Pré-Produção`** | `/flashcards` com SM-2, audio e loading |
+| **[TELA] Simulados** | `86e3ry4df` | Feature | Dev & QA | **`Teste Pré-Produção`** | `/simulados` e `/simulados/[id]` com matriz 40Q |
+| **[BUG-001]** | `86e3rqtzr` | Bug / Concorrência | Dev & QA | **`Teste Pré-Produção`** | Trava CAS no backend + button disabled/spinner |
+| **[QA-001]** | `86e3rqr0p` | QA Test / Timer | QA & Dev | **`Teste Pré-Produção`** | Timer regressivo autoritativo persistido no F5 |
+| **[QA-002]** | `86e3rqtz9` | QA Test / SM-2 | QA & Dev | **`Teste Pré-Produção`** | Cálculo determinístico de intervalos SM-2 |
+| **[QA-003]** | `86e3rqtze` | Segurança / RBAC | QA & DevOps | **`Teste Pré-Produção`** | RBAC 403, anti-IDOR e trilha em AuditLog |
+| **[QA-004]** | `86e3rqtzh` | Frontend / Zod | Dev & QA | **`Teste Pré-Produção`** | Validação Zod amigável em `/cadastro` |
+| **[TELA] Design Anti-Slop** | `86e3vha9n` | UI-UX | PO / Dev / QA | **`Teste Pré-Produção`** | 0 FAIL no lint.mjs, tema quente e build 47/47 |
+| **[QA] Sincronização Docs** | `86e3vha9x` | QA / Docs | PO / QA / Dev | **`Teste Pré-Produção`** | +30 XP, Cap 4 = 12, 80Q e LESSON: |
+| **[FEAT] Vozes Neurais** | `86e3vhaa0` | UX / Audio | Dev & QA | **`Teste Pré-Produção`** | Catálogo inteligente e modal educativo |
