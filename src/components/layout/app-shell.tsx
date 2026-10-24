@@ -247,6 +247,15 @@ export function AppShell({
             <LogOut className="h-4 w-4" />
             Sair da Conta
           </Button>
+          <div className="mt-3 flex items-center justify-center gap-2 rounded-md bg-secondary/60 py-1.5 px-2.5 select-none">
+            <span className="relative flex h-2 w-2" aria-hidden="true">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 animate-engine-pulse" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            <samp className="text-[11px] font-semibold text-muted-foreground tracking-tight">
+              ISTQB® CTFL v4.0.1 • Engine Online
+            </samp>
+          </div>
         </div>
       </aside>
 
@@ -405,14 +414,24 @@ export function AppShell({
                   <LogOut className="h-4 w-4" />
                   Sair
                 </Button>
+                <div className="mt-3 flex items-center justify-center gap-2 rounded-md bg-secondary/60 py-1.5 px-2.5 select-none">
+                  <span className="relative flex h-2 w-2" aria-hidden="true">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 animate-engine-pulse" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                  </span>
+                  <samp className="text-[11px] font-semibold text-muted-foreground tracking-tight">
+                    ISTQB® CTFL v4.0.1 • Engine Online
+                  </samp>
+                </div>
               </div>
             </div>
           </div>
         )}
 
         <main
+          key={pathname}
           className={cn(
-            'flex-1 p-4 sm:p-6 lg:p-8 pb-24 sm:pb-28 lg:pb-32',
+            'flex-1 p-4 sm:p-6 lg:p-8 pb-24 sm:pb-28 lg:pb-32 animate-screen-enter',
             focusMode && 'pt-6 max-w-5xl mx-auto w-full'
           )}
         >

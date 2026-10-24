@@ -31,7 +31,15 @@ const { mockPrisma } = vi.hoisted(() => {
     auditLog: {
       create: vi.fn(),
     },
-    $transaction: vi.fn((cb: (tx: unknown) => unknown) => cb(m)),
+    passwordResetToken: {
+      create: vi.fn(),
+      deleteMany: vi.fn(),
+      findUnique: vi.fn(),
+      update: vi.fn(),
+    },
+    $transaction: vi.fn((cb: unknown) =>
+      typeof cb === 'function' ? (cb as (tx: unknown) => unknown)(m) : Promise.all(cb as Promise<unknown>[])
+    ),
   };
   return { mockPrisma: m };
 });
@@ -61,6 +69,10 @@ vi.mock('@/lib/audit', () => ({
   logAuditEvent: vi.fn().mockResolvedValue({ id: 'audit-1' }),
 }));
 
+vi.mock('@/lib/email', () => ({
+  sendPasswordResetEmail: vi.fn().mockResolvedValue({ success: true, messageId: 'test-msg-1' }),
+}));
+
 vi.mock('@/backend/services/gamification.service', () => ({
   awardXpAndRecordActivity: vi.fn().mockResolvedValue({ awarded: true }),
   XP_RULES: {
@@ -70,6 +82,8 @@ vi.mock('@/backend/services/gamification.service', () => ({
 }));
 
 import { POST as handleRecover } from '@/app/api/auth/recover/route';
+import { POST as handleResetPassword } from '@/app/api/auth/reset-password/route';
+import { sendPasswordResetEmail } from '@/lib/email';
 import { POST as handleAnswer } from '@/app/api/exams/[id]/answer/route';
 import { finalizeExamAttemptIdempotent } from '@/backend/services/exam.service';
 import * as gamificationService from '@/backend/services/gamification.service';
@@ -88,7 +102,6 @@ describe('Security Hardening & Anti-Side-Channel Tests', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: 'naoexiste@dominio.com',
-          newPassword: 'NovaSenhaForte123!',
         }),
       });
 
@@ -98,21 +111,27 @@ describe('Security Hardening & Anti-Side-Channel Tests', () => {
       const json = await res.json();
       expect(json.success).toBe(true);
       expect(json.message).toContain('Se o e-mail informado estiver cadastrado');
+      expect(mockPrisma.passwordResetToken.create).not.toHaveBeenCalled();
+      expect(sendPasswordResetEmail).not.toHaveBeenCalled();
     });
 
-    it('retorna a mesma mensagem uniforme HTTP 200 quando o e-mail existe', async () => {
+    it('retorna a mesma mensagem uniforme HTTP 200 e gera token temporário quando o e-mail existe', async () => {
       mockPrisma.userProfile.findFirst.mockResolvedValue({
         id: 'user-existent-id',
         email: 'cadastrado@ctfl.local',
       });
-      mockPrisma.userProfile.update.mockResolvedValue({ id: 'user-existent-id' });
+      mockPrisma.passwordResetToken.deleteMany.mockResolvedValue({ count: 0 });
+      mockPrisma.passwordResetToken.create.mockResolvedValue({
+        id: 'token-1',
+        email: 'cadastrado@ctfl.local',
+        tokenHash: 'somehash',
+      });
 
       const req = new Request('http://localhost:3000/api/auth/recover', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: 'cadastrado@ctfl.local',
-          newPassword: 'NovaSenhaForte123!',
         }),
       });
 
@@ -122,10 +141,132 @@ describe('Security Hardening & Anti-Side-Channel Tests', () => {
       const json = await res.json();
       expect(json.success).toBe(true);
       expect(json.message).toContain('Se o e-mail informado estiver cadastrado');
+      expect(mockPrisma.passwordResetToken.deleteMany).toHaveBeenCalledWith({
+        where: { email: 'cadastrado@ctfl.local' },
+      });
+      expect(mockPrisma.passwordResetToken.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            email: 'cadastrado@ctfl.local',
+          }),
+        })
+      );
+      expect(sendPasswordResetEmail).toHaveBeenCalledWith(
+        'cadastrado@ctfl.local',
+        expect.stringContaining('/redefinir-senha?token=')
+      );
+    });
+  });
+
+  describe('Fluxo Seguro de Redefinição de Senha (/api/auth/reset-password)', () => {
+    it('retorna HTTP 400 se o token não existir ou for inválido', async () => {
+      mockPrisma.passwordResetToken.findUnique.mockResolvedValue(null);
+
+      const req = new Request('http://localhost:3000/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: 'token-invalido',
+          newPassword: 'NovaSenhaSegura123!',
+        }),
+      });
+
+      const res = await handleResetPassword(req);
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.error).toContain('Link expirado ou já utilizado');
+    });
+
+    it('retorna HTTP 400 se o token já tiver sido utilizado', async () => {
+      mockPrisma.passwordResetToken.findUnique.mockResolvedValue({
+        id: 'tok-123',
+        email: 'user@ctfl.local',
+        tokenHash: 'hash',
+        usedAt: new Date(Date.now() - 1000),
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      });
+
+      const req = new Request('http://localhost:3000/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: 'token-ja-usado',
+          newPassword: 'NovaSenhaSegura123!',
+        }),
+      });
+
+      const res = await handleResetPassword(req);
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.error).toContain('Link expirado ou já utilizado');
+    });
+
+    it('retorna HTTP 400 se o token estiver expirado (> 15 minutos)', async () => {
+      mockPrisma.passwordResetToken.findUnique.mockResolvedValue({
+        id: 'tok-123',
+        email: 'user@ctfl.local',
+        tokenHash: 'hash',
+        usedAt: null,
+        expiresAt: new Date(Date.now() - 5000), // Expirado no passado
+      });
+
+      const req = new Request('http://localhost:3000/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: 'token-expirado',
+          newPassword: 'NovaSenhaSegura123!',
+        }),
+      });
+
+      const res = await handleResetPassword(req);
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.error).toContain('Link expirado ou já utilizado');
+    });
+
+    it('atualiza senha, marca token como utilizado e retorna 200 quando válido', async () => {
+      mockPrisma.passwordResetToken.findUnique.mockResolvedValue({
+        id: 'tok-valido',
+        email: 'user@ctfl.local',
+        tokenHash: 'hash',
+        usedAt: null,
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      });
+      mockPrisma.userProfile.findFirst.mockResolvedValue({
+        id: 'user-id-1',
+        email: 'user@ctfl.local',
+      });
+      mockPrisma.userProfile.update.mockResolvedValue({ id: 'user-id-1' });
+      mockPrisma.passwordResetToken.update.mockResolvedValue({ id: 'tok-valido' });
+
+      const req = new Request('http://localhost:3000/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: 'raw-token-123',
+          newPassword: 'NovaSenhaSegura123!',
+        }),
+      });
+
+      const res = await handleResetPassword(req);
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.success).toBe(true);
       expect(mockPrisma.userProfile.update).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { id: 'user-existent-id' },
-          data: { passwordHash: 'hashed_NovaSenhaForte123!' },
+          where: { id: 'user-id-1' },
+          data: expect.objectContaining({
+            passwordHash: 'hashed_NovaSenhaSegura123!',
+          }),
+        })
+      );
+      expect(mockPrisma.passwordResetToken.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'tok-valido' },
+          data: expect.objectContaining({
+            usedAt: expect.any(Date),
+          }),
         })
       );
     });

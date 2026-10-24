@@ -44,6 +44,15 @@ export const recoverPasswordSchema = z.object({
     .optional(),
 });
 
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Token de recuperação não informado.'),
+  newPassword: z
+    .string()
+    .min(1, 'Insira sua nova senha.')
+    .min(8, 'A nova senha deve possuir no mínimo 8 caracteres.')
+    .max(72, 'A nova senha deve possuir no máximo 72 caracteres.'),
+});
+
 export const updateProfileSchema = z.object({
   fullName: z
     .string()

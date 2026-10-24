@@ -8,11 +8,57 @@ function NavigationProgressInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isNavigating, setIsNavigating] = React.useState(false);
+  const [progress, setProgress] = React.useState(0);
+  const [isVisible, setIsVisible] = React.useState(false);
+  const [isFading, setIsFading] = React.useState(false);
 
-  // Sempre que a rota ou query string termina de atualizar, encerra o estado de carregamento
+  // Monitora alterações de rota para concluir a barra com precisão
+  const isInitialMount = React.useRef(true);
   React.useEffect(() => {
-    setIsNavigating(false);
-  }, [pathname, searchParams]);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    if (isVisible) {
+      setProgress(100);
+      const fadeTimer = setTimeout(() => {
+        setIsFading(true);
+      }, 150);
+
+      const hideTimer = setTimeout(() => {
+        setIsVisible(false);
+        setIsNavigating(false);
+        setIsFading(false);
+        setProgress(0);
+      }, 350);
+
+      return () => {
+        clearTimeout(fadeTimer);
+        clearTimeout(hideTimer);
+      };
+    }
+  }, [pathname, searchParams, isVisible]);
+
+  // Avanço dinâmico e fluido enquanto a navegação ocorre
+  React.useEffect(() => {
+    if (!isNavigating) return;
+
+    setIsVisible(true);
+    setIsFading(false);
+    setProgress(18);
+
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev < 50) return prev + 12;
+        if (prev < 75) return prev + 6;
+        if (prev < 92) return prev + 2;
+        return 94;
+      });
+    }, 180);
+
+    return () => clearInterval(interval);
+  }, [isNavigating]);
 
   // Intercepta cliques em links internos (<a href="/...">) para feedback visual instantâneo
   React.useEffect(() => {
@@ -71,30 +117,53 @@ function NavigationProgressInner() {
   // Timeout de segurança caso uma navegação seja cancelada
   React.useEffect(() => {
     if (!isNavigating) return;
-    const timer = setTimeout(() => setIsNavigating(false), 8000);
+    const timer = setTimeout(() => {
+      setIsFading(true);
+      setTimeout(() => {
+        setIsVisible(false);
+        setIsNavigating(false);
+        setIsFading(false);
+        setProgress(0);
+      }, 200);
+    }, 8000);
     return () => clearTimeout(timer);
   }, [isNavigating]);
 
-  if (!isNavigating) return null;
+  if (!isVisible) return null;
 
   return (
     <>
-      {/* Barra superior contínua no tema Primary Editorial */}
+      {/* Barra de alta precisão no topo em gradiente Teal/Esmeralda com micro-shimmer */}
       <div
         role="progressbar"
         aria-label="Carregando página"
-        className="pointer-events-none fixed inset-x-0 top-0 z-[100] h-1 overflow-hidden bg-primary/20"
+        aria-valuenow={Math.round(progress)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        className={`pointer-events-none fixed inset-x-0 top-0 z-[100] h-[3px] overflow-hidden bg-transparent transition-opacity duration-200 ease-out ${
+          isFading ? 'opacity-0' : 'opacity-100'
+        }`}
       >
-        <div className="h-full w-2/3 rounded-r-full bg-primary" />
-      </div>
-
-      {/* Pílula discreta e elegante no topo central */}
-      <div className="pointer-events-none fixed left-1/2 top-3.5 z-[100] -translate-x-1/2 animate-in fade-in slide-in-from-top-2 duration-150">
-        <div className="flex items-center gap-2 rounded-full bg-card px-3.5 py-1.5 text-xs font-semibold text-foreground ring-1 ring-primary/35">
-          <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
-          <span>Carregando...</span>
+        <div
+          className="nav-precision-progress relative h-full rounded-r-full transition-[width] duration-200 ease-out"
+          style={{ width: `${progress}%` }}
+        >
+          {/* Micro-shimmer tecnológico que desliza pela barra */}
+          <div className="pointer-events-none absolute inset-0 w-1/3 bg-white/20 animate-tech-shimmer motion-reduce:hidden" />
+          {/* Micro-glow sutil de precisão na ponta da barra */}
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-2 bg-emerald-200/80 blur-[1px] motion-reduce:hidden" />
         </div>
       </div>
+
+      {/* Pílula discreta de telemetria se a navegação demorar mais de 300ms */}
+      {progress > 40 && (
+        <div className="pointer-events-none fixed left-1/2 top-3.5 z-[100] -translate-x-1/2 animate-screen-enter">
+          <div className="flex items-center gap-2 rounded-full bg-card px-3.5 py-1.5 text-xs font-semibold text-foreground ring-1 ring-border/80">
+            <Loader2 className="h-3.5 w-3.5 animate-spin text-emerald-600 dark:text-emerald-400" />
+            <span>Navegando...</span>
+          </div>
+        </div>
+      )}
     </>
   );
 }
