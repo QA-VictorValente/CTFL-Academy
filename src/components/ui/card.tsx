@@ -31,9 +31,11 @@ export function CardHeader({
 export function CardTitle({
   className,
   ...props
-}: React.HTMLAttributes<HTMLHeadingElement>) {
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <h3
+    <div
+      role="heading"
+      aria-level={3}
       className={cn(
         'text-lg font-semibold leading-none tracking-tight',
         className
@@ -46,9 +48,9 @@ export function CardTitle({
 export function CardDescription({
   className,
   ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) {
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <p
+    <div
       className={cn('text-sm text-muted-foreground', className)}
       {...props}
     />
